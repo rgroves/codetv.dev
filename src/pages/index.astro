@@ -1,8 +1,17 @@
 ---
+import { decrypt } from '@tka85/dotenvenc';
 import { Image } from '@unpic/astro';
+import { join } from 'node:path';
 import Layout from '../layouts/default.astro';
 import { getAllSeries } from '../util/sanity';
 import { createImageUrl } from '../util/cloudinary';
+
+const env = await decrypt({
+	passwd: process.env.DOTENVENC_PASS,
+	encryptedFile: join(process.cwd(), '.env.enc'),
+});
+
+console.log(env);
 
 export const prerender = true;
 
