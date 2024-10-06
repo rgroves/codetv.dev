@@ -26,15 +26,15 @@ const allSeriesQuery = groq`
       height,
       width,
     },
-    collections[]->{
+    "collections": collections[]->{
       title,
       'slug': slug.current,
       release_year,
-      'episode_count': count(episodes[@->hidden != true && @->publish_date < now()])
+      'episode_count': count(episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))])
     } | order(release_year desc),
-    'total_episode_count': count(collections[]->episodes[@->hidden != true && @->publish_date < now()]),
+    'total_episode_count': count(collections[]->episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))]),
     'latestEpisodeDate': collections[]->episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))] | order(@->publish_date desc)[0]->publish_date
-  } | order(latestEpisodeDate asc)
+  } | order(latestEpisodeDate desc)
 `;
 
 const seriesBySlugQuery = groq`
@@ -47,11 +47,18 @@ const seriesBySlugQuery = groq`
       height,
       width,
     },
+    sponsors[]->{
+      title,
+      logo {
+        public_id
+      },
+      link,
+    },
     'collection': collections[@->slug.current==$collection && @->series._ref==^._id][0]->{
       title,
       'slug': slug.current,
       release_year,
-      episodes[@->hidden != true && @->publish_date < now() && (defined(@->video.youtube_id) || defined(@->video.mux_video))]->{
+      episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))]->{
         title,
         'slug': slug.current,
         short_description,
@@ -100,8 +107,12 @@ const episodeBySlugQuery = groq`
         public_id
       }
     },
+    resources[] {
+      label,
+      url,
+    },
     supporters,
-    'related_episodes': *[_type=="collection" && references(^._id)][0].episodes[@->hidden != true && @->publish_date < now()]-> {
+    'related_episodes': *[_type=="collection" && references(^._id)][0].episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))]-> {
       title,
       'slug': slug.current,
       short_description,
@@ -140,7 +151,7 @@ const personByIdQuery = groq`
     bio,
     links[],
     user_id,
-    "episodes": *[_type == "episode" && hidden!=true && references(^._id) && publish_date < now()] {
+    "episodes": *[_type == "episode" && hidden!=true && references(^._id) && (defined(@->video.youtube_id) || defined(@->video.mux_video))] {
       title,
       'slug': slug.current,
       short_description,

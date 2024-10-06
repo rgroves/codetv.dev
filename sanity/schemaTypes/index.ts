@@ -69,6 +69,17 @@ const series = defineType({
       type: 'text',
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      title: 'Sponsors',
+      name: 'sponsors',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'sponsor'}],
+        },
+      ],
+    }),
   ],
 })
 
@@ -192,13 +203,6 @@ const episode = defineType({
       ],
     }),
     defineField({
-      title: 'Supporters',
-      name: 'supporters',
-      type: 'text',
-      description:
-        'The list of people who were actively supporting LWJ at the time of this episode’s release.',
-    }),
-    defineField({
       title: 'Video',
       name: 'video',
       type: 'object',
@@ -243,4 +247,31 @@ const episode = defineType({
   },
 })
 
-export const schemaTypes = [series, collection, episode, person]
+const sponsor = defineType({
+  type: 'document',
+  name: 'sponsor',
+  title: 'Sponsor',
+  fields: [
+    defineField({
+      title: 'Sponsor Name',
+      name: 'title',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    slugField,
+    defineField({
+      title: 'Logo',
+      name: 'logo',
+      type: 'cloudinary.asset',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      title: 'Link',
+      name: 'link',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+  ],
+})
+
+export const schemaTypes = [series, collection, episode, person, sponsor]

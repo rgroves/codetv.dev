@@ -1,0 +1,60 @@
+---
+import Search from './search/search.astro';
+---
+
+<footer>
+	<div class="mini-bio">
+		<p>
+			TODO: write a couple sentences here. Write a couple sentences here. Write
+			a couple sentences here. Write a couple sentences here.
+		</p>
+	</div>
+
+	<div class="middle">
+		<Search />
+	</div>
+
+	<nav class="links">
+		<a href="https://partners.lwj.dev">Become a partner / sponsor</a>
+		<a href="/newsletter">Get news & updates</a>
+		<a href="/code-of-conduct">Code of conduct</a>
+		<a href="mailto:info@learnwithjason.dev">info@learnwithjason.dev</a><a
+			href="https://github.com/learnwithjason/learnwithjason.dev-v2"
+			>Source code</a
+		>
+	</nav>
+</footer>
+
+<style>
+	footer {
+		align-items: center;
+		background: var(--gray-800);
+		color: var(--gray-200);
+		display: grid;
+		font-size: 0.75rem;
+		grid-template-columns: min(90dvi, 400px) auto max-content;
+		padding: 2rem max(calc((100cqw - 1024px) / 2), 5cqw);
+
+		.middle {
+			align-items: center;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.links {
+			align-items: end;
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+
+			a {
+				color: inherit;
+
+				&:is(:hover, :focus, :active) {
+					color: var(--gray-100);
+				}
+			}
+		}
+	}
+</style>

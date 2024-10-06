@@ -2,10 +2,7 @@ import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { useState } from 'react';
 
 import { searchClient } from './search-client';
-import {
-	LinkItem,
-	QueryEpisodeItem,
-} from './items.jsx';
+import { LinkItem, QueryEpisodeItem } from './items.jsx';
 import { GoogleCalendarLogo } from './logos/google-calendar-logo.jsx';
 import { YouTubeLogo } from './logos/youtube-logo.jsx';
 import { SearchIcon } from './icons/search-icon.tsx';
@@ -33,7 +30,7 @@ export function Search() {
 			>
 				<SearchIcon />
 				<span className="aa-OpenButtonText" data-viewport="large">
-					⌘+K
+					search the site
 				</span>
 				<span className="aa-OpenButtonText" data-viewport="small">
 					search

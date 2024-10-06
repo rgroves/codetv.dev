@@ -52,6 +52,7 @@ const seriesImage = createImageUrl(series.image.public_id, {
 			</div>
 			<img src={seriesImage} alt={series.title} />
 		</div>
+		<pre>{JSON.stringify(series.sponsors, null, 2)}</pre>
 
 		<section id="episodes" class="collection">
 			<div class="collection-info">

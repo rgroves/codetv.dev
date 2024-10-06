@@ -88,39 +88,67 @@ const relatedEpisodes = episode.related_episodes ?? [];
 			</nav>
 		</section>
 
-		<section class="description" set:html={description} />
+		<section class="description">
+			<div set:html={description} />
 
-		{
-			peopleWithUsername.length > 0 ? (
-				<section class="people">
-					<h2>People in this episode</h2>
+			{
+				episode.resources && episode.resources.length > 0 ? (
+					<div class="resources">
+						<h2>Resources & Links</h2>
 
-					<div class="people-list">
-						{peopleWithUsername.map((person) => {
-							if (!person.photo || !person.photo.public_id) {
-								return null;
-							}
+						<ul class="resources">
+							{episode.resources.map((resource) => {
+								if (!resource.url) {
+									return null;
+								}
 
-							const imgUrl = createImageUrl(person.photo.public_id, {
-								width: 180,
-								aspect_ratio: 1,
-								crop: 'thumb',
-								gravity: 'face',
-							});
+								const label = resource.label ?? resource.url;
 
-							return (
-								<div class="person">
-									<a href={`/profile/${person.username}`}>
-										<img src={imgUrl} alt={person.name} />
-									</a>
-									<h4>{person.name}</h4>
-								</div>
-							);
-						})}
+								return (
+									<li class="resource">
+										<a href={resource.url}>{label}</a>
+									</li>
+								);
+							})}
+						</ul>
 					</div>
-				</section>
-			) : null
-		}
+				) : null
+			}
+		</section>
+
+		<section class="additional-details">
+			{
+				peopleWithUsername.length > 0 ? (
+					<div class="people">
+						<h2>People in this episode</h2>
+
+						<div class="people-list">
+							{peopleWithUsername.map((person) => {
+								if (!person.photo || !person.photo.public_id) {
+									return null;
+								}
+
+								const imgUrl = createImageUrl(person.photo.public_id, {
+									width: 180,
+									aspect_ratio: 1,
+									crop: 'thumb',
+									gravity: 'face',
+								});
+
+								return (
+									<div class="person">
+										<a href={`/profile/${person.username}`}>
+											<img src={imgUrl} alt={person.name} />
+										</a>
+										<h4>{person.name}</h4>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				) : null
+			}
+		</section>
 
 		{
 			relatedEpisodes.length > 0 ? (
@@ -272,8 +300,24 @@ const relatedEpisodes = episode.related_episodes ?? [];
 				margin-block: 0.25rem;
 			}
 
+			ul {
+				margin-block: 0.5rem 0;
+				padding-inline-start: 1.25rem;
+			}
+
+			li {
+				margin-block-start: 0.25rem;
+			}
+
+			li,
 			p {
 				font-size: 0.75rem;
+			}
+
+			p {
+				&:first-child {
+					font-size: 0.875rem;
+				}
 			}
 		}
 
