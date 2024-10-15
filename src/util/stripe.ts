@@ -5,9 +5,10 @@ import {
 	TIER_SILVER_PRICE_ID,
 	TIER_GOLD_PRICE_ID,
 	TIER_PLATINUM_PRICE_ID,
+	STRIPE_WEBHOOK_SECRET,
 } from 'astro:env/server';
 
-const stripe = new Stripe(STRIPE_SECRET_KEY);
+export const stripe = new Stripe(STRIPE_SECRET_KEY);
 
 export const STRIPE_SUBSCRIPTION_TYPES = [
 	{
@@ -47,6 +48,44 @@ export const STRIPE_SUBSCRIPTION_TYPES = [
 		],
 	},
 ];
+
+export async function validateWebhookSignature(request: Request) {
+	const signature = request.headers.get('stripe-signature');
+
+	if (!signature) {
+		return new Response(null, {
+			status: 400,
+		});
+	}
+
+	let event;
+	try {
+		event = stripe.webhooks.constructEvent(
+			await request.text(),
+			signature,
+			STRIPE_WEBHOOK_SECRET,
+		);
+	} catch (error) {
+		if (error instanceof Error) {
+			return new Response(
+				JSON.stringify({
+					error: error.message,
+				}),
+				{
+					status: 400,
+				},
+			);
+		}
+	}
+
+	if (!event) {
+		return new Response(null, {
+			status: 400,
+		});
+	}
+
+	return event;
+}
 
 export async function getSubscriptionStatus(user: User | null) {
 	if (
