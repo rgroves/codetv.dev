@@ -8,7 +8,6 @@ import {
 import { cloudinary } from './cloudinary';
 import { stripe } from './stripe';
 import { clerk } from './clerk';
-import type { PersonByClerkIdQueryResult } from '../types/sanity';
 import type Stripe from 'stripe';
 import type { InvocationResult } from 'inngest/types';
 import { sendDiscordMessage } from './discord';
@@ -93,12 +92,12 @@ export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 		const lastName = event.data.last_name;
 		const name = firstName + ' ' + lastName;
 
-		const user = await step.run('check-for-existing-user', async () => {
+		const checkUser = step.run('check-for-existing-user', async () => {
 			// use Clerk ID to look for an existing user in Sanity
 			return getPersonByClerkId({ user_id });
 		});
 
-		const photo = await step.run(
+		const uploadPhoto = step.run(
 			'cloudinary/update-user-profile-photo',
 			async () => {
 				return cloudinary.uploader.upload(event.data.profile_image_url, {
@@ -108,6 +107,8 @@ export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 				});
 			},
 		);
+
+		const [user, photo] = await Promise.all([checkUser, uploadPhoto]);
 
 		if (!user) {
 			await step.run('sanity/create-new-user', async () => {

@@ -17,7 +17,8 @@ const newsletterSubscription = user.primaryEmailAddress ? await getSubscriberByE
 const	userDetails = await getPersonById({ user_id: user.id }, { useCdn: false });
 
 if (!userDetails) {
-	throw new Error('no user details found')
+	// TODO report this somehow that doesn't crash the page
+	// throw new Error('no user details found')
 }
 
 const subscription = user?.publicMetadata.stripe;
@@ -104,56 +105,62 @@ const isSubscriber = subscription?.status === 'active';
 			</section>
 		) : null}
 
-		<section class="details">
-			<form method="post" action={actions.user.updateProfile}>
-				<legend>Account Details</legend>
+		{userDetails ? (
+			<section class="details">
+				<form method="post" action={actions.user.updateProfile}>
+					<legend>Account Details</legend>
 
-				<label for="display_name">Display name</label>
-				<input type="text" name="display_name" id="display_name" value={userDetails.name} required />
+					<label for="display_name">Display name</label>
+					<input type="text" name="display_name" id="display_name" value={userDetails.name} required />
 
-				<label for="bio">Bio</label>
-				<textarea name="bio" id="bio">{userDetails.bio}</textarea>
+					<label for="bio">Bio</label>
+					<textarea name="bio" id="bio">{userDetails.bio}</textarea>
 
-				<div class="profile-links">
-					<h3>Your Links</h3>
+					<div class="profile-links">
+						<h3>Your Links</h3>
 
-					<div class="links">
-						{userDetails.links?.map((link, i: number) => (
-							<div class="link">
-								<label for={`link-label-${i}`}>Label
-									<input type="text" name="link_label[]" id={`link-label-${i}`} value={link.label} required />
-								</label>
+						<div class="links">
+							{userDetails.links?.map((link, i: number) => (
+								<div class="link">
+									<label for={`link-label-${i}`}>Label
+										<input type="text" name="link_label[]" id={`link-label-${i}`} value={link.label} required />
+									</label>
 
-								<label for={`link-url-${i}`}>URL
-									<input type="url" name="link_url[]" id={`link-url-${i}`} value={link.url} required />
-								</label>
+									<label for={`link-url-${i}`}>URL
+										<input type="url" name="link_url[]" id={`link-url-${i}`} value={link.url} required />
+									</label>
 
-								<button class="remove-link">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-									<span class="sr-only">Delete Link</span>
-								</button>
-							</div>
-						))}
+									<button class="remove-link">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+										<span class="sr-only">Delete Link</span>
+									</button>
+								</div>
+							))}
+						</div>
+
+						<button id="add-profile-link">+ add a link</button>
 					</div>
 
-					<button id="add-profile-link">+ add a link</button>
-				</div>
+					<input type="hidden" name="id" value={userDetails._id} />
 
-				<input type="hidden" name="id" value={userDetails._id} />
+					<button type="submit">Update Profile</button>
+				</form>
 
-				<button type="submit">Update Profile</button>
-			</form>
+				<form method="post" action="/api/newsletter">
+					<legend>Newsletter</legend>
+					<label>
+						<input type="checkbox" checked={newsletterSubscription.state === 'active'} />
+						<span>Get new episodes, blog posts, events, and more delivered directly to your inbox</span>
+					</label>
 
-			<form method="post" action="/api/newsletter">
-				<legend>Newsletter</legend>
-				<label>
-					<input type="checkbox" checked={newsletterSubscription.state === 'active'} />
-					<span>Get new episodes, blog posts, events, and more delivered directly to your inbox</span>
-				</label>
-
-				<button type="submit">Update Preferences</button>
-			</form>
-		</section>
+					<button type="submit">Update Preferences</button>
+				</form>
+			</section>
+		) : (
+			<section class="details">
+				<p>Your account is being set up. Please check back in a few seconds.</p>
+			</section>
+		)}
 	</main>
 </Layout>
 
