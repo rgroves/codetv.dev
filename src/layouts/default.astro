@@ -11,15 +11,24 @@ const nav = [
 	{ path: '/newsletter', label: 'Newsletter' },
 	{ path: 'https://partners.lwj.dev', label: 'Partners' },
 ];
+
+export interface Props {
+	title?: string;
+}
+
+const { title = 'LWJ' } = Astro.props;
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
+		<link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>{title}</title>
 	</head>
 	<body>
 		<header>
