@@ -32,7 +32,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 	const options: Stripe.Checkout.SessionCreateParams = {
 		success_url: url.toString(),
 		line_items: [{ price, quantity: 1 }],
-		metadata: { userId, test: 'value' },
+		metadata: { userId },
 		mode: 'subscription',
 	};
 
