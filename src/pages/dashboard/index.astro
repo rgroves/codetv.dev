@@ -1,7 +1,7 @@
 ---
 import { actions } from 'astro:actions';
 import { SignOutButton } from '@clerk/astro/components'
-import { getSubscriberByEmail } from '../../util/convertkit';
+// import { getSubscriberByEmail } from '../../util/convertkit';
 import { getPersonById } from '../../util/sanity';
 import { getSubscriptionDetails, STRIPE_SUBSCRIPTION_TYPES } from '../../util/stripe';
 import Layout from '../../layouts/default.astro';
@@ -13,7 +13,7 @@ if (!user) {
 }
 
 const stripeSub = await getSubscriptionDetails(user);
-const newsletterSubscription = user.primaryEmailAddress ? await getSubscriberByEmail(user.primaryEmailAddress.emailAddress) : null;
+// const newsletterSubscription = user.primaryEmailAddress ? await getSubscriberByEmail(user.primaryEmailAddress.emailAddress) : null;
 const	userDetails = await getPersonById({ user_id: user.id }, { useCdn: false });
 
 if (!userDetails) {
@@ -146,7 +146,7 @@ const isSubscriber = subscription?.status === 'active';
 					<button type="submit">Update Profile</button>
 				</form>
 
-				<form method="post" action="/api/newsletter">
+				{/* <form method="post" action="/api/newsletter">
 					<legend>Newsletter</legend>
 					<label>
 						<input type="checkbox" checked={newsletterSubscription.state === 'active'} />
@@ -154,7 +154,7 @@ const isSubscriber = subscription?.status === 'active';
 					</label>
 
 					<button type="submit">Update Preferences</button>
-				</form>
+				</form> */}
 			</section>
 		) : (
 			<section class="details">
