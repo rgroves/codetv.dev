@@ -272,6 +272,11 @@ const sponsors = series.sponsors ?? [];
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.25rem;
+		justify-content: center;
 		padding-block-start: 2rem;
+
+		@media (min-width: 800px) {
+			justify-content: start;
+		}
 	}
 </style>

@@ -30,10 +30,17 @@ import Search from './search/search.astro';
 		align-items: center;
 		background: var(--gray-800);
 		color: var(--gray-200);
-		display: grid;
+		display: flex;
+		flex-direction: column;
 		font-size: 0.75rem;
-		grid-template-columns: min(90dvi, 400px) auto max-content;
+		gap: 2rem;
+		justify-content: center;
 		padding: 2rem max(calc((100cqw - 1024px) / 2), 5cqw);
+
+		@media (min-width: 800px) {
+			display: grid;
+			grid-template-columns: min(90dvi, 400px) auto max-content;
+		}
 
 		.middle {
 			align-items: center;
@@ -43,10 +50,14 @@ import Search from './search/search.astro';
 		}
 
 		.links {
-			align-items: end;
+			align-items: center;
 			display: flex;
 			flex-direction: column;
 			gap: 0.5rem;
+
+			@media (min-width: 800px) {
+				align-items: end;
+			}
 
 			a {
 				color: inherit;
