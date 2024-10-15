@@ -5,8 +5,11 @@ import type {
 	AllSeriesQueryResult,
 	EpisodeBySlugQueryResult,
 	PersonByIdQueryResult,
+	PersonByClerkIdQueryResult,
 	SeriesBySlugQueryResult,
+	SupportersQueryResult,
 } from '../types/sanity';
+import type { UploadApiResponse } from 'cloudinary';
 
 const client = createClient({
 	projectId: 'vnkupgyb',
@@ -47,10 +50,12 @@ const seriesBySlugQuery = groq`
       height,
       width,
     },
-    sponsors[]->{
-      title,
+    'sponsors': sponsors[]->{
+      'title': title,
       logo {
-        public_id
+        public_id,
+        width,
+        height
       },
       link,
     },
@@ -111,7 +116,15 @@ const episodeBySlugQuery = groq`
       label,
       url,
     },
-    supporters,
+    'sponsors': sponsors[]->{
+      title,
+      logo {
+        public_id,
+        width,
+        height
+      },
+      link,
+    },
     'related_episodes': *[_type=="collection" && references(^._id)][0].episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))]-> {
       title,
       'slug': slug.current,
@@ -178,21 +191,59 @@ const personByIdQuery = groq`
   }
 `;
 
+const personByClerkIdQuery = groq`
+  *[_type == "person" && user_id == $user_id][0] {
+    _id,
+    name,
+    slug,
+    user_id,
+  }
+`;
+
+// *[_type == "person" && subscription.status == "active"] {
+const supportersQuery = groq`
+  *[_type == "person" && subscription.status == "active"] {
+    _id,
+    name,
+    photo {
+      public_id,
+      height,
+      width,
+    },
+    'username': slug.current,
+    subscription {
+      level,
+      status
+    }
+  } | score(
+    boost(subscription.level match "Platinum", 3),
+    boost(subscription.level match "Gold", 2),
+    boost(subscription.level match "Silver", 1),
+  ) | order(_score desc)
+`;
+
 export async function getAllSeries() {
-	return client.fetch<AllSeriesQueryResult>(allSeriesQuery);
+	return client.fetch<AllSeriesQueryResult>(
+		allSeriesQuery,
+		{},
+		{ useCdn: true },
+	);
 }
 
 export async function getSeriesBySlug(params: {
 	series: string;
 	collection: string;
 }) {
-	return client.fetch<SeriesBySlugQueryResult>(seriesBySlugQuery, params);
+	return client.fetch<SeriesBySlugQueryResult>(seriesBySlugQuery, params, {
+		useCdn: true,
+	});
 }
 
 export async function getEpisodeBySlug(params: { episode: string }) {
 	const episode = await client.fetch<EpisodeBySlugQueryResult>(
 		episodeBySlugQuery,
 		params,
+		{ useCdn: true },
 	);
 
 	if (!episode) {
@@ -209,6 +260,74 @@ export async function getPersonById(
 	return client.fetch<PersonByIdQueryResult>(personByIdQuery, params, {
 		useCdn: options?.useCdn ?? true,
 	});
+}
+
+export async function getPersonByClerkId(
+	params: { user_id: string },
+	options?: { useCdn: boolean },
+) {
+	return client.fetch<PersonByClerkIdQueryResult>(
+		personByClerkIdQuery,
+		params,
+		{
+			useCdn: options?.useCdn ?? true,
+		},
+	);
+}
+
+export async function getSupporters() {
+	return client.fetch<SupportersQueryResult>(
+		supportersQuery,
+		{},
+		{ useCdn: true },
+	);
+}
+
+export async function createPerson(
+	name: string,
+	user_id: string,
+	username: string,
+	photo: UploadApiResponse,
+) {
+	return client.create({
+		_type: 'person',
+		name,
+		user_id,
+		slug: { current: username },
+		photo,
+	});
+}
+
+export async function updatePersonSubscription(
+	id: string,
+	subscription: {
+		customer: string;
+		level: string;
+		status: string;
+		date: Date;
+	},
+) {
+	return client.patch(id).set({ subscription }).commit();
+}
+
+export async function updatePersonFromClerk(
+	id: string,
+	fields: {
+		name: string;
+		username: string;
+		photo: UploadApiResponse;
+	},
+) {
+	return client
+		.patch(id)
+		.set({
+			name: fields.name,
+			slug: {
+				current: fields.username,
+			},
+			photo: fields.photo,
+		})
+		.commit();
 }
 
 export async function updatePerson(
