@@ -19,3 +19,4 @@ TODO:
 - [ ] Subdomain v2.learnwithjason.dev
 - [ ] env vars
 - [ ] Add a WIP banner with link to GitHub for issues
+- [ ] generate redirects for all v1 site pages that changed location
