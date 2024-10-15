@@ -1,7 +1,8 @@
 ---
 import { format } from 'date-fns';
 import { marked } from 'marked';
-import { getEpisodeBySlug } from '../../../../util/sanity';
+import { Image } from '@unpic/astro';
+import { getEpisodeBySlug, getSupporters } from '../../../../util/sanity';
 import { createImageUrl } from '../../../../util/cloudinary';
 import { getSubscriptionStatus } from '../../../../util/stripe';
 import { loadUsersByIDs } from '../../../../util/clerk';
@@ -17,6 +18,7 @@ const user = await Astro.locals.currentUser();
 const status = await getSubscriptionStatus(user);
 
 const episode = await getEpisodeBySlug({ episode: episodeSlug! });
+const supporters = await getSupporters();
 
 const people = episode.people ?? [];
 const description = marked.parse(episode.description ?? '');
@@ -118,6 +120,47 @@ const relatedEpisodes = episode.related_episodes ?? [];
 
 		<section class="additional-details">
 			{
+				episode.sponsors && episode.sponsors.length > 0 ? (
+					<div class="sponsors">
+						<>
+							<h3>Presented by</h3>
+
+							<div class="sponsor-logos">
+								{episode.sponsors.map((sponsor) => {
+									if (
+										!sponsor.logo ||
+										!sponsor.logo.public_id ||
+										!sponsor.logo.width ||
+										!sponsor.logo.height
+									) {
+										return;
+									}
+
+									const src = createImageUrl(sponsor.logo.public_id, {
+										height: sponsor.logo.height * 2,
+										width: sponsor.logo.width * 2,
+										color: '#463963',
+										effect: 'colorize',
+									});
+
+									return (
+										<a href={sponsor.link}>
+											<Image
+												src={src}
+												alt={sponsor.title}
+												height={70}
+												aspectRatio={sponsor.logo.width / sponsor.logo.height}
+											/>
+										</a>
+									);
+								})}
+							</div>
+						</>
+					</div>
+				) : null
+			}
+
+			{
 				peopleWithUsername.length > 0 ? (
 					<div class="people">
 						<h2>People in this episode</h2>
@@ -184,17 +227,48 @@ const relatedEpisodes = episode.related_episodes ?? [];
 			) : null
 		}
 
-		<section class="supporters">
-			<h2>Supporters for this episode</h2>
-			<p>
-				<a href="/dashboard"
-					>Become a supporter to see your name here on future episodes!</a
-				>
-			</p>
-			<p class="name-list">
-				{(episode.supporters ?? '').split('\n').map((n) => <span>{n}</span>)}
-			</p>
-		</section>
+		{
+			supporters.length > 0 ? (
+				<section class="supporters">
+					<h2>Supporters</h2>
+					<p>
+						<a href="/dashboard">
+							Become a supporter to see yourself here on future episodes!
+						</a>
+					</p>
+
+					<div class="supporter-list">
+						{supporters.map((supporter) => {
+							const photo = supporter.photo;
+
+							if (!photo || !photo.public_id) {
+								return;
+							}
+
+							const src = createImageUrl(photo.public_id, {
+								height: 80,
+								width: 80,
+								crop: 'fill',
+							});
+
+							return (
+								<a
+									href={`/profile/${supporter.username}`}
+									title={supporter.name}
+								>
+									<Image
+										src={src}
+										alt={supporter.name}
+										width={80}
+										aspectRatio={1}
+									/>
+								</a>
+							);
+						})}
+					</div>
+				</section>
+			) : null
+		}
 	</div>
 
 	<style>
@@ -334,6 +408,10 @@ const relatedEpisodes = episode.related_episodes ?? [];
 			}
 		}
 
+		.people {
+			margin-block-start: 1rem;
+		}
+
 		.people-list {
 			display: flex;
 			flex-wrap: wrap;
@@ -378,6 +456,33 @@ const relatedEpisodes = episode.related_episodes ?? [];
 			}
 		}
 
+		.sponsors {
+			align-items: center;
+			display: flex;
+			gap: 1.5rem;
+			justify-content: start;
+			margin: 0;
+
+			h3 {
+				color: var(--text-muted);
+				font-family: mallory-medium;
+				font-size: 0.75rem;
+				margin: 0;
+				text-transform: uppercase;
+			}
+		}
+
+		.sponsor-logos {
+			align-items: center;
+			display: flex;
+			gap: 2rem;
+
+			img {
+				block-size: 2.5rem;
+				inline-size: auto;
+			}
+		}
+
 		.related-episodes,
 		.supporters {
 			@media (min-width: 1000px) {
@@ -398,12 +503,21 @@ const relatedEpisodes = episode.related_episodes ?? [];
 			}
 		}
 
-		.name-list {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, 140px);
-			justify-content: center;
+		.supporter-list {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.25rem;
+			justify-content: start;
 			margin-block-start: 1rem;
-			white-space: pre;
+
+			a {
+				display: block;
+			}
+
+			img {
+				block-size: 40px;
+				border-radius: 50%;
+			}
 		}
 	</style>
 </Layout>
