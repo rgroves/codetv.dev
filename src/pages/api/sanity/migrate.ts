@@ -1,25 +1,14 @@
 import type { APIRoute } from 'astro';
+import { SANITY_SECRET_TOKEN } from 'astro:env/server';
 import { createClient, Transaction } from '@sanity/client';
 import groq from 'groq';
-import { v2 as cloudinary } from 'cloudinary';
-import {
-	CLOUDINARY_CLOUD_NAME,
-	CLOUDINARY_API_KEY,
-	CLOUDINARY_API_SECRET,
-	SANITY_SECRET_TOKEN,
-} from 'astro:env/server';
+import { cloudinary } from '../../../util/cloudinary';
 import type {
 	Episode,
 	OldEpisodesQueryResult,
 	Person,
 } from '../../../types/sanity';
 import { createUser } from '../../../util/clerk';
-
-cloudinary.config({
-	cloud_name: CLOUDINARY_CLOUD_NAME,
-	api_key: CLOUDINARY_API_KEY,
-	api_secret: CLOUDINARY_API_SECRET,
-});
 
 const oldClient = createClient({
 	projectId: 'vnkupgyb',
@@ -128,7 +117,6 @@ export const GET: APIRoute = async ({ request }) => {
 						_rev: person._rev,
 						_id: person._id,
 						name: person.name,
-						// @ts-expect-error no idea why Sanity doesn't pick this one up
 						slug: {
 							current: person.twitter.trim(),
 							_type: 'slug',
