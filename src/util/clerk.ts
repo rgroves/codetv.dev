@@ -1,7 +1,7 @@
 import { createClerkClient } from '@clerk/backend';
 import { CLERK_SECRET_KEY } from 'astro:env/server';
 
-const clerk = createClerkClient({
+export const clerk = createClerkClient({
 	secretKey: CLERK_SECRET_KEY,
 });
 
