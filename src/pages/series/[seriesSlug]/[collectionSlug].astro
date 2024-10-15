@@ -1,5 +1,6 @@
 ---
 import { format } from 'date-fns';
+import { Image } from '@unpic/astro';
 import Layout from '../../../layouts/default.astro';
 import EpisodePreview from '../../../components/episode-preview.astro';
 import { getSeriesBySlug } from '../../../util/sanity';
@@ -29,6 +30,8 @@ const seriesImage = createImageUrl(series.image.public_id, {
 	aspect_ratio: '16:9',
 	crop: 'fill',
 });
+
+const sponsors = series.sponsors ?? [];
 ---
 
 <Layout>
@@ -50,9 +53,47 @@ const seriesImage = createImageUrl(series.image.public_id, {
 				<p>{series.description}</p>
 				<button class="play-episode button">Start watching</button>
 			</div>
+			<div class="sponsors">
+				{
+					sponsors && sponsors.length > 0 ? (
+						<>
+							<h3>Presented by</h3>
+
+							<div class="sponsor-logos">
+								{sponsors.map((sponsor) => {
+									if (
+										!sponsor.logo ||
+										!sponsor.logo.public_id ||
+										!sponsor.logo.width ||
+										!sponsor.logo.height
+									) {
+										return;
+									}
+
+									const src = createImageUrl(sponsor.logo.public_id, {
+										height: sponsor.logo.height * 2,
+										width: sponsor.logo.width * 2,
+										crop: 'fill',
+									});
+
+									return (
+										<a href={sponsor.link}>
+											<Image
+												src={src}
+												alt={sponsor.title}
+												height={70}
+												aspectRatio={sponsor.logo.width / sponsor.logo.height}
+											/>
+										</a>
+									);
+								})}
+							</div>
+						</>
+					) : null
+				}
+			</div>
 			<img src={seriesImage} alt={series.title} />
 		</div>
-		<pre>{JSON.stringify(series.sponsors, null, 2)}</pre>
 
 		<section id="episodes" class="collection">
 			<div class="collection-info">
@@ -122,6 +163,7 @@ const seriesImage = createImageUrl(series.image.public_id, {
 		max-block-size: 60dvb;
 		display: flex;
 		inline-size: 100cqw;
+		justify-content: space-between;
 		padding: 4rem max(calc((100cqw - 1024px) / 2), 5cqw);
 		position: relative;
 
@@ -147,16 +189,20 @@ const seriesImage = createImageUrl(series.image.public_id, {
 			z-index: 2;
 		}
 
-		& .series-info {
+		.series-info,
+		.sponsors {
+			position: relative;
+			z-index: 10;
+		}
+
+		.series-info {
 			color: var(--gray-100);
 			font-family: mallory-light;
 			font-size: 0.875rem;
 			line-height: 1.25;
 			inline-size: 40ch;
-			position: relative;
-			z-index: 10;
 
-			& h1 {
+			h1 {
 				color: var(--white);
 				font-size: 2rem;
 				line-height: 1.1;
@@ -164,7 +210,32 @@ const seriesImage = createImageUrl(series.image.public_id, {
 			}
 		}
 
-		& img {
+		.sponsors {
+			align-items: center;
+			display: flex;
+			gap: 2.5rem;
+
+			h3 {
+				color: var(--gray-100);
+				font-family: mallory-medium;
+				font-size: 0.75rem;
+				text-transform: uppercase;
+			}
+		}
+
+		.sponsor-logos {
+			align-items: center;
+			display: flex;
+			gap: 2rem;
+
+			img {
+				block-size: 2.5rem;
+				inline-size: auto;
+				opacity: 80%;
+			}
+		}
+
+		> img {
 			block-size: 100%;
 			inline-size: 100%;
 			display: block;
