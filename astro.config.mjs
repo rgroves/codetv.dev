@@ -101,6 +101,10 @@ export default defineConfig({
 				access: 'secret',
 				context: 'server',
 			}),
+			DISCORD_BOT_TOKEN: envField.string({
+				access: 'secret',
+				context: 'server',
+			}),
 		},
 	},
 });
