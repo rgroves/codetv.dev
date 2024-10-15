@@ -62,19 +62,32 @@ export const person = defineType({
       ],
     }),
     defineField({
+      title: 'Subscription',
+      name: 'subscription',
+      type: 'object',
+      fields: [
+        {title: 'Stripe Customer ID', name: 'customer', type: 'string'},
+        {title: 'Level', name: 'level', type: 'string'},
+        {title: 'Status', name: 'status', type: 'string'},
+        {title: 'Join Date', name: 'date', type: 'datetime'},
+      ],
+      readOnly: true,
+    }),
+    defineField({
       title: 'Clerk User ID',
       name: 'user_id',
       type: 'string',
       validation: (rule) => rule.required(),
-      // readOnly: true,
+      readOnly: true,
     }),
   ],
   preview: {
     select: {
       name: 'name',
       photo: 'photo',
+      subscription: 'subscription',
     },
-    prepare({name, photo}) {
+    prepare({name, photo, subscription}) {
       const url = new URL('https://res.cloudinary.com')
       url.pathname = [
         'jlengstorf',
@@ -86,8 +99,11 @@ export const person = defineType({
         photo.public_id,
       ].join('/')
 
+      const subtitle = subscription?.status === 'active' ? subscription?.level : ''
+
       return {
         title: name,
+        subtitle,
         imageUrl: url.toString(),
       }
     },

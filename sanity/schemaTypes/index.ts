@@ -203,6 +203,17 @@ const episode = defineType({
       ],
     }),
     defineField({
+      title: 'Sponsors',
+      name: 'sponsors',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'sponsor'}],
+        },
+      ],
+    }),
+    defineField({
       title: 'Video',
       name: 'video',
       type: 'object',
