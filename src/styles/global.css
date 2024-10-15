@@ -83,3 +83,7 @@ body {
 	border: 0;
 	white-space: nowrap; /* Prevents wrapping */
 }
+
+.cl-rootBox {
+	margin: 4rem auto;
+}
