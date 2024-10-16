@@ -7,11 +7,29 @@ import { createImageUrl } from '../util/cloudinary';
 export const prerender = true;
 
 const allSeries = await getAllSeries();
+
+const bannerImage = createImageUrl('lwj/v2/lwj-hero-default', {
+	transformation: {
+		width: 2560,
+		height: 866,
+		crop: 'fill',
+	},
+});
 ---
 
 <Layout>
+	<section>
+		<Image
+			src={bannerImage}
+			alt="We make stuff developers actually want to watch"
+			width={2560}
+			aspectRatio={2560 / 866}
+			placeholder="blurhash"
+			loading="eager"
+		/>
+	</section>
 	<main>
-		<section>
+		<section class="series-container">
 			<h2>Choose a series to watch</h2>
 			<div class="series-list">
 				{
@@ -88,10 +106,19 @@ const allSeries = await getAllSeries();
 		margin-inline: auto;
 	}
 
+	.series-container {
+		margin-block: 2rem;
+
+		@media (min-width: 800px) {
+			margin-block: 4rem;
+		}
+	}
+
 	.series-list {
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
+		margin-block-start: 1rem;
 
 		@media (min-width: 800px) {
 			display: grid;
