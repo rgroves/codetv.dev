@@ -1,3 +1,67 @@
+@font-face {
+	font-family: 'jwf-light';
+	src: url('/fonts/jwf-light.woff2') format('woff2');
+	font-weight: 300;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'jwf-light';
+	src: url('/fonts/jwf-light-italic.woff2') format('woff2');
+	font-weight: 300;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'jwf-book';
+	src: url('/fonts/jwf-book.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'jwf-book';
+	src: url('/fonts/jwf-book-italic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'jwf-medium';
+	src: url('/fonts/jwf-medium.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'jwf-medium';
+	src: url('/fonts/jwf-medium-italic.woff2') format('woff2');
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'jwf-bold';
+	src: url('/fonts/jwf-bold.woff2') format('woff2');
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'jwf-bold';
+	src: url('/fonts/jwf-bold-italic.woff2') format('woff2');
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
+}
+
 * {
 	box-sizing: border-box;
 	margin: 0;
@@ -38,9 +102,9 @@
 	--text-strong: var(--gray-600);
 	--text-link: var(--blue-500);
 
-	--font-family: mallory-book, system-ui, sans-serif;
-	--font-family-medium: mallory-medium, system-ui, sans-serif;
-	--font-family-bold: mallory-bold, system-ui, sans-serif;
+	--font-family: jwf-book, system-ui, sans-serif;
+	--font-family-medium: jwf-medium, system-ui, sans-serif;
+	--font-family-bold: jwf-bold, system-ui, sans-serif;
 
 	color: var(--text);
 	font-family: var(--font-family);

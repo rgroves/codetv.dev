@@ -1,4 +1,5 @@
 ---
+import Eyebrow from '../components/eyebrow.astro';
 import Logo from '../components/logo.astro';
 import Footer from '../components/footer.astro';
 import UserButton from '../components/user-button.astro';
@@ -51,6 +52,7 @@ const { title = 'LWJ Productions' } = Astro.props;
 	</head>
 	<body>
 		<header>
+			<Eyebrow />
 			<div>
 				<a href="/" rel="home" class="logo">
 					<Logo />
@@ -282,7 +284,7 @@ const { title = 'LWJ Productions' } = Astro.props;
 				color: var(--white);
 				display: flex;
 				flex-wrap: wrap;
-				font-family: mallory-medium;
+				font-family: jwf-medium;
 				font-size: 0.875rem;
 				gap: 1rem 1.5rem;
 				inline-size: min(max-content, 90dvi);
