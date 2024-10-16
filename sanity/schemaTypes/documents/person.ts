@@ -71,14 +71,14 @@ export const person = defineType({
         {title: 'Status', name: 'status', type: 'string'},
         {title: 'Join Date', name: 'date', type: 'datetime'},
       ],
-      readOnly: true,
+      // readOnly: true,
     }),
     defineField({
       title: 'Clerk User ID',
       name: 'user_id',
       type: 'string',
       validation: (rule) => rule.required(),
-      readOnly: true,
+      // readOnly: true,
     }),
   ],
   preview: {
