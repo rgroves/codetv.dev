@@ -92,6 +92,7 @@ const episodeBySlugQuery = groq`
     title,
     'slug': slug.current,
     description,
+    short_description,
     publish_date,
     'thumbnail': {
       'public_id': video.thumbnail.public_id,

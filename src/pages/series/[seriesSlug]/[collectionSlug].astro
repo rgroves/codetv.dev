@@ -32,9 +32,30 @@ const seriesImage = createImageUrl(series.image.public_id, {
 });
 
 const sponsors = series.sponsors ?? [];
+
+const url = new URL('https://lwj.dev');
+url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 ---
 
 <Layout>
+	<Fragment slot="head">
+		<link rel="canonical" href={url.toString()} />
+
+		<meta property="og:type" content="video.tv_show" />
+		<meta property="og:url" content={url.toString()} />
+		<meta property="og:site_name" content="LWJ Productions" />
+		<meta
+			property="og:title"
+			content={`${series.title} ${series.collection?.title}`}
+		/>
+		<meta property="og:description" content={series.description} />
+
+		<meta property="og:image" content={seriesImage} />
+		<meta property="og:image:width" content="1280" />
+		<meta property="og:image:height" content="720" />
+		<meta property="og:image:alt" content={series.title} />
+	</Fragment>
+
 	<main>
 		<div class="header">
 			<div class="series-info">
@@ -134,7 +155,15 @@ const sponsors = series.sponsors ?? [];
 								episode={episode}
 								episodeNumber={`${series.collection?.slug}E${index + 1}`.toUpperCase()}
 								episodeUrl={`/series/${series.slug}/${series.collection?.slug}/${episode.slug}`}
-							/>
+								server:defer
+							>
+								<div slot="fallback" class="episode-preview-placeholder">
+									<div class="img" />
+									<div class="meta" />
+									<div class="title" />
+									<div class="description" />
+								</div>
+							</EpisodePreview>
 						);
 					})
 				}
@@ -269,6 +298,8 @@ const sponsors = series.sponsors ?? [];
 	}
 
 	.episodes {
+		container-name: episodes;
+		container-type: inline-size;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.25rem;

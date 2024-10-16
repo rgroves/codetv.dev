@@ -67,11 +67,27 @@ const description =
 </div>
 
 <style>
-	.episode {
-		background: var(--white);
+	.episode,
+	:global(.episode-preview-placeholder) {
 		border-radius: 0.125rem;
 		display: block;
-		inline-size: 200px;
+		inline-size: min(100cqi, 320px);
+
+		@container episodes (min-width: 500px) {
+			inline-size: calc((100cqi - 0.25rem) / 2);
+		}
+
+		@container episodes (min-width: 700px) {
+			inline-size: calc((100cqi - 0.25rem * 2) / 3);
+		}
+
+		@container episodes (min-width: 900px) {
+			inline-size: calc((100cqi - 0.25rem * 3) / 4);
+		}
+	}
+
+	.episode {
+		background: var(--white);
 		transition: 200ms linear background;
 
 		&:is(:focus-within, :hover) {
@@ -131,5 +147,38 @@ const description =
 
 	.episode-date {
 		margin-inline-start: auto;
+	}
+
+	:global(.episode-preview-placeholder) {
+		animation: 1s pulse infinite alternate linear;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+
+		.img,
+		.meta,
+		.title,
+		.description {
+			background: var(--gray-100);
+			border-radius: 0.125rem;
+			display: block;
+			inline-size: 100%;
+		}
+
+		.img {
+			aspect-ratio: 16 / 9;
+		}
+
+		.meta {
+			block-size: 0.75rem;
+		}
+
+		.title {
+			block-size: 1rem;
+		}
+
+		.description {
+			block-size: 3rem;
+		}
 	}
 </style>

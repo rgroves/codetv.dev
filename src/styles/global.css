@@ -87,3 +87,9 @@ body {
 .cl-rootBox {
 	margin: 4rem auto;
 }
+
+@keyframes pulse {
+	to {
+		opacity: 0.5;
+	}
+}
