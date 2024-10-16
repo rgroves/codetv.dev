@@ -49,7 +49,7 @@ const url = new URL('https://lwj.dev');
 url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 ---
 
-<Layout>
+<Layout title={`${series.title} ${series.collection?.title}`}>
 	<Fragment slot="head">
 		<link rel="canonical" href={url.toString()} />
 
