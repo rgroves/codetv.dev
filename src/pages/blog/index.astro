@@ -5,7 +5,6 @@ import Layout from '../../layouts/default.astro';
 export const prerender = true;
 
 const blogs = await getCollection('blog', ({ data }) => {
-	console.log(data);
 	if (data.draft === true) {
 		return false;
 	}

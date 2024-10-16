@@ -190,7 +190,6 @@ const updateSanityPersonSubscription = inngest.createFunction(
 	{ event: 'internal/sanity.person.update-subscription' },
 	async ({ event, step }) => {
 		return step.run('sanity/update-subscription-details', async () => {
-			console.log(event.data);
 			return updatePersonSubscription(event.data.sanityUserId, {
 				customer: event.data.stripeCustomerId,
 				status: event.data.subscriptionStatus,
