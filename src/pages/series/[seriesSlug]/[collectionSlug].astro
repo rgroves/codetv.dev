@@ -3,8 +3,20 @@ import { format } from 'date-fns';
 import { Image } from '@unpic/astro';
 import Layout from '../../../layouts/default.astro';
 import EpisodePreview from '../../../components/episode-preview.astro';
-import { getSeriesBySlug } from '../../../util/sanity';
+import { getAllSeries, getSeriesBySlug } from '../../../util/sanity';
 import { createImageUrl } from '../../../util/cloudinary';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	const allSeries = await getAllSeries();
+
+	return allSeries.flatMap((s) => {
+		return s.collections!.map((c) => ({
+			params: { seriesSlug: s.slug, collectionSlug: c.slug },
+		}));
+	});
+}
 
 const { seriesSlug, collectionSlug } = Astro.params;
 
@@ -113,7 +125,14 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 					) : null
 				}
 			</div>
-			<img src={seriesImage} alt={series.title} />
+			<Image
+				src={seriesImage}
+				alt={series.title}
+				aspectRatio={16 / 9}
+				width={1280}
+				placeholder="blurhash"
+				loading="eager"
+			/>
 		</div>
 
 		<section id="episodes" class="collection">
@@ -185,14 +204,15 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 	});
 </script>
 
-<style>
+<style define:vars={{ bg: `url(${seriesImage})` }}>
 	.header {
 		align-items: end;
 		aspect-ratio: 16 / 9;
-		max-block-size: 60dvb;
 		display: flex;
 		inline-size: 100cqw;
 		justify-content: space-between;
+		max-block-size: min(60dvb, 720px);
+		overflow: hidden;
 		padding: 4rem max(calc((100cqw - 1024px) / 2), 5cqw);
 		position: relative;
 
@@ -202,11 +222,27 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 		 */
 		backdrop-filter: opacity(1);
 
+		&::before {
+			background-image: linear-gradient(
+					to bottom,
+					color-mix(in oklch, var(--gray-900), transparent) 0%,
+					color-mix(in oklch, var(--gray-900), transparent) 100%
+				),
+				var(--bg);
+			background-position: center;
+			background-size: 100%;
+			content: '';
+			filter: blur(1rem);
+			inset: -2rem;
+			position: absolute;
+			z-index: 1;
+		}
+
 		&::after {
 			background-image: linear-gradient(
 				10deg in oklch,
-				oklch(16.13% 0.08 291.17 / 0.9),
-				oklch(16.13% 0.08 291.17 / 0.9) 30%,
+				oklch(16.13% 0.08 291.17 / 0.95),
+				oklch(16.13% 0.08 291.17 / 0.95) 30%,
 				oklch(16.13% 0.08 291.17 / 0.75) 43%,
 				oklch(16.13% 0.08 291.17 / 0) 65%
 			);
@@ -265,10 +301,12 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 		}
 
 		> img {
+			box-shadow: 0 0 5rem color-mix(in oklch, var(--gray-900) 75%, transparent);
 			block-size: 100%;
 			inline-size: 100%;
 			display: block;
 			inset: 0;
+			margin-inline: auto;
 			object-fit: cover;
 			position: absolute;
 			z-index: 1;
