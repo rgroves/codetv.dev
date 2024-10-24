@@ -117,9 +117,21 @@ const { title = 'LWJ Productions' } = Astro.props;
 </script>
 
 <style>
-	/* This prevents background scrolling when the nav menu popover is visible. */
+	/* When the nav popover is visible:
+		1. Disable anchor tags from being targets of pointer events to prevent clicking links under the popover
+		2. Ensure that the anchor tags in the nav popover menu still are clickable
+	*/
 	html:has(#menu:popover-open) {
+		/* This prevents background scrolling when the nav menu popover is visible. */
 		overflow:hidden;
+ 
+		/* When the nav popover is visible:
+			1. Disable anchor tags from being targets of pointer events to prevent clicking links under the popover
+			2. Ensure that the anchor tags in the nav popover menu still are clickable
+		*/
+		a:not(#menu a) {
+			pointer-events: none;
+		}
 	}
 
 	/* This allows the header and nav menu popover to be full screen height when the popover is visible. */
