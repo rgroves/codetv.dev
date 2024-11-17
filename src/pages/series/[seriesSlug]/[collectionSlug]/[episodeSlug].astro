@@ -2,7 +2,7 @@
 import { format } from 'date-fns';
 import { marked } from 'marked';
 import { Image } from '@unpic/astro';
-import { getEpisodeBySlug, getSupporters } from '../../../../util/sanity';
+import { getAllEpisodes, getEpisodeBySlug, getSupporters } from '../../../../util/sanity';
 import { createImageUrl } from '../../../../util/cloudinary';
 import { getSubscriptionStatus } from '../../../../util/stripe';
 import { loadUsersByIDs } from '../../../../util/clerk';
@@ -11,6 +11,23 @@ import VideoPlayer from '../../../../components/video-player.astro';
 import EpisodePreview from '../../../../components/episode-preview.astro';
 import ShareInput from '../../../../components/share-input.astro';
 import Heart from '../../../../components/heart.astro';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	const allEpisodes = await getAllEpisodes();
+
+	return allEpisodes.map((e) => {
+		if (!e.series || !e.collection || !e.slug) {
+			console.log(e)
+			return false;
+		}
+
+		return {
+			params: { seriesSlug: e.series, collectionSlug: e.collection, episodeSlug: e.slug },
+		};
+	}).filter(Boolean);
+}
 
 const { episodeSlug } = Astro.params;
 
@@ -90,7 +107,10 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 			title: episode.title,
 			publish_date: episode.publish_date,
 		}}
-	/>
+		server:defer
+	>
+		<div class="video-player-placeholder" slot="fallback" />
+	</VideoPlayer>
 
 	<div class="wrapper">
 		<section class="header">
@@ -315,6 +335,14 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 				gap: 2rem;
 				grid-template-columns: repeat(2, calc(50% - 1rem));
 			}
+		}
+
+		.video-player-placeholder {
+			animation: 1s pulse infinite alternate linear;
+			aspect-ratio: 16 / 9;
+			background: var(--gray-100);
+			block-size: auto;
+			inline-size: 100dvi;
 		}
 
 		.header {

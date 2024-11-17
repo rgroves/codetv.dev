@@ -174,7 +174,6 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 								episode={episode}
 								episodeNumber={`${series.collection?.slug}E${index + 1}`.toUpperCase()}
 								episodeUrl={`/series/${series.slug}/${series.collection?.slug}/${episode.slug}`}
-								server:defer
 							>
 								<div slot="fallback" class="episode-preview-placeholder">
 									<div class="img" />

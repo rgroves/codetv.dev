@@ -8,6 +8,7 @@ import type {
 	PersonByClerkIdQueryResult,
 	SeriesBySlugQueryResult,
 	SupportersQueryResult,
+	AllEpisodesQueryResult,
 } from '../types/sanity';
 import type { UploadApiResponse } from 'cloudinary';
 
@@ -84,6 +85,15 @@ const seriesBySlugQuery = groq`
       'slug': slug.current,
       release_year,
     }
+  }
+`;
+
+const allEpisodesQuery = groq`
+  *[_type=="episode" && hidden != true] {
+    title,
+    'slug': slug.current,
+    'collection': *[_type=="collection" && references(^._id)][0].slug.current,
+    'series': *[_type=="collection" && references(^._id)][0].series->slug.current
   }
 `;
 
@@ -238,6 +248,14 @@ export async function getSeriesBySlug(params: {
 	return client.fetch<SeriesBySlugQueryResult>(seriesBySlugQuery, params, {
 		useCdn: true,
 	});
+}
+
+export async function getAllEpisodes() {
+	return client.fetch<AllEpisodesQueryResult>(
+		allEpisodesQuery,
+		{},
+		{ useCdn: true },
+	);
 }
 
 export async function getEpisodeBySlug(params: { episode: string }) {
