@@ -63,9 +63,11 @@ const relatedEpisodes = episode.related_episodes ?? [];
 const url = new URL('https://lwj.dev');
 url.pathname = `/series/${episode.series?.slug}/${episode.collection?.slug}/${episode.slug}`;
 
+const thumb_w = 1280;
+const thumb_h = 720;
 const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnail.public_id, {
-	height: 720,
-	width: 1280,
+	height: thumb_h,
+	width: thumb_w,
 	crop: 'fill',
 }) : false;
 ---
@@ -91,8 +93,8 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 				property="og:image"
 				content={thumbnail}
 			/>
-			<meta property="og:image:width" content="1280" />
-			<meta property="og:image:height" content="720" />
+			<meta property="og:image:width" content={thumb_w.toString()} />
+			<meta property="og:image:height" content={thumb_h.toString()} />
 			<meta
 				property="og:image:alt"
 				content={episode.thumbnail?.alt ?? episode.title}
