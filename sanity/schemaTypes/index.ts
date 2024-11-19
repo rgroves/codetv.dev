@@ -80,7 +80,17 @@ const series = defineType({
         },
       ],
     }),
+    defineField({
+      title: 'Feature on the home page?',
+      name: 'featured',
+      type: 'boolean',
+    }),
   ],
+  initialValue: () => {
+    return {
+      featured: false,
+    }
+  },
 })
 
 const collection = defineType({
@@ -219,6 +229,11 @@ const episode = defineType({
       type: 'object',
       group: 'video',
       fields: [
+        {
+          title: 'Members-only',
+          name: 'members_only',
+          type: 'boolean',
+        },
         {name: 'mux_video', title: 'Video File', type: 'mux.video'},
         {name: 'captions', title: 'Captions (SRT)', type: 'file', options: {accept: '.srt'}},
         {
@@ -254,6 +269,9 @@ const episode = defineType({
   initialValue: () => {
     return {
       hidden: false,
+      video: {
+        members_only: false,
+      },
     }
   },
 })
