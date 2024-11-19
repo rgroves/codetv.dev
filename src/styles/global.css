@@ -62,6 +62,15 @@
 	font-display: swap;
 }
 
+@font-face {
+	font-display: swap;
+	font-family: 'monaspace-argon';
+	font-style: oblique 0deg 11deg;
+	font-weight: 200 800;
+	src: url('./fonts/MonaspaceArgonVarVF[wght,wdth,slnt].woff2')
+		format('woff2-variations');
+}
+
 * {
 	box-sizing: border-box;
 	margin: 0;
