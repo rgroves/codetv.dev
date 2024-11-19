@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/default.astro';
+import SeriesList from '../components/series-list.astro';
+import { getAllSeries } from '../util/sanity';
+
+export const prerender = true;
+
+const allSeries = await getAllSeries();
+---
+
+<Layout>
+	<main>
+		<SeriesList series={allSeries} />
+	</main>
+</Layout>
+
+<style>
+	main {
+		inline-size: min(90dvi, calc((300px + 2rem) * 4 - 2rem));
+		margin-block-start: 3rem;
+		margin-inline: auto;
+	}
+</style>
