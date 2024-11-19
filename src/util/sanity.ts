@@ -9,6 +9,7 @@ import type {
 	SeriesBySlugQueryResult,
 	SupportersQueryResult,
 	AllEpisodesQueryResult,
+	UpcomingEpisodeBySeriesQueryResult,
 } from '../types/sanity';
 import type { UploadApiResponse } from 'cloudinary';
 
@@ -17,6 +18,7 @@ const client = createClient({
 	dataset: 'develop',
 	apiVersion: '2024-08-10',
 	token: SANITY_SECRET_TOKEN,
+	perspective: 'published',
 	useCdn: true,
 });
 
@@ -37,7 +39,8 @@ const allSeriesQuery = groq`
       'episode_count': count(episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))])
     } | order(release_year desc),
     'total_episode_count': count(collections[]->episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))]),
-    'latestEpisodeDate': collections[]->episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))] | order(@->publish_date desc)[0]->publish_date
+    'latestEpisodeDate': collections[]->episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))] | order(@->publish_date desc)[0]->publish_date,
+    featured
   } | order(latestEpisodeDate desc)
 `;
 
@@ -64,7 +67,7 @@ const seriesBySlugQuery = groq`
       title,
       'slug': slug.current,
       release_year,
-      episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))]->{
+      episodes[@->hidden != true]->{
         title,
         'slug': slug.current,
         short_description,
@@ -76,7 +79,9 @@ const seriesBySlugQuery = groq`
           'height': video.thumbnail.height,
         },
         video {
-          youtube_id
+          youtube_id,
+          mux_video,
+          members_only
         }
       }
     },
@@ -160,6 +165,22 @@ const episodeBySlugQuery = groq`
       'slug': slug.current,
       title,
     },
+  }
+`;
+
+const upcomingEpisodeBySeriesQuery = groq`
+  *[ _type == "collection" && series->slug.current == $seriesSlug] {
+    title,
+    "schedule": episodes[dateTime(@->publish_date) > dateTime(now()) && !defined(@->video.youtube_id) && !defined(@->video.mux_video) && @->hidden != true]-> {
+      title,
+      "slug": slug.current,
+      short_description,
+      publish_date,
+      "thumbnail": {
+        "src": video.thumbnail.public_id,
+        "alt": video.thumbnail_alt,
+      }
+    }
   }
 `;
 
@@ -270,6 +291,21 @@ export async function getEpisodeBySlug(params: { episode: string }) {
 	}
 
 	return episode;
+}
+
+// TODO use this to build out a LWJ schedule
+export async function getUpcomingEpisodeBySeries(params: {
+	seriesSlug: string;
+}) {
+	const result = await client.fetch<UpcomingEpisodeBySeriesQueryResult>(
+		upcomingEpisodeBySeriesQuery,
+		params,
+		{
+			useCdn: true,
+		},
+	);
+
+	return result.at(0)?.schedule;
 }
 
 export async function getPersonById(

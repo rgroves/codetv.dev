@@ -29,6 +29,42 @@ if (episode.thumbnail.public_id) {
 	episodeImage = generateEpisodePoster();
 }
 
+// if there's a YouTube ID, it's public
+// if there's no YouTube ID and a Mux ID AND the video is marked public, it's public
+// if there's no YouTube ID and a Mux ID AND the video is marked members-only, it's members-only
+// if there's no YouTube ID or Mux ID, it's scheduled
+const date = new Date(episode.publish_date);
+const isPrerelease = date >= new Date();
+
+let episode_status = 'unknown';
+let status_text = '';
+if (episode.video.youtube_id) {
+	episode_status = 'public';
+} else if (!episode.video.youtube_id && episode.video.mux_video) {
+	if (!episode.video.members_only && !isPrerelease) {
+		episode_status = 'public';
+	}
+
+	if (!episode.video.members_only && isPrerelease) {
+		episode_status = 'members-first';
+		status_text = `Members only until ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+	}
+
+	if (episode.video.members_only) {
+		episode_status = 'members-only';
+		status_text = `Members only content`;
+	}
+} else if (
+	isPrerelease &&
+	!episode.video.youtube_id &&
+	!episode.video.mux_video
+) {
+	episode_status = 'scheduled';
+	status_text = `New episode coming ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+} else {
+	console.log(`Episode ${episode.slug} is in an unknown state`);
+}
+
 const MAX_DESC_LENGTH = 18;
 const desc_words = episode.short_description.split(' ');
 const description =
@@ -38,33 +74,35 @@ const description =
 			'&hellip;';
 ---
 
-<div class:list={['episode', className]}>
-	<a href={episodeUrl}>
-		<Image
-			src={episodeImage}
-			alt={episode.title}
-			width={340}
-			height={190}
-			placeholder="blurhash"
-		/>
-	</a>
-	<div class="info">
-		<div class="episode-meta">
-			<span class="episode-number">
-				{episodeNumber}
-			</span>
-			<span class="episode-date">
-				{format(episode.publish_date, 'MMM d, yyyy')}
-			</span>
-		</div>
-		<h2>
-			<a href={episodeUrl}>
-				{episode.title}
+{
+	['scheduled', 'public', 'members-first', 'members-only'].includes(
+		episode_status,
+	) ? (
+		<div class:list={['episode', className, episode_status]}>
+			<a href={episodeUrl} class="image-link" data-overlay-text={status_text}>
+				<Image
+					src={episodeImage}
+					alt={episode.title}
+					width={340}
+					height={190}
+					placeholder="blurhash"
+				/>
 			</a>
-		</h2>
-		<p set:html={description} />
-	</div>
-</div>
+			<div class="info">
+				<div class="episode-meta">
+					<span class="episode-number">{episodeNumber}</span>
+					<span class="episode-date">
+						{format(episode.publish_date, 'MMM d, yyyy')}
+					</span>
+				</div>
+				<h2>
+					<a href={episodeUrl}>{episode.title}</a>
+				</h2>
+				<p set:html={description} />
+			</div>
+		</div>
+	) : null
+}
 
 <style>
 	.episode,
@@ -128,6 +166,56 @@ const description =
 		& p {
 			font-size: 0.75rem;
 			line-height: 1.25;
+		}
+
+		&:is(.members-first, .members-only, .scheduled) {
+			.image-link {
+				--bg-color: var(--gray-000);
+				--transparency-amount: 85%;
+				position: relative;
+
+				&::before,
+				&::after {
+					background: color-mix(
+						in oklch,
+						var(--bg-color) var(--transparency-amount),
+						transparent
+					);
+					content: '';
+					display: block;
+					inset-inline: 0;
+					position: absolute;
+				}
+
+				&::after {
+					color: var(--text-strong);
+					content: attr(data-overlay-text);
+					font-family: jwf-bold;
+					font-size: 0.6rem;
+					inset-block-end: 0;
+					letter-spacing: 0.1em;
+					padding: 0.325rem 0;
+					text-align: center;
+					text-transform: uppercase;
+				}
+			}
+
+			&:is(.members-first, .members-only) .image-link {
+				--bg-color: var(--yellow-500);
+
+				&::before {
+					block-size: 0.875rem;
+					inset-block-start: 0;
+				}
+			}
+
+			&:is(.scheduled) .image-link {
+				&::before {
+					--transparency-amount: 60%;
+
+					inset: 0;
+				}
+			}
 		}
 	}
 
