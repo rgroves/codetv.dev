@@ -11,6 +11,7 @@ import { clerk } from './clerk';
 import type Stripe from 'stripe';
 import type { InvocationResult } from 'inngest/types';
 import { sendDiscordMessage } from './discord';
+import { purgeCache } from '@netlify/functions';
 
 type ClerkWebhookUser = {
 	data: {
@@ -49,6 +50,11 @@ type Events = {
 			stripeCustomerId: string;
 			subscriptionStatus: string;
 			productName: string;
+		};
+	};
+	'internal/netlify.cache-tag.invalidate': {
+		data: {
+			cacheTag: string;
 		};
 	};
 	'stripe/checkout.session.completed': {
@@ -142,6 +148,18 @@ export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 // 		// });
 // 	},
 // )
+
+const invalidateNetlifyProfileCacheTag = inngest.createFunction(
+	{ id: 'netlify/invalidate-cache-tag' },
+	{ event: 'internal/netlify.cache-tag.invalidate' },
+	async function ({ event, step }) {
+		return step.run('netlify/invalidate-cache-tag', async () => {
+			return purgeCache({
+				tags: [event.data.cacheTag],
+			});
+		});
+	},
+);
 
 const retrieveStripeSubscription = inngest.createFunction(
 	{ id: 'stripe/subscription.retrieve' },
@@ -280,7 +298,19 @@ export const handleStripeSubscriptionCompletedWebhook = inngest.createFunction(
 			});
 		});
 
-		await Promise.all([updateClerkUser, updateSanityUser, sendMessage]);
+		const purgeCache = await step.invoke('netlify/invalidate-cache-tag', {
+			function: invalidateNetlifyProfileCacheTag,
+			data: {
+				cacheTag: `profile-${user.slug?.current ?? ''}`,
+			},
+		});
+
+		await Promise.all([
+			updateClerkUser,
+			updateSanityUser,
+			sendMessage,
+			purgeCache,
+		]);
 	},
 );
 
@@ -356,6 +386,13 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 			},
 		);
 
+		const purgeCache = await step.invoke('netlify/invalidate-cache-tag', {
+			function: invalidateNetlifyProfileCacheTag,
+			data: {
+				cacheTag: `profile-${user.slug?.current ?? ''}`,
+			},
+		});
+
 		const sendMessage = step.run('discord-send-message', async () => {
 			const n = user.name;
 			const p = product.name;
@@ -367,7 +404,7 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 			});
 		});
 
-		await Promise.all([updateSanityPerson, sendMessage]);
+		await Promise.all([updateSanityPerson, sendMessage, purgeCache]);
 	},
 );
 
