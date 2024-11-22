@@ -1,4 +1,5 @@
 ---
+import { CacheHeaders } from 'cdn-cache-control';
 import { Image } from '@unpic/astro';
 import { marked } from 'marked';
 import Layout from '../../layouts/default.astro';
@@ -8,6 +9,17 @@ import { getPersonById } from '../../util/sanity';
 import EpisodePreview from '../../components/episode-preview.astro';
 
 const { username } = Astro.params;
+
+// cache profile pages for a day unless the tag gets invalidated
+const headers = new CacheHeaders()
+	.swr()
+	.ttl(86_400)
+	.tag(['profile', `profile-${username}`]);
+
+console.log(headers);
+headers.forEach((value, key) => {
+	Astro.response.headers.set(key, value);
+});
 
 const clerkUser = await getUserByUsername(username as string);
 if (!clerkUser || !clerkUser.id) {
