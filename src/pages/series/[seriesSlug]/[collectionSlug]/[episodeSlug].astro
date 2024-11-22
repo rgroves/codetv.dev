@@ -31,9 +31,11 @@ export async function getStaticPaths() {
 
 const { episodeSlug } = Astro.params;
 
+// TODO move into server island
 const user = await Astro.locals.currentUser();
 const status = await getSubscriptionStatus(user);
 
+// TODO move into getStaticPaths query
 const episode = await getEpisodeBySlug({ episode: episodeSlug! });
 const supporters = await getSupporters();
 
