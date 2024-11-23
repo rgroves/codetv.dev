@@ -6,6 +6,8 @@ import { getPersonById } from '../../util/sanity';
 import { getSubscriptionDetails, STRIPE_SUBSCRIPTION_TYPES } from '../../util/stripe';
 import Layout from '../../layouts/default.astro';
 
+export const prerender = false;
+
 const user = await Astro.locals.currentUser();
 
 if (!user) {
