@@ -84,7 +84,10 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 				>
 				<h1>{series.title}</h1>
 				<p>{series.description}</p>
-				<button class="play-episode button">Start watching</button>
+				<a
+					href={`/series/${series.slug}/${series.collection?.slug}/${series.collection?.episodes?.at(0)?.slug}`}
+					class="play-episode button">Start watching</a
+				>
 			</div>
 			<div class="sponsors">
 				{
