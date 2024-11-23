@@ -265,7 +265,6 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 
 			img {
 				block-size: 2.5rem;
-				inline-size: auto;
 				opacity: 80%;
 			}
 		}
@@ -283,9 +282,9 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 			position: relative;
 
 			/**
-		 * This is required to avoid a Chrome bug related to mix-blend-mode.
-		 * @see https://stackoverflow.com/a/69273410
-		 */
+		   * This is required to avoid a Chrome bug related to mix-blend-mode.
+		   * @see https://stackoverflow.com/a/69273410
+		   */
 			backdrop-filter: opacity(1);
 
 			&::before {
@@ -327,43 +326,16 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 			}
 
 			.series-info {
-				color: var(--gray-100);
-				font-family: jwf-light;
-				font-size: 0.875rem;
 				line-height: 1.25;
-				inline-size: 40ch;
+				max-inline-size: 40ch;
 
 				h1 {
-					color: var(--white);
 					font-size: 2rem;
-					line-height: 1.1;
-					padding-block: 0.5rem;
 				}
 			}
 
 			.sponsors {
-				align-items: center;
-				display: flex;
-				gap: 2.5rem;
-
-				h3 {
-					color: var(--gray-100);
-					font-family: jwf-medium;
-					font-size: 0.75rem;
-					text-transform: uppercase;
-				}
-			}
-
-			.sponsor-logos {
-				align-items: center;
-				display: flex;
-				gap: 2rem;
-
-				img {
-					block-size: 2.5rem;
-					inline-size: auto;
-					opacity: 80%;
-				}
+				justify-content: start;
 			}
 
 			> img {
