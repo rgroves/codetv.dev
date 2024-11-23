@@ -16,7 +16,6 @@ const headers = new CacheHeaders()
 	.ttl(86_400)
 	.tag(['profile', `profile-${username}`]);
 
-console.log(headers);
 headers.forEach((value, key) => {
 	Astro.response.headers.set(key, value);
 });
