@@ -53,6 +53,7 @@ if (video?.youtube_id) {
 			title={video.title ?? ''}
 			publish_date={video.publish_date}
 			thumbnail={video.thumbnail}
+			server:defer
 		/>
 	) : null
 }
