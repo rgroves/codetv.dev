@@ -8,6 +8,8 @@ import { createImageUrl } from '../../util/cloudinary';
 import { getPersonById } from '../../util/sanity';
 import EpisodePreview from '../../components/episode-preview.astro';
 
+export const prerender = false;
+
 const { username } = Astro.params;
 
 // cache profile pages for a day unless the tag gets invalidated
