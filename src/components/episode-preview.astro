@@ -63,6 +63,7 @@ if (episode.video.youtube_id) {
 	status_text = `New episode coming ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 } else {
 	console.log(`Episode ${episode.slug} is in an unknown state`);
+	console.log(episode);
 }
 
 const MAX_DESC_LENGTH = 18;
