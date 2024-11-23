@@ -1,6 +1,7 @@
 ---
 import { join } from 'node:path';
 import Mux from '@mux/mux-node';
+import { CacheHeaders } from 'cdn-cache-control';
 import {
 	MUX_TOKEN_ID,
 	MUX_TOKEN_SECRET,
@@ -62,6 +63,18 @@ if (isSubscriber && signedPlayback) {
 		expiration: '1d',
 	});
 }
+
+const headers = new CacheHeaders()
+	.swr()
+	.ttl(86_400)
+	.tag([
+		'video',
+		`video-${publicPlayback?.id}${signedPlayback?.id}-${user?.id}`,
+	]);
+
+headers.forEach((value, key) => {
+	Astro.response.headers.set(key, value);
+});
 
 let thumbnailSrc;
 
