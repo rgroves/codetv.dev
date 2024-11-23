@@ -146,7 +146,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 								return (
 									<li class="resource">
-										<a href={resource.url}>{label}</a>
+										<a href={resource.url}>{label.replace(/^https:\/\//, '')}</a>
 									</li>
 								);
 							})}
@@ -422,6 +422,15 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 			h2 {
 				margin-block: 1.5rem 0.5rem;
+			}
+		}
+
+		.resource {
+			a {
+				display: block;
+				max-inline-size: 90dvi;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 

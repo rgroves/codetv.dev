@@ -14,8 +14,9 @@ const { frontmatter } = Astro.props;
 
 <style>
 	.container {
-		inline-size: min(90dvi, 54ch);
+		max-inline-size: min(90dvi, 54ch);
 		margin: 5rem auto;
+		word-wrap: break-word;
 
 		:is(h1, h2, h3, h4, h5, h6) {
 			line-height: 1.1;
