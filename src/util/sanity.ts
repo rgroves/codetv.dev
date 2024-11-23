@@ -97,8 +97,65 @@ const allEpisodesQuery = groq`
   *[_type=="episode" && hidden != true] {
     title,
     'slug': slug.current,
-    'collection': *[_type=="collection" && references(^._id)][0].slug.current,
-    'series': *[_type=="collection" && references(^._id)][0].series->slug.current
+    description,
+    short_description,
+    publish_date,
+    'thumbnail': {
+      'public_id': video.thumbnail.public_id,
+      'width': video.thumbnail.width,
+      'height': video.thumbnail.height,
+      'alt': video.thumbnail_alt,
+    },
+    video {
+      youtube_id,
+      'mux': mux_video.asset->data.playback_ids,
+      'captions': captions.asset->url,
+      transcript,
+    },
+    people[]-> {
+      user_id,
+      name,
+      photo {
+        public_id
+      }
+    },
+    resources[] {
+      label,
+      url,
+    },
+    'sponsors': sponsors[]->{
+      title,
+      logo {
+        public_id,
+        width,
+        height
+      },
+      link,
+    },
+    'related_episodes': *[_type=="collection" && references(^._id)][0].episodes[@->hidden != true && (defined(@->video.youtube_id) || defined(@->video.mux_video))]-> {
+      title,
+      'slug': slug.current,
+      short_description,
+      publish_date,
+      'thumbnail': {
+        'public_id': video.thumbnail.public_id,
+        'width': video.thumbnail.width,
+        'height': video.thumbnail.height,
+        'alt': video.thumbnail_alt,
+      },
+      video {
+        youtube_id
+      }
+    },
+    'collection': *[_type=="collection" && references(^._id)][0] {
+      'slug': slug.current,
+      title,
+      'episodeSlugs': episodes[]->slug.current,
+    },
+    'series': *[_type=="collection" && references(^._id)][0].series->{
+      'slug': slug.current,
+      title,
+    },
   }
 `;
 
