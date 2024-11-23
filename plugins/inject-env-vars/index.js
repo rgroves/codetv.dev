@@ -11,8 +11,6 @@ export const onPreBuild = async function ({ inputs, utils }) {
 		'mux-video-player.astro',
 	);
 
-	console.log({ path });
-
 	const file = await readFile(path, { encoding: 'utf-8' });
 	const updated = file
 		.replace('MUX_JWT_PRIVATE_KEY,', '')
