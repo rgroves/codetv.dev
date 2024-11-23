@@ -5,10 +5,6 @@ const isProtectedPage = createRouteMatcher([
 ]);
 
 export const onRequest = clerkMiddleware((auth, context, next) => {
-	if (context.isPrerendered) {
-		return next();
-	}
-
 	if (isProtectedPage(context.request) && !auth().userId) {
 		return auth().redirectToSignIn();
 	}
