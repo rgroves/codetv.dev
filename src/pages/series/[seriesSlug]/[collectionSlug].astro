@@ -208,70 +208,36 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 
 <style define:vars={{ bg: `url(${seriesImage})` }}>
 	.header {
-		align-items: end;
-		aspect-ratio: 16 / 9;
-		display: flex;
-		inline-size: 100cqw;
-		justify-content: space-between;
-		max-block-size: min(60dvb, 720px);
-		overflow: hidden;
-		padding: 4rem max(calc((100cqw - 1024px) / 2), 5cqw);
-		position: relative;
+		background: var(--black);
+		display: grid;
+		gap: 1rem;
+		grid-template:
+			'image' 180px
+			'info'
+			'sponsors';
+		padding-block-end: 0.5rem;
 
-		/**
-		 * This is required to avoid a Chrome bug related to mix-blend-mode.
-		 * @see https://stackoverflow.com/a/69273410
-		 */
-		backdrop-filter: opacity(1);
-
-		&::before {
-			background-image: linear-gradient(
-					to bottom,
-					color-mix(in oklch, var(--gray-900), transparent) 0%,
-					color-mix(in oklch, var(--gray-900), transparent) 100%
-				),
-				var(--bg);
-			background-position: center;
-			background-size: 100%;
-			content: '';
-			filter: blur(1rem);
-			inset: -2rem;
-			position: absolute;
-			z-index: 1;
-		}
-
-		&::after {
-			background-image: linear-gradient(
-				10deg in oklch,
-				oklch(16.13% 0.08 291.17 / 0.95),
-				oklch(16.13% 0.08 291.17 / 0.95) 30%,
-				oklch(16.13% 0.08 291.17 / 0.75) 43%,
-				oklch(16.13% 0.08 291.17 / 0) 65%
-			);
-			mix-blend-mode: multiply;
-			content: '';
+		> img {
+			aspect-ratio: 16 / 9;
 			display: block;
-			inset: 0;
-			position: absolute;
-			z-index: 2;
+			grid-area: image;
+			object-fit: cover;
 		}
 
-		.series-info,
-		.sponsors {
-			position: relative;
-			z-index: 10;
+		:is(.series-info, .sponsors) {
+			padding: 0 1rem;
 		}
 
 		.series-info {
 			color: var(--gray-100);
 			font-family: jwf-light;
 			font-size: 0.875rem;
-			line-height: 1.25;
-			inline-size: 40ch;
+			grid-area: info;
+			line-height: 1.45;
 
 			h1 {
 				color: var(--white);
-				font-size: 2rem;
+				font-size: 1.5rem;
 				line-height: 1.1;
 				padding-block: 0.5rem;
 			}
@@ -280,7 +246,9 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 		.sponsors {
 			align-items: center;
 			display: flex;
-			gap: 2.5rem;
+			gap: 0.75rem;
+			grid-area: sponsors;
+			justify-content: center;
 
 			h3 {
 				color: var(--gray-100);
@@ -293,7 +261,7 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 		.sponsor-logos {
 			align-items: center;
 			display: flex;
-			gap: 2rem;
+			gap: 1rem;
 
 			img {
 				block-size: 2.5rem;
@@ -302,16 +270,112 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 			}
 		}
 
-		> img {
-			box-shadow: 0 0 5rem color-mix(in oklch, var(--gray-900) 75%, transparent);
-			block-size: 100%;
-			inline-size: 100%;
-			display: block;
-			inset: 0;
-			margin-inline: auto;
-			object-fit: cover;
-			position: absolute;
-			z-index: 1;
+		@media (min-width: 720px) {
+			align-items: end;
+			aspect-ratio: 16 / 9;
+			display: flex;
+			inline-size: 100cqw;
+			justify-content: space-between;
+			max-block-size: min(60dvb, 720px);
+			min-block-size: 600px;
+			overflow: hidden;
+			padding: 4rem max(calc((100cqw - 1024px) / 2), 5cqw);
+			position: relative;
+
+			/**
+		 * This is required to avoid a Chrome bug related to mix-blend-mode.
+		 * @see https://stackoverflow.com/a/69273410
+		 */
+			backdrop-filter: opacity(1);
+
+			&::before {
+				background-image: linear-gradient(
+						to bottom,
+						color-mix(in oklch, var(--gray-900), transparent) 0%,
+						color-mix(in oklch, var(--gray-900), transparent) 100%
+					),
+					var(--bg);
+				background-position: center;
+				background-size: 100%;
+				content: '';
+				filter: blur(1rem);
+				inset: -2rem;
+				position: absolute;
+				z-index: 1;
+			}
+
+			&::after {
+				background-image: linear-gradient(
+					10deg in oklch,
+					oklch(16.13% 0.08 291.17 / 0.95),
+					oklch(16.13% 0.08 291.17 / 0.95) 30%,
+					oklch(16.13% 0.08 291.17 / 0.75) 43%,
+					oklch(16.13% 0.08 291.17 / 0) 65%
+				);
+				mix-blend-mode: multiply;
+				content: '';
+				display: block;
+				inset: 0;
+				position: absolute;
+				z-index: 2;
+			}
+
+			:is(.series-info, .sponsors) {
+				padding: 0;
+				position: relative;
+				z-index: 10;
+			}
+
+			.series-info {
+				color: var(--gray-100);
+				font-family: jwf-light;
+				font-size: 0.875rem;
+				line-height: 1.25;
+				inline-size: 40ch;
+
+				h1 {
+					color: var(--white);
+					font-size: 2rem;
+					line-height: 1.1;
+					padding-block: 0.5rem;
+				}
+			}
+
+			.sponsors {
+				align-items: center;
+				display: flex;
+				gap: 2.5rem;
+
+				h3 {
+					color: var(--gray-100);
+					font-family: jwf-medium;
+					font-size: 0.75rem;
+					text-transform: uppercase;
+				}
+			}
+
+			.sponsor-logos {
+				align-items: center;
+				display: flex;
+				gap: 2rem;
+
+				img {
+					block-size: 2.5rem;
+					inline-size: auto;
+					opacity: 80%;
+				}
+			}
+
+			> img {
+				box-shadow: 0 0 5rem
+					color-mix(in oklch, var(--gray-900) 75%, transparent);
+				display: block;
+				inset: 0;
+				inset-block-start: auto;
+				margin-inline: auto;
+				position: absolute;
+				z-index: 1;
+			}
 		}
 	}
 
