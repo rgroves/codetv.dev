@@ -1,7 +1,6 @@
 ---
 import { actions } from 'astro:actions';
-import { SignOutButton } from '@clerk/astro/components'
-// import { getSubscriberByEmail } from '../../util/convertkit';
+import { SignOutButton } from '@clerk/astro/components';
 import { getPersonById } from '../../util/sanity';
 import { getSubscriptionDetails, STRIPE_SUBSCRIPTION_TYPES } from '../../util/stripe';
 import Layout from '../../layouts/default.astro';
@@ -15,7 +14,6 @@ if (!user) {
 }
 
 const stripeSub = await getSubscriptionDetails(user);
-// const newsletterSubscription = user.primaryEmailAddress ? await getSubscriberByEmail(user.primaryEmailAddress.emailAddress) : null;
 const	userDetails = await getPersonById({ user_id: user.id }, { useCdn: false });
 
 if (!userDetails) {
@@ -31,13 +29,18 @@ const isSubscriber = subscription?.status === 'active';
 	<main>
 		{user ? (
 			<section class="user-info">
-				<img src={user.imageUrl} alt=`${user.firstName} ${user.lastName}` width="200" height="200" />
-				<h1 class="name">{user.firstName} {user.lastName}</h1>
+				<img src={user.imageUrl} alt={`${user.firstName} ${user.lastName}`} width="200" height="200" />
+				<h1 class="name">
+					{user.firstName} {user.lastName}
+					<span class="view-profile">
+						(<a href={`/profile/${user.username}`} class="view-profile">view profile</a>)
+					</span>
+				</h1>
 
 				<>
 					{isSubscriber ? (
 						<p class="level">{subscription.level}</p>
-						<p class="start-date">Supporter since {new Intl.DateTimeFormat('en-US', { dateStyle: 'medium'}).format(new Date((stripeSub?.start_date ?? Date.now()) * 1000))}</p>
+						<p class="start-date">Supporter since {new Intl.DateTimeFormat('en-US', { dateStyle: 'medium'}).format(new Date((stripeSub?.start_date ?? Date.now() / 1000) * 1000))}</p>
 
 						<>
 							{stripeSub?.cancel_at_period_end && stripeSub.cancel_at ? (
@@ -55,7 +58,7 @@ const isSubscriber = subscription?.status === 'active';
 						</form>
 					) : null}
 
-					<a href={`/profile/${user.username}`} class="view-profile">View Your Public Profile</a>
+					<a href="https://accounts.learnwithjason.dev/user" class="update-profile">Update Avatar, Username, etc.</a>
 
 					<SignOutButton />
 				</>
@@ -147,16 +150,6 @@ const isSubscriber = subscription?.status === 'active';
 
 					<button type="submit">Update Profile</button>
 				</form>
-
-				{/* <form method="post" action="/api/newsletter">
-					<legend>Newsletter</legend>
-					<label>
-						<input type="checkbox" checked={newsletterSubscription.state === 'active'} />
-						<span>Get new episodes, blog posts, events, and more delivered directly to your inbox</span>
-					</label>
-
-					<button type="submit">Update Preferences</button>
-				</form> */}
 			</section>
 		) : (
 			<section class="details">
@@ -185,12 +178,12 @@ const isSubscriber = subscription?.status === 'active';
 
 <script>
 	// handle removing links
-	const removeLinkBtns = document.querySelectorAll('.remove-link');
-
 	function addRemoveHandlers() {
+		const removeLinkBtns = document.querySelectorAll('.remove-link');
 		removeLinkBtns.forEach((btn) => {
 			function removeParent(event: Event) {
 				event.preventDefault();
+				event.stopImmediatePropagation();
 				btn.parentElement?.remove();
 			}
 
@@ -231,7 +224,7 @@ const isSubscriber = subscription?.status === 'active';
 
 	.user-info {
 		aspect-ratio: 1;
-		inline-size: 200px;
+		inline-size: 250px;
 		margin-block-end: 4rem;
 		margin-inline: auto;
 		img {
@@ -240,6 +233,11 @@ const isSubscriber = subscription?.status === 'active';
 			border-radius: 50%;
 			display: block;
 			inline-size: 100%;
+		}
+
+		.view-profile {
+			font-size: 0.625rem;
+			font-family: jwf-book;
 		}
 
 		.name,
@@ -282,12 +280,13 @@ const isSubscriber = subscription?.status === 'active';
 		}
 	}
 
-	.view-profile,
+	.update-profile,
 	button {
 		background: var(--white);
 		border: 1px solid var(--gray-400);
 		border-radius: 0.125rem;
 		color: var(--gray-400);
+		cursor: pointer;
 		display: block;
 		font-family: jwf-book;
 		font-size: 0.625rem;
