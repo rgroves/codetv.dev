@@ -5,12 +5,13 @@ WIP.
 TODO:
 
 - [x] fix newsletter subscription
+- [ ] fix RSS feed imports
 - [ ] Update LWJ episodes
 - [ ] Finish importing _Web Dev Challenge_
 - [ ] hook up Algolia to the v2 site data
 - [ ] Add schedule
 - [ ] generate redirects for all v1 site pages that changed location
-- [ ] fix block-level links in resources on episodes
+- [x] fix block-level links in resources on episodes
 - [ ] footer blurb written
 
 Lower priority:
