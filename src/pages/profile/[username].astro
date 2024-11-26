@@ -5,7 +5,7 @@ import { marked } from 'marked';
 import Layout from '../../layouts/default.astro';
 import { getUserByUsername } from '../../util/clerk';
 import { createImageUrl } from '../../util/cloudinary';
-import { getPersonById } from '../../util/sanity';
+import { getPersonBySlug } from '../../util/sanity';
 import EpisodePreview from '../../components/episode-preview.astro';
 
 export const prerender = false;
@@ -22,12 +22,10 @@ headers.forEach((value, key) => {
 	Astro.response.headers.set(key, value);
 });
 
-const clerkUser = await getUserByUsername(username as string);
-if (!clerkUser || !clerkUser.id) {
-	throw new Error('no user found');
-}
-
-const person = await getPersonById({ user_id: clerkUser.id });
+const [clerkUser, person] = await Promise.all([
+	getUserByUsername(username as string),
+	getPersonBySlug({ slug: username as string }),
+]);
 
 if (!person) {
 	throw new Error('no person with this username');
@@ -40,9 +38,13 @@ const imgUrl = person.photo?.public_id
 			crop: 'thumb',
 			gravity: 'face',
 		})
-	: clerkUser.imageUrl;
+	: (clerkUser?.imageUrl ??
+		'https://res.cloudinary.com/jlengstorf/image/upload/f_auto/q_auto/w_150/v1732599682/lwj/v2/lwj-heart.png');
 
-const subscription = clerkUser.publicMetadata.stripe;
+const subscription = clerkUser?.publicMetadata.stripe ?? {
+	status: 'inactive',
+	level: 'none',
+};
 const isSubscriber = subscription?.status === 'active';
 
 const bio = marked.parse(person.bio ?? '');
@@ -62,7 +64,7 @@ const bio = marked.parse(person.bio ?? '');
 		</div>
 		<div class="details">
 			<h1>
-				{person.name} (@{clerkUser.username})
+				{person.name} (@{username})
 			</h1>
 			{isSubscriber ? <p class="level">{subscription.level}</p> : null}
 
@@ -85,7 +87,7 @@ const bio = marked.parse(person.bio ?? '');
 						<h2>Episodes featuring {person.name}</h2>
 
 						<div class="more-episodes">
-							{person.episodes.map((related, index) => {
+							{person.episodes.map((related) => {
 								const epIndex =
 									related.collection?.episodeSlugs?.findIndex(
 										(slug) => slug === related.slug,

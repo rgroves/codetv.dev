@@ -10,6 +10,7 @@ import type {
 	SupportersQueryResult,
 	AllEpisodesQueryResult,
 	UpcomingEpisodeBySeriesQueryResult,
+	PersonBySlugQueryResult,
 } from '../types/sanity';
 import type { UploadApiResponse } from 'cloudinary';
 
@@ -115,6 +116,7 @@ const allEpisodesQuery = groq`
     people[]-> {
       user_id,
       name,
+      "slug": slug.current,
       photo {
         public_id
       }
@@ -181,6 +183,7 @@ const episodeBySlugQuery = groq`
     people[]-> {
       user_id,
       name,
+      "slug": slug.current,
       photo {
         public_id
       }
@@ -245,6 +248,45 @@ const personByIdQuery = groq`
   *[_type == "person" && user_id == $user_id][0] {
     _id,
     name,
+    photo {
+      public_id,
+      height,
+      width,
+    },
+    bio,
+    links[],
+    user_id,
+    "episodes": *[_type == "episode" && hidden!=true && references(^._id) && (defined(@->video.youtube_id) || defined(@->video.mux_video))] {
+      title,
+      'slug': slug.current,
+      short_description,
+      publish_date,
+      'thumbnail': {
+        'public_id': video.thumbnail.public_id,
+        'alt': video.thumbnail_alt,
+        'width': video.thumbnail.width,
+        'height': video.thumbnail.height,
+      },
+      video {
+        youtube_id,
+      },
+      'collection': *[_type=="collection" && references(^._id)][0] {
+        'slug': slug.current,
+        title,
+        'episodeSlugs': episodes[]->slug.current,
+      },
+      'series': *[_type=="collection" && references(^._id)][0].series->{
+        'slug': slug.current,
+        title,
+      },
+    } | order(publish_date desc)[0...4]
+  }
+`;
+const personBySlugQuery = groq`
+  *[_type == "person" && slug.current == $slug][0] {
+    _id,
+    name,
+    "slug": slug.current,
     photo {
       public_id,
       height,
@@ -374,6 +416,15 @@ export async function getPersonById(
 	});
 }
 
+export async function getPersonBySlug(
+	params: { slug: string },
+	options?: { useCdn: boolean },
+) {
+	return client.fetch<PersonBySlugQueryResult>(personBySlugQuery, params, {
+		useCdn: options?.useCdn ?? true,
+	});
+}
+
 export async function getPersonByClerkId(
 	params: { user_id: string },
 	options?: { useCdn: boolean },
@@ -445,7 +496,7 @@ export async function updatePersonFromClerk(
 export async function updatePerson(
 	id: string,
 	set: {
-		name: string;
+		// name: string;
 		bio: string;
 		links: Array<{ label: string; url: string }>;
 	},
