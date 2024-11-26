@@ -1,6 +1,5 @@
 ---
 import { CacheHeaders } from 'cdn-cache-control';
-import { loadUsersByIDs } from '../util/clerk';
 import { createImageUrl } from '../util/cloudinary';
 
 export const prerender = false;
@@ -9,6 +8,7 @@ export interface Props {
 	people: {
 		user_id: string | null;
 		name: string | null;
+		slug: string | null;
 		photo: { public_id: string | null } | null;
 	}[];
 }
@@ -18,13 +18,10 @@ const { people = [] } = Astro.props;
 const userIds = people
 	.map((p) => p.user_id)
 	.filter((p) => typeof p === 'string');
-const clerkUsers = await loadUsersByIDs(userIds);
 const peopleWithUsername = people.map((person) => {
-	const user = clerkUsers.find((u) => u.id === person.user_id);
-
 	return {
 		...person,
-		username: user?.username,
+		username: person.slug,
 	};
 });
 
