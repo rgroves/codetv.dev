@@ -41,6 +41,11 @@ const oldEpisodesQuery = groq`
 	} | order(date asc)[$startIndex...$endIndex]
 `;
 
+// collection: ID of the current collection
+// mode=append mode adds documents to the collection
+// mode=replace empties the collection and starts fresh
+// http://localhost:4321/api/migrate?collection=XXX&mode=append|replace&year=YYYY&page=N
+
 export const GET: APIRoute = async ({ request }) => {
 	const url = new URL(request.url);
 
@@ -247,6 +252,8 @@ export const GET: APIRoute = async ({ request }) => {
 			}).catch((error) => {
 				console.log(error);
 			});
+
+			console.log({ clerkUser });
 
 			if (!clerkUser?.id) {
 				console.log({
