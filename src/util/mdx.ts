@@ -41,7 +41,7 @@ const loadAstroAsJsx = {
 					break;
 
 				case 'opt-in-form.astro':
-					contents = `export function OptInForm() { return <p><a href="https://lwj.dev/newsletter">Subscribe to my newsletter for more like this!</a></p>; }`;
+					contents = `export default function OptInForm() { return <p><a href="https://lwj.dev/newsletter">Subscribe to my newsletter for more like this!</a></p>; }`;
 					break;
 
 				default:
