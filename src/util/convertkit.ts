@@ -22,17 +22,19 @@ export async function addSubscriber(first_name: string, email: string) {
 
 	if (!response.ok) {
 		console.error(response);
+		console.log('Error creating a subscriber');
 		throw new Error('Error creating a subscriber');
 	}
 
 	const data = await response.json();
 
-	if (!data.subscriber || !data.subscriber.id) {
+	if (!data.subscription || !data.subscription.id) {
 		console.error(data);
+		console.error('Failed to create subscriber.');
 		throw new Error('Failed to create subscriber.');
 	}
 
-	return data.subscriber;
+	return data.subscription;
 }
 
 export async function getSubscriberByEmail(email: string) {
