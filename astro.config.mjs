@@ -25,6 +25,10 @@ export default defineConfig({
 	adapter: netlify(),
 	env: {
 		schema: {
+			NETLIFY_PERSONAL_ACCESS_TOKEN: envField.string({
+				access: 'secret',
+				context: 'server',
+			}),
 			PUBLIC_CLERK_PUBLISHABLE_KEY: envField.string({
 				access: 'public',
 				context: 'client',

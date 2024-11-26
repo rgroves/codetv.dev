@@ -1,7 +1,7 @@
 import { defineAction } from 'astro:actions';
 import { z } from 'astro:content';
-import { updatePerson } from '../util/sanity';
 import { addSubscriber } from '../util/convertkit';
+import { inngest } from '../util/inngest';
 
 export const server = {
 	user: {
@@ -9,31 +9,36 @@ export const server = {
 			accept: 'form',
 			input: z.object({
 				id: z.string(),
-				display_name: z.string(),
+				username: z.string(),
 				bio: z.string().optional(),
 				'link_label[]': z.array(z.string()),
 				'link_url[]': z.array(z.string()),
 			}),
 			handler: async (input) => {
-				const { id, display_name, bio } = input;
+				const { id, username, bio = '' } = input;
 				const link_labels = input['link_label[]'];
 				const link_urls = input['link_url[]'];
+				const links = link_urls
+					.map((url, i) => {
+						if (!url) {
+							return false;
+						}
 
-				const result = await updatePerson(id.toString(), {
-					name: display_name,
-					bio: bio ?? '',
-					links: link_urls
-						.map((url, i) => {
-							if (!url) {
-								return false;
-							}
+						return {
+							label: link_labels.at(i) ?? '',
+							url,
+						};
+					})
+					.filter((val) => val !== false);
 
-							return {
-								label: link_labels.at(i) ?? '',
-								url,
-							};
-						})
-						.filter((val) => val !== false),
+				const result = await inngest.send({
+					name: 'lwj/user.profile.update',
+					data: {
+						id: id.toString(),
+						username,
+						bio,
+						links,
+					},
 				});
 
 				return result;

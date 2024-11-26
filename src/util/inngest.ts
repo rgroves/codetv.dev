@@ -1,17 +1,20 @@
+import { purgeCache } from '@netlify/functions';
+import { NETLIFY_PERSONAL_ACCESS_TOKEN } from 'astro:env/server';
 import { Inngest, EventSchemas, NonRetriableError } from 'inngest';
+import type { InvocationResult } from 'inngest/types';
+import type Stripe from 'stripe';
+
 import {
 	createPerson,
 	getPersonByClerkId,
+	updatePerson,
 	updatePersonFromClerk,
 	updatePersonSubscription,
 } from './sanity';
 import { cloudinary } from './cloudinary';
 import { stripe } from './stripe';
 import { clerk } from './clerk';
-import type Stripe from 'stripe';
-import type { InvocationResult } from 'inngest/types';
 import { sendDiscordMessage } from './discord';
-import { purgeCache } from '@netlify/functions';
 
 type ClerkWebhookUser = {
 	data: {
@@ -80,6 +83,14 @@ type Events = {
 			object: {
 				id: string;
 			};
+		};
+	};
+	'lwj/user.profile.update': {
+		data: {
+			id: string;
+			username: string;
+			bio: string;
+			links: Array<{ label: string; url: string }>;
 		};
 	};
 };
@@ -155,7 +166,9 @@ const invalidateNetlifyProfileCacheTag = inngest.createFunction(
 	async function ({ event, step }) {
 		return step.run('netlify/invalidate-cache-tag', async () => {
 			return purgeCache({
+				siteID: '38f74995-47a6-4a22-9cd6-6ccc0ba17d4e',
 				tags: [event.data.cacheTag],
+				token: NETLIFY_PERSONAL_ACCESS_TOKEN,
 			});
 		});
 	},
@@ -215,6 +228,29 @@ const updateSanityPersonSubscription = inngest.createFunction(
 				date: new Date(),
 			});
 		});
+	},
+);
+
+const handleUpdateUserProfile = inngest.createFunction(
+	{ id: 'lwj/user.profile.update' },
+	{ event: 'lwj/user.profile.update' },
+	async function ({ event, step }) {
+		const { id, username, bio, links } = event.data;
+
+		// send update to Sanity
+		const updateSanityUser = step.run('sanity/update-user', async () => {
+			return updatePerson(id, { bio, links });
+		});
+
+		// invalidate Netlify cache
+		const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
+			function: invalidateNetlifyProfileCacheTag,
+			data: {
+				cacheTag: `profile-${username ?? ''}`,
+			},
+		});
+
+		await Promise.all([updateSanityUser, purgeCache]);
 	},
 );
 
@@ -298,7 +334,7 @@ export const handleStripeSubscriptionCompletedWebhook = inngest.createFunction(
 			});
 		});
 
-		const purgeCache = await step.invoke('netlify/invalidate-cache-tag', {
+		const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
 			function: invalidateNetlifyProfileCacheTag,
 			data: {
 				cacheTag: `profile-${user.slug?.current ?? ''}`,
@@ -386,7 +422,7 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 			},
 		);
 
-		const purgeCache = await step.invoke('netlify/invalidate-cache-tag', {
+		const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
 			function: invalidateNetlifyProfileCacheTag,
 			data: {
 				cacheTag: `profile-${user.slug?.current ?? ''}`,
@@ -416,4 +452,6 @@ export const functions = [
 	retrieveStripeProduct,
 	updateClerkUserSubscription,
 	updateSanityPersonSubscription,
+	invalidateNetlifyProfileCacheTag,
+	handleUpdateUserProfile,
 ];
