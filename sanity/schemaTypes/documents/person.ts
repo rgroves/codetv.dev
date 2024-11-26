@@ -77,7 +77,7 @@ export const person = defineType({
       title: 'Clerk User ID',
       name: 'user_id',
       type: 'string',
-      validation: (rule) => rule.required(),
+      // validation: (rule) => rule.required(),
       // readOnly: true,
     }),
   ],
