@@ -147,7 +147,7 @@ export function Search() {
 								queries: [
 									{
 										indexName:
-											'netlify_c55763f8-efc8-4ed9-841a-186a011ed84b_main_all',
+											'netlify_38f74995-47a6-4a22-9cd6-6ccc0ba17d4e_main_all',
 										query,
 										params: {
 											hitsPerPage: 12,
