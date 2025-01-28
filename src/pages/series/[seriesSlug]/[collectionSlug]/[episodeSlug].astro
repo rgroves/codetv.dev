@@ -89,17 +89,23 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		) : null}
 	</Fragment>
 
-	<VideoPlayer
-		video={{
-			...episode.video,
-			thumbnail: episode.thumbnail,
-			title: episode.title,
-			publish_date: episode.publish_date,
-		}}
-		server:defer
-	>
-		<div class="video-player-placeholder" slot="fallback" />
-	</VideoPlayer>
+	{(episode.video?.youtube_id || episode.video?.mux_video) ? (
+		<VideoPlayer
+			video={{
+				...episode.video,
+				thumbnail: episode.thumbnail,
+				title: episode.title,
+				publish_date: episode.publish_date,
+			}}
+			server:defer
+		>
+			<div class="video-player-placeholder" slot="fallback" />
+		</VideoPlayer>
+	) : (
+		<div class="thumbnail">
+			<Image src={thumbnail as string} alt={episode.title} />
+		</div>
+	)}
 
 	<div class="wrapper">
 		<section class="header">
@@ -116,7 +122,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 						{episodeNumber}
 					</span>
 					<span class="episode-date">
-						{format(episode.publish_date!, 'MMM d, yyyy')}
+						{new Date(episode.publish_date) > new Date() ? `Coming ${format(episode.publish_date, 'eeee, MMM d')}` : format(episode.publish_date!, 'MMM d, yyyy')}
 					</span>
 				</div>
 			</div>
@@ -281,6 +287,8 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 	<style>
 		.wrapper {
+			margin-inline: auto;
+			max-inline-size: 1440px;
 			padding: 1rem 5cqw 4rem;
 
 			@media (min-width: 750px) {
@@ -296,6 +304,14 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 			background: var(--gray-100);
 			block-size: auto;
 			inline-size: 100dvi;
+		}
+
+		.thumbnail {
+			img {
+				aspect-ratio: 16 / 7;
+				display: block;
+				object-fit: cover;
+			}
 		}
 
 		.header {

@@ -3,7 +3,11 @@ import { format } from 'date-fns';
 import { Image } from '@unpic/astro';
 import Layout from '../../../layouts/default.astro';
 import EpisodePreview from '../../../components/episode-preview.astro';
-import { getAllSeries, getSeriesBySlug } from '../../../util/sanity';
+import {
+	getAllSeries,
+	getSeriesBySlug,
+	getUpcomingEpisodeBySeries,
+} from '../../../util/sanity';
 import { createImageUrl } from '../../../util/cloudinary';
 
 export const prerender = true;

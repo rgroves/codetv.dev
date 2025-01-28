@@ -722,6 +722,16 @@ export type SupportersQueryResult = Array<{
   } | null;
 }>;
 
+// Source: ../src/pages/api/sanity/generate-redirects.ts
+// Variable: getEpisodeSlugQuery
+// Query: *[_type == "collection" && series->slug.current == "learn-with-jason"] {    "newSlugBase": "/series/" + series->slug.current + "/" + slug.current,      episodes[]-> {        "oldSlug": "/" + slug.current      }  }
+export type GetEpisodeSlugQueryResult = Array<{
+  newSlugBase: string | null;
+  episodes: Array<{
+    oldSlug: string | null;
+  }> | null;
+}>;
+
 // Source: ../src/pages/api/sanity/migrate.ts
 // Variable: oldEpisodesQuery
 // Query: *[_type == "episode" && date > $startDate && date < $endDate]{		...,		host->{				...,				guestImage{asset->},		},		guest[]->{				...,				guestImage{asset->},		},		episodeTags[],	} | order(date asc)[$startIndex...$endIndex]
@@ -792,6 +802,7 @@ declare module "@sanity/client" {
     "\n  *[_type == \"person\" && slug.current == $slug][0] {\n    _id,\n    name,\n    \"slug\": slug.current,\n    photo {\n      public_id,\n      height,\n      width,\n    },\n    bio,\n    links[],\n    user_id,\n    \"episodes\": *[_type == \"episode\" && hidden!=true && references(^._id) && (defined(@->video.youtube_id) || defined(@->video.mux_video))] {\n      title,\n      'slug': slug.current,\n      short_description,\n      publish_date,\n      'thumbnail': {\n        'public_id': video.thumbnail.public_id,\n        'alt': video.thumbnail_alt,\n        'width': video.thumbnail.width,\n        'height': video.thumbnail.height,\n      },\n      video {\n        youtube_id,\n      },\n      'collection': *[_type==\"collection\" && references(^._id)][0] {\n        'slug': slug.current,\n        title,\n        'episodeSlugs': episodes[]->slug.current,\n      },\n      'series': *[_type==\"collection\" && references(^._id)][0].series->{\n        'slug': slug.current,\n        title,\n      },\n    } | order(publish_date desc)[0...4]\n  }\n": PersonBySlugQueryResult;
     "\n  *[_type == \"person\" && user_id == $user_id][0] {\n    _id,\n    name,\n    slug,\n    user_id,\n  }\n": PersonByClerkIdQueryResult;
     "\n  *[_type == \"person\" && subscription.status == \"active\"] {\n    _id,\n    name,\n    photo {\n      public_id,\n      height,\n      width,\n    },\n    'username': slug.current,\n    subscription {\n      level,\n      status\n    }\n  } | score(\n    boost(subscription.level match \"Platinum\", 3),\n    boost(subscription.level match \"Gold\", 2),\n    boost(subscription.level match \"Silver\", 1),\n  ) | order(_score desc)\n": SupportersQueryResult;
+    "\n  *[_type == \"collection\" && series->slug.current == \"learn-with-jason\"] {\n    \"newSlugBase\": \"/series/\" + series->slug.current + \"/\" + slug.current,\n      episodes[]-> {\n        \"oldSlug\": \"/\" + slug.current\n      }\n  }\n": GetEpisodeSlugQueryResult;
     "\n\t*[_type == \"episode\" && date > $startDate && date < $endDate]{\n\t\t...,\n\t\thost->{\n\t\t\t\t...,\n\t\t\t\tguestImage{asset->},\n\t\t},\n\t\tguest[]->{\n\t\t\t\t...,\n\t\t\t\tguestImage{asset->},\n\t\t},\n\t\tepisodeTags[],\n\t} | order(date asc)[$startIndex...$endIndex]\n": OldEpisodesQueryResult;
   }
 }

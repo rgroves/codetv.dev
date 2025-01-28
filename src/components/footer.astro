@@ -5,8 +5,14 @@ import Search from './search/search.astro';
 <footer>
 	<div class="mini-bio">
 		<p>
-			TODO: write a couple sentences here. Write a couple sentences here. Write
-			a couple sentences here. Write a couple sentences here.
+			CodeTV is a place for developers to watch programming designed for them.
+			Watch original shows featuring professional developers across all skill
+			levels and career paths.
+		</p>
+		<p>
+			Our mission is to remind developers everywhere that learning, building,
+			and growing a technical skill set can be fun — and it's even more fun if
+			you're doing it with friends.
 		</p>
 	</div>
 
@@ -40,6 +46,12 @@ import Search from './search/search.astro';
 		@media (min-width: 800px) {
 			display: grid;
 			grid-template-columns: min(90dvi, 400px) auto max-content;
+		}
+
+		.mini-bio {
+			p + p {
+				margin-block-start: 1rem;
+			}
 		}
 
 		.middle {
