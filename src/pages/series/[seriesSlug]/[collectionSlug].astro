@@ -3,11 +3,7 @@ import { format } from 'date-fns';
 import { Image } from '@unpic/astro';
 import Layout from '../../../layouts/default.astro';
 import EpisodePreview from '../../../components/episode-preview.astro';
-import {
-	getAllSeries,
-	getSeriesBySlug,
-	getUpcomingEpisodeBySeries,
-} from '../../../util/sanity';
+import { getAllSeries, getSeriesBySlug } from '../../../util/sanity';
 import { createImageUrl } from '../../../util/cloudinary';
 
 export const prerender = true;
@@ -234,8 +230,8 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 
 		.series-info {
 			color: var(--gray-100);
-			font-family: jwf-light;
 			font-size: 0.875rem;
+			font-weight: 200;
 			grid-area: info;
 			line-height: 1.45;
 
@@ -256,8 +252,8 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 
 			h3 {
 				color: var(--gray-100);
-				font-family: jwf-medium;
 				font-size: 0.75rem;
+				font-weight: 600;
 				text-transform: uppercase;
 			}
 		}
@@ -366,14 +362,14 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 
 	.collection-info {
 		display: flex;
-		font-family: jwf-light;
+		font-weight: 200;
 		gap: 1rem;
 
 		& select {
 			background: var(--white);
 			border: none;
-			font-family: jwf-medium, system-ui, sans-serif;
 			font-size: 1rem;
+			font-weight: 500;
 		}
 	}
 

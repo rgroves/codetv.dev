@@ -144,8 +144,9 @@ const description =
 		}
 
 		& h2 {
-			font-family: jwf-medium;
+			font-family: var(--font-family);
 			font-size: 0.875rem;
+			font-weight: 600;
 			line-height: 1.1;
 			margin-block: 0.25rem;
 
@@ -191,8 +192,8 @@ const description =
 				&::after {
 					color: var(--text-strong);
 					content: attr(data-overlay-text);
-					font-family: jwf-bold;
 					font-size: 0.6rem;
+					font-weight: 800;
 					inset-block-end: 0;
 					letter-spacing: 0.1em;
 					padding: 0.325rem 0;
@@ -223,14 +224,14 @@ const description =
 	.episode-meta {
 		display: flex;
 		flex-wrap: wrap;
-		font-family: jwf-light;
 		font-size: 0.75rem;
+		font-weight: 200;
 		gap: 0.5rem;
 		margin-block-start: 0.25rem;
 	}
 
 	.episode-number {
-		font-family: jwf-medium;
+		font-weight: 600;
 		text-transform: uppercase;
 	}
 

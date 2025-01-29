@@ -324,7 +324,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 		.episode-details {
 			& h1 {
-				font-family: jwf-medium;
+				font-weight: 500;
 				font-size: 1.5rem;
 				line-height: 1.1;
 				margin-block: 0.25rem 0.5rem;
@@ -354,8 +354,8 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 				input {
 					display: block;
-					font-family: jwf-book;
 					font-size: 16px;
+					font-weight: 400;
 					inline-size: 300px;
 				}
 			}
@@ -366,6 +366,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 				block-size: min-content;
 				color: var(--black);
 				font-size: 0.875rem;
+				font-weight: 600;
 				margin: 0;
 				text-decoration: none;
 			}
@@ -377,15 +378,15 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 		.episode-meta {
 			display: flex;
-			font-family: jwf-light;
 			font-size: 0.75rem;
+			font-weight: 200;
 			gap: 0.5rem;
 			margin-block: 0.25rem;
 		}
 
 		.season-link {
 			color: var(--text-strong);
-			font-family: jwf-medium;
+			font-weight: 600;
 			text-decoration: none;
 
 			&:is(:focus, :hover, :active) {
@@ -394,15 +395,15 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		}
 
 		.episode-number {
-			font-family: jwf-medium;
+			font-weight: 600;
 			text-transform: uppercase;
 		}
 
 		section,
 		.description {
 			h2 {
-				font-family: jwf-book;
 				font-size: 0.875rem;
+				font-weight: 400;
 				line-height: 1.1;
 				margin-block: 0.25rem;
 			}
@@ -459,8 +460,8 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 			h3 {
 				color: var(--text-muted);
-				font-family: jwf-medium;
 				font-size: 0.75rem;
+				font-weight: 500;
 				margin: 0;
 				text-transform: uppercase;
 			}

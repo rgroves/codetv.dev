@@ -8,7 +8,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://v2.learnwithjason.dev',
+	site: 'https://codetv.dev',
 	output: 'server',
 	integrations: [
 		clerk({
