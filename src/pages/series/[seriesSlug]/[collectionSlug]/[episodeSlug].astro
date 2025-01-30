@@ -47,7 +47,7 @@ const episodeNumber = (
 
 const relatedEpisodes = episode.related_episodes ?? [];
 
-const url = new URL('https://v2.learnwithjason.dev');
+const url = Astro.site!;
 url.pathname = `/series/${episode.series?.slug}/${episode.collection?.slug}/${episode.slug}`;
 
 const thumb_w = 1280;

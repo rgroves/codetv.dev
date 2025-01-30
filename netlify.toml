@@ -4,4 +4,4 @@ package = "./plugins/inject-env-vars"
 [[plugins]]
 package = "@algolia/netlify-plugin-crawler"
 [plugins.inputs]
-customDomain = "v2.learnwithjason.dev"
+customDomain = "codetv.dev"
