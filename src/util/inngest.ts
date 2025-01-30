@@ -85,7 +85,7 @@ type Events = {
 			};
 		};
 	};
-	'lwj/user.profile.update': {
+	'codetv/user.profile.update': {
 		data: {
 			id: string;
 			username: string;
@@ -97,7 +97,7 @@ type Events = {
 
 export const schemas = new EventSchemas().fromRecord<Events>();
 
-export const inngest = new Inngest({ id: 'learnwithjason', schemas });
+export const inngest = new Inngest({ id: 'codetv', schemas });
 
 export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 	{ id: 'clerk/user-created-or-updated' },
@@ -119,7 +119,7 @@ export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 			async () => {
 				return cloudinary.uploader.upload(event.data.profile_image_url, {
 					public_id: username + '-' + event.ts,
-					folder: 'lwj/people',
+					folder: 'codetv/people',
 					overwrite: false,
 				});
 			},
@@ -232,8 +232,8 @@ const updateSanityPersonSubscription = inngest.createFunction(
 );
 
 const handleUpdateUserProfile = inngest.createFunction(
-	{ id: 'lwj/user.profile.update' },
-	{ event: 'lwj/user.profile.update' },
+	{ id: 'codetv/user.profile.update' },
+	{ event: 'codetv/user.profile.update' },
 	async function ({ event, step }) {
 		const { id, username, bio, links } = event.data;
 
