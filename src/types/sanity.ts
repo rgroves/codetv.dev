@@ -628,30 +628,7 @@ export type PersonByIdQueryResult = {
     _key: string;
   }> | null;
   user_id: string | null;
-  episodes: Array<{
-    title: string | null;
-    slug: string | null;
-    short_description: string | null;
-    publish_date: string | null;
-    thumbnail: {
-      public_id: string | null;
-      alt: string | null;
-      width: number | null;
-      height: number | null;
-    };
-    video: {
-      youtube_id: string | null;
-    } | null;
-    collection: {
-      slug: string | null;
-      title: string | null;
-      episodeSlugs: Array<string | null> | null;
-    } | null;
-    series: {
-      slug: string | null;
-      title: string | null;
-    } | null;
-  }>;
+  episodes: Array<never>;
 } | null;
 // Variable: personBySlugQuery
 // Query: *[_type == "person" && slug.current == $slug][0] {    _id,    name,    "slug": slug.current,    photo {      public_id,      height,      width,    },    bio,    links[],    user_id,    "episodes": *[_type == "episode" && hidden!=true && references(^._id) && (defined(@->video.youtube_id) || defined(@->video.mux_video))] {      title,      'slug': slug.current,      short_description,      publish_date,      'thumbnail': {        'public_id': video.thumbnail.public_id,        'alt': video.thumbnail_alt,        'width': video.thumbnail.width,        'height': video.thumbnail.height,      },      video {        youtube_id,      },      'collection': *[_type=="collection" && references(^._id)][0] {        'slug': slug.current,        title,        'episodeSlugs': episodes[]->slug.current,      },      'series': *[_type=="collection" && references(^._id)][0].series->{        'slug': slug.current,        title,      },    } | order(publish_date desc)[0...4]  }
@@ -672,30 +649,7 @@ export type PersonBySlugQueryResult = {
     _key: string;
   }> | null;
   user_id: string | null;
-  episodes: Array<{
-    title: string | null;
-    slug: string | null;
-    short_description: string | null;
-    publish_date: string | null;
-    thumbnail: {
-      public_id: string | null;
-      alt: string | null;
-      width: number | null;
-      height: number | null;
-    };
-    video: {
-      youtube_id: string | null;
-    } | null;
-    collection: {
-      slug: string | null;
-      title: string | null;
-      episodeSlugs: Array<string | null> | null;
-    } | null;
-    series: {
-      slug: string | null;
-      title: string | null;
-    } | null;
-  }>;
+  episodes: Array<never>;
 } | null;
 // Variable: personByClerkIdQuery
 // Query: *[_type == "person" && user_id == $user_id][0] {    _id,    name,    slug,    user_id,  }
