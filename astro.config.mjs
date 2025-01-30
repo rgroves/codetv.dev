@@ -23,6 +23,9 @@ export default defineConfig({
 		service: imageService(),
 	},
 	adapter: netlify(),
+	security: {
+		checkOrigin: false,
+	},
 	env: {
 		schema: {
 			NETLIFY_PERSONAL_ACCESS_TOKEN: envField.string({
