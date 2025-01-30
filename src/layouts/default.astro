@@ -17,7 +17,7 @@ export interface Props {
 	title?: string;
 }
 
-const { title = 'LWJ Productions' } = Astro.props;
+const { title = 'CodeTV' } = Astro.props;
 ---
 
 <html lang="en">
@@ -34,7 +34,7 @@ const { title = 'LWJ Productions' } = Astro.props;
 		<slot name="head">
 			<meta property="og:type" content="website" />
 			<meta property="og:title" content={title} />
-			<meta property="og:site_name" content="LWJ Productions" />
+			<meta property="og:site_name" content="CodeTV" />
 			<meta property="og:description" content="" />
 			<meta property="og:url" content={Astro.url} />
 
