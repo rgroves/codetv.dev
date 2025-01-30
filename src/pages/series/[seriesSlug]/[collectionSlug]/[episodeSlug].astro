@@ -101,11 +101,11 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		>
 			<div class="video-player-placeholder" slot="fallback" />
 		</VideoPlayer>
-	) : (
+	) : thumbnail ? (
 		<div class="thumbnail">
 			<Image src={thumbnail as string} alt={episode.title} />
 		</div>
-	)}
+	) : null}
 
 	<div class="wrapper">
 		<section class="header">
