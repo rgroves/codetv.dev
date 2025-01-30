@@ -15,7 +15,7 @@ const og: { title: string; description: string; image?: string } = {
 og.image = frontmatter.share?.image ?? false;
 ---
 
-<Layout title={title}>
+<Layout title={title} description={og.description}>
 	<Fragment slot="head-tags">
 		<meta name="twitter:title" content={og.title} />
 
@@ -32,7 +32,7 @@ og.image = frontmatter.share?.image ?? false;
 		<meta property="og:type" content="article" />
 		<meta name="twitter:dnt" content="on" />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:creator" content="@LWJShow" />
+		<meta name="twitter:creator" content="@codetv_dev" />
 		<script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"
 		></script>
 	</Fragment>
@@ -304,8 +304,8 @@ og.image = frontmatter.share?.image ?? false;
 	}
 
 	code {
-		font-family: 'Operator Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono',
-			monospace;
+		font-family: 'Operator Mono', Consolas, Monaco, 'Andale Mono',
+			'Ubuntu Mono', monospace;
 	}
 
 	.post-figure {

@@ -8,7 +8,10 @@ export const prerender = true;
 const allSeries = await getAllSeries();
 ---
 
-<Layout>
+<Layout
+	title="All Series by CodeTV — tv for developers"
+	description="Watch original programming made for developers. Rediscover the fun in web dev with CodeTV."
+>
 	<main>
 		<SeriesList series={allSeries} />
 	</main>

@@ -15,9 +15,10 @@ const nav = [
 
 export interface Props {
 	title?: string;
+	description?: string;
 }
 
-const { title = 'CodeTV' } = Astro.props;
+const { title = 'CodeTV', description = 'tv for developers' } = Astro.props;
 ---
 
 <html lang="en">
@@ -35,7 +36,7 @@ const { title = 'CodeTV' } = Astro.props;
 			<meta property="og:type" content="website" />
 			<meta property="og:title" content={title} />
 			<meta property="og:site_name" content="CodeTV" />
-			<meta property="og:description" content="" />
+			<meta property="og:description" content={description} />
 			<meta property="og:url" content={Astro.url} />
 
 			<meta

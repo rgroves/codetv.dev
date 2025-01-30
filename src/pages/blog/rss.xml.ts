@@ -23,7 +23,7 @@ export async function GET(context: AstroConfig) {
 	}
 
 	return rss({
-		title: 'Learn With Jason Blog RSS Feed',
+		title: 'CodeTV Blog RSS Feed',
 		description:
 			'Articles and tutorials about web dev, career growth, and more.',
 		site: context.site,

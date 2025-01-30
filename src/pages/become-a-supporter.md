@@ -1,6 +1,6 @@
 ---
 layout: ../layouts/simple.astro
-title: Become a Supporter
+title: Become a CodeTV Supporter
 description: >
   With your help, we can make learning web dev more fun, create a welcoming and supportive community, and build resilient careers in tech. Let's do this together.
 ---

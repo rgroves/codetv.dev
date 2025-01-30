@@ -50,7 +50,7 @@ const isSubscriber = subscription?.status === 'active';
 const bio = marked.parse(person.bio ?? '');
 ---
 
-<Layout>
+<Layout title={`${person.name}’s profile on CodeTV`}>
 	<div class="wrapper">
 		<div class="profile-photo">
 			<Image
