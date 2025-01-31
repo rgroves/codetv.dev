@@ -10,6 +10,7 @@ import react from '@astrojs/react';
 export default defineConfig({
 	site: 'https://codetv.dev',
 	output: 'server',
+	trailingSlash: 'never',
 	integrations: [
 		clerk({
 			afterSignInUrl: '/dashboard',
