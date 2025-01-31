@@ -487,6 +487,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		}
 
 		.more-episodes {
+			container: more-episodes / inline-size;
 			display: flex;
 			flex-wrap: wrap;
 			gap: 2rem;
@@ -495,6 +496,10 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 			@media (min-width: 1000px) {
 				justify-content: start;
+
+				.episode {
+					inline-size: calc((100cqi - 6rem) / 4);
+				}
 			}
 		}
 
