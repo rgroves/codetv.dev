@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://codetv.dev/sitemap-index.xml
