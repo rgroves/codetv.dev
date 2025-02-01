@@ -29,7 +29,8 @@ export const GET: APIRoute = async ({ request }) => {
 
 	const redirects = data.flatMap(({ newSlugBase, episodes }) => {
 		return episodes?.map(
-			({ oldSlug }) => `${oldSlug}\t\t${newSlugBase}${oldSlug}`,
+			({ oldSlug }) =>
+				`${oldSlug}\t\thttps://codetv.dev${newSlugBase}${oldSlug}`,
 		);
 	});
 
