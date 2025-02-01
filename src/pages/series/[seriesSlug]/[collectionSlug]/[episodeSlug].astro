@@ -115,7 +115,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 				</h1>
 				<div class="episode-meta">
 					<a
-						href={`/series/${episode.series?.slug}/${episode.collection?.slug}/`}
+						href={`/series/${episode.series?.slug}/${episode.collection?.slug}`}
 						class="season-link">{episode.series?.title}</a
 					>
 					<span class="episode-number">
@@ -152,7 +152,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 
 								return (
 									<li class="resource">
-										<a href={resource.url}>{label.replace(/^https:\/\//, '')}</a>
+										<a href={resource.url}>{label.replace(/^https:\/\/(www\.)?/, '')}</a>
 									</li>
 								);
 							})}
@@ -408,7 +408,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 				margin-block: 0.25rem;
 			}
 
-			ul {
+			ul:not(.resources) {
 				margin-block: 0.5rem 0;
 				padding-inline-start: 1.25rem;
 			}
@@ -442,13 +442,20 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 			}
 		}
 
+		.resources {
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+			list-style: none;
+			padding: 0;
+		}
+
 		.resource {
-			a {
-				display: inline-block;
-				max-inline-size: 90dvi;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
+			display: block;
+			max-inline-size: 90dvi;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
 		}
 
 		.sponsors {

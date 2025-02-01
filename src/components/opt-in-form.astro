@@ -49,6 +49,7 @@ const {
 	.opt-in {
 		background: var(--black);
 		color: var(--white);
+		container: newsletter / inline-size;
 		grid-column-start: 2;
 		margin: 3rem max(-5vw, -2rem) 0;
 		padding: 2rem min(5vw, 2rem) 2.25rem;
@@ -64,6 +65,8 @@ const {
 
 		h2 {
 			color: var(--white);
+			font-size: clamp(1.25rem, 6cqi, 2rem);
+			font-weight: 600;
 			line-height: 1.1;
 			margin: 0;
 			padding: 0;
@@ -87,11 +90,11 @@ const {
 		}
 
 		label {
-			margin-top: 0.5rem;
+			margin-block-start: 0.5rem;
 		}
 
 		p + label {
-			margin-top: 1.5rem;
+			margin-block-start: 1.5rem;
 		}
 
 		input {
@@ -110,7 +113,7 @@ const {
 			color: var(--white);
 			font-size: 1.25rem;
 			font-weight: 800;
-			margin-top: 1rem;
+			margin-block-start: 1rem;
 			max-width: 300px;
 			padding: 0.25rem;
 			text-transform: uppercase;
@@ -119,20 +122,20 @@ const {
 
 		@media (min-width: 716px) {
 			border-radius: 0.25rem;
-			margin-top: 0;
+			margin-block-start: 0;
 
 			&:not(:first-child) {
 				margin-block-start: 4rem;
 			}
 		}
-	}
 
-	.disclaimer {
-		color: var(--gray-200);
-		font-size: 0.75rem;
-		font-style: italic;
-		margin: 1.5rem 0 0;
-		max-width: 54ch;
+		p.disclaimer {
+			color: var(--gray-200);
+			font-size: 0.75rem;
+			font-style: italic;
+			margin-block-start: 2rem;
+			max-width: 54ch;
+		}
 	}
 
 	:global(.post-content) .opt-in {

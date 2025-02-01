@@ -38,7 +38,7 @@ const isPrerelease = date >= new Date();
 
 let episode_status = 'unknown';
 let status_text = '';
-if (episode.video.youtube_id) {
+if (!isPrerelease && episode.video.youtube_id) {
 	episode_status = 'public';
 } else if (!episode.video.youtube_id && episode.video.mux_video) {
 	if (!episode.video.members_only && !isPrerelease) {
@@ -54,16 +54,19 @@ if (episode.video.youtube_id) {
 		episode_status = 'members-only';
 		status_text = `Members only content`;
 	}
-} else if (
-	isPrerelease &&
-	!episode.video.youtube_id &&
-	!episode.video.mux_video
-) {
+} else if (isPrerelease) {
 	episode_status = 'scheduled';
 	status_text = `New episode coming ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 } else {
 	console.log(`Episode ${episode.slug} is in an unknown state`);
 	console.log(episode);
+}
+
+if (episode.slug === 'sqlite-and-turso') {
+	console.log({
+		episode_status,
+		isPrerelease,
+	});
 }
 
 const MAX_DESC_LENGTH = 18;

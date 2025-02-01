@@ -9,6 +9,7 @@ import type {
 	Person,
 } from '../../../types/sanity';
 import { createUser } from '../../../util/clerk';
+import { slugify } from 'inngest';
 
 const oldClient = createClient({
 	projectId: 'vnkupgyb',
@@ -45,6 +46,7 @@ const oldEpisodesQuery = groq`
 // mode=append mode adds documents to the collection
 // mode=replace empties the collection and starts fresh
 // http://localhost:4321/api/migrate?collection=XXX&mode=append|replace&year=YYYY&page=N
+// https://localhost:4321/api/migrate?collection=77bc350a-fe6a-430b-9374-046151be19f1
 
 export const GET: APIRoute = async ({ request }) => {
 	const url = new URL(request.url);
@@ -115,6 +117,10 @@ export const GET: APIRoute = async ({ request }) => {
 						console.log(person);
 					}
 
+					const personSlug = person.twitter
+						? person.twitter.trim()
+						: slugify(person.name);
+
 					people.set(person._id, {
 						_type: 'person',
 						_createdAt: person._createdAt,
@@ -123,7 +129,7 @@ export const GET: APIRoute = async ({ request }) => {
 						_id: person._id,
 						name: person.name,
 						slug: {
-							current: person.twitter.trim(),
+							current: personSlug,
 							_type: 'slug',
 						},
 						photo: {

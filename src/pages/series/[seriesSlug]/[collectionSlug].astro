@@ -86,7 +86,8 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 				<p>{series.description}</p>
 				<a
 					href={`/series/${series.slug}/${series.collection?.slug}/${series.collection?.episodes?.at(0)?.slug}`}
-					class="play-episode button">Start watching</a
+					class="play-episode button"
+					>Start Watching {series.collection?.title}</a
 				>
 			</div>
 			<div class="sponsors">
@@ -159,6 +160,9 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 							: null
 					}
 				</select>
+				<p class="count">
+					{series.collection?.episodes?.length} episodes
+				</p>
 				<p class="year">
 					Release year: {
 						format(series.collection?.release_year ?? new Date(), 'yyyy')
