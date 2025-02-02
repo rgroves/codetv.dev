@@ -40,7 +40,7 @@ let episode_status = 'unknown';
 let status_text = '';
 if (!isPrerelease && episode.video.youtube_id) {
 	episode_status = 'public';
-} else if (!episode.video.youtube_id && episode.video.mux_video) {
+} else if (!episode.video.youtube_id && episode.video.mux) {
 	if (!episode.video.members_only && !isPrerelease) {
 		episode_status = 'public';
 	}
