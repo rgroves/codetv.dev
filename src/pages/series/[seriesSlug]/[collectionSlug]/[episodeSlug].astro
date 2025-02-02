@@ -89,23 +89,25 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		) : null}
 	</Fragment>
 
-	{(episode.video?.youtube_id || episode.video?.mux_video) ? (
-		<VideoPlayer
-			video={{
-				...episode.video,
-				thumbnail: episode.thumbnail,
-				title: episode.title,
-				publish_date: episode.publish_date,
-			}}
-			server:defer
-		>
-			<div class="video-player-placeholder" slot="fallback" />
-		</VideoPlayer>
-	) : thumbnail ? (
-		<div class="thumbnail">
-			<Image src={thumbnail as string} alt={episode.title} />
-		</div>
-	) : null}
+	<div class="video-wrapper">
+		{(episode.video?.youtube_id || episode.video?.mux_video) ? (
+			<VideoPlayer
+				video={{
+					...episode.video,
+					thumbnail: episode.thumbnail,
+					title: episode.title,
+					publish_date: episode.publish_date,
+				}}
+				server:defer
+			>
+				<div class="video-player-placeholder" slot="fallback" />
+			</VideoPlayer>
+		) : thumbnail ? (
+			<div class="thumbnail">
+				<Image src={thumbnail as string} alt={episode.title} />
+			</div>
+		) : null}
+	</div>
 
 	<div class="wrapper">
 		<section class="header">
@@ -166,40 +168,38 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 			{
 				episode.sponsors && episode.sponsors.length > 0 ? (
 					<div class="sponsors">
-						<>
-							<h3>Presented by</h3>
+						<h3>Presented by</h3>
 
-							<div class="sponsor-logos">
-								{episode.sponsors.map((sponsor) => {
-									if (
-										!sponsor.logo ||
-										!sponsor.logo.public_id ||
-										!sponsor.logo.width ||
-										!sponsor.logo.height
-									) {
-										return;
-									}
+						<div class="sponsor-logos">
+							{episode.sponsors.map((sponsor) => {
+								if (
+									!sponsor.logo ||
+									!sponsor.logo.public_id ||
+									!sponsor.logo.width ||
+									!sponsor.logo.height
+								) {
+									return;
+								}
 
-									const src = createImageUrl(sponsor.logo.public_id, {
-										height: sponsor.logo.height * 2,
-										width: sponsor.logo.width * 2,
-										color: '#463963',
-										effect: 'colorize',
-									});
+								const src = createImageUrl(sponsor.logo.public_id, {
+									height: sponsor.logo.height * 2,
+									width: sponsor.logo.width * 2,
+									color: '#463963',
+									effect: 'colorize',
+								});
 
-									return (
-										<a href={sponsor.link}>
-											<Image
-												src={src}
-												alt={sponsor.title}
-												height={70}
-												aspectRatio={sponsor.logo.width / sponsor.logo.height}
-											/>
-										</a>
-									);
-								})}
-							</div>
-						</>
+								return (
+									<a href={sponsor.link}>
+										<Image
+											src={src}
+											alt={sponsor.title}
+											height={70}
+											aspectRatio={sponsor.logo.width / sponsor.logo.height}
+										/>
+									</a>
+								);
+							})}
+						</div>
 					</div>
 				) : null
 			}
@@ -286,6 +286,16 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 	</div>
 
 	<style>
+		.video-wrapper {
+			aspect-ratio: 16 / 9;
+			background: var(--gray-900);
+			container: video-wrapper / size;
+			inline-size: 100dvi;
+			max-block-size: calc(100dvh - 280px);
+			min-block-size: 480px;
+			overflow: hidden;
+		}
+
 		.wrapper {
 			margin-inline: auto;
 			max-inline-size: 1440px;
