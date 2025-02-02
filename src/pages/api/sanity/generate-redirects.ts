@@ -30,7 +30,7 @@ export const GET: APIRoute = async ({ request }) => {
 	const redirects = data.flatMap(({ newSlugBase, episodes }) => {
 		return episodes?.map(
 			({ oldSlug }) =>
-				`${oldSlug}\t\thttps://codetv.dev${newSlugBase}${oldSlug}`,
+				`${oldSlug}\t\thttps://codetv.dev${newSlugBase}${oldSlug} 301!`,
 		);
 	});
 
