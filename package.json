@@ -53,6 +53,7 @@
 	},
 	"devDependencies": {
 		"@types/sanitize-html": "^2.13.0",
+		"netlify-plugin-inngest": "^1.0.1",
 		"prettier": "^3.3.3",
 		"prettier-plugin-astro": "^0.14.1"
 	}
