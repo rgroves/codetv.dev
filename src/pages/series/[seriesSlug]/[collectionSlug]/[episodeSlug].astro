@@ -2,7 +2,7 @@
 import { format } from 'date-fns';
 import { marked } from 'marked';
 import { Image } from '@unpic/astro';
-import { getAllEpisodes, getSupporters } from '../../../../util/sanity';
+import { getAllEpisodes } from '../../../../util/sanity';
 import { createImageUrl } from '../../../../util/cloudinary';
 import Layout from '../../../../layouts/default.astro';
 import VideoPlayer from '../../../../components/video-player.astro';
@@ -10,12 +10,12 @@ import EpisodePreview from '../../../../components/episode-preview.astro';
 import ShareInput from '../../../../components/share-input.astro';
 import BecomeASupporter from '../../../../components/supporter-button.astro';
 import PeopleInEpisode from '../../../../components/people-in-episode.astro';
+import Supporters from '../../../../components/supporters.astro';
 
 export const prerender = true;
 
 export async function getStaticPaths() {
 	const allEpisodes = await getAllEpisodes();
-	const supporters = await getSupporters();
 
 	const paths = await Promise.all(allEpisodes.map(async (e) => {
 		if (!e.series || !e.collection || !e.slug) {
@@ -27,14 +27,14 @@ export async function getStaticPaths() {
 
 		return {
 			params: { seriesSlug: e.series.slug, collectionSlug: e.collection.slug, episodeSlug: e.slug },
-			props: { episode, supporters }
+			props: { episode }
 		};
 	}));
 
 	return paths.filter(Boolean);
 }
 
-const { episode, supporters } = Astro.props;
+const { episode } = Astro.props;
 
 const description = marked.parse(episode.description ?? '');
 
@@ -241,48 +241,15 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 			) : null
 		}
 
-		{
-			supporters.length > 0 ? (
-				<section class="supporters">
-					<h2>Supporters</h2>
-					<p>
-						<a href="/dashboard">
-							Become a supporter to see yourself here on future episodes!
-						</a>
-					</p>
-
-					<div class="supporter-list">
-						{supporters.map((supporter) => {
-							const photo = supporter.photo;
-
-							if (!photo || !photo.public_id) {
-								return;
-							}
-
-							const src = createImageUrl(photo.public_id, {
-								height: 80,
-								width: 80,
-								crop: 'fill',
-							});
-
-							return (
-								<a
-									href={`/profile/${supporter.username}`}
-									title={supporter.name}
-								>
-									<Image
-										src={src}
-										alt={supporter.name}
-										width={80}
-										aspectRatio={1}
-									/>
-								</a>
-							);
-						})}
-					</div>
-				</section>
-			) : null
-		}
+		<section class="supporters">
+			<h2>Supporters</h2>
+			<p>
+				<a href="/support">
+					Become a supporter to see yourself here on future episodes!
+				</a>
+			</p>
+			<Supporters />
+		</section>
 	</div>
 
 	<style>
@@ -526,23 +493,6 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 				.episode {
 					inline-size: calc((100cqi - 6rem) / 4);
 				}
-			}
-		}
-
-		.supporter-list {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.25rem;
-			justify-content: start;
-			margin-block-start: 1rem;
-
-			a {
-				display: block;
-			}
-
-			img {
-				block-size: 40px;
-				border-radius: 50%;
 			}
 		}
 	</style>

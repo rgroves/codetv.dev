@@ -3,6 +3,7 @@ import Layout from '../layouts/default.astro';
 import SeriesList from '../components/series-list.astro';
 import { getAllSeries } from '../util/sanity';
 import Heart from '../components/heart.astro';
+import Supporters from '../components/supporters.astro';
 
 export const prerender = true;
 
@@ -34,6 +35,10 @@ const allSeries = await getAllSeries();
 				<a href="https://partners.codetv.dev" class="button"
 					>Partner Companies</a
 				>
+			</div>
+			<div class="supporters">
+				<h3>Current Supporters</h3>
+				<Supporters />
 			</div>
 		</section>
 	</main>
@@ -79,12 +84,25 @@ const allSeries = await getAllSeries();
 			display: flex;
 			gap: 2rem;
 			justify-content: center;
+			margin-block-start: 0.25rem;
 
 			a {
 				border: 1px solid var(--gray-600);
 				font-size: 1rem;
 				font-weight: 400;
 			}
+		}
+	}
+
+	.supporters {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		margin: 2rem auto 0;
+
+		h3 {
+			inline-size: 100%;
+			text-align: center;
 		}
 	}
 </style>
