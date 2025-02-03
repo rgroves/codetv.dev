@@ -42,6 +42,9 @@ export const server = {
 						},
 					});
 
+					// TODO figure out how to actually wait for the result
+					await new Promise((resolve) => setTimeout(() => resolve(true), 3000));
+
 					return result;
 				} catch (err) {
 					console.log({ err });

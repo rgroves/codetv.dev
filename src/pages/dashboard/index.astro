@@ -110,7 +110,7 @@ const isSubscriber = subscription?.status === 'active';
 
 		{userDetails ? (
 			<section class="details">
-				<form method="post" action={actions.user.updateProfile}>
+				<form method="post" action={actions.user.updateProfile} class="update-profile-form">
 					<legend>Account Details</legend>
 
 					<label for="bio">Bio</label>
@@ -144,7 +144,7 @@ const isSubscriber = subscription?.status === 'active';
 					<input type="hidden" name="id" value={userDetails._id} />
 					<input type="hidden" name="username" value={user.username} />
 
-					<button type="submit">Update Profile</button>
+					<button type="submit" class="update-profile-btn">Update Profile</button>
 				</form>
 			</section>
 		) : (
@@ -208,7 +208,13 @@ const isSubscriber = subscription?.status === 'active';
 		addRemoveHandlers();
 	});
 
+	// disable form while waiting for update
+	const updateProfile = document.querySelector('.update-profile-form');
 
+	updateProfile?.addEventListener('submit', () => {
+		updateProfile.classList.add('submitting');
+		updateProfile.querySelector('button')?.setAttribute('disabled', 'true');
+	})
 </script>
 
 <style>
@@ -459,5 +465,24 @@ const isSubscriber = subscription?.status === 'active';
 		border: none;
 		color: var(--text-muted);
 		text-align: start;
+	}
+
+	.update-profile-form {
+		position: relative;
+		
+		&.submitting {
+			opacity: 0.5;
+
+			&::after {
+				align-items: center;
+				background: color-mix(in oklch, var(--gray-000) 80%, transparent);
+				content: 'please wait';
+				display:flex;
+				flex-direction:row;
+				inset: 0;
+				justify-content: center;
+				position: absolute;
+			}
+		}
 	}
 </style>
