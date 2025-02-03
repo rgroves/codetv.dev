@@ -51,6 +51,12 @@ const {
 	.post-figure {
 		margin: 2rem max(-5vw, -2rem);
 
+		.embed-container {
+			aspect-ratio: 16 / 9;
+			container: embed / size;
+			inline-size: calc(100% + min(5vw, 2rem));
+		}
+
 		& :global(img) {
 			border-radius: 0.25rem 0.25rem 0 0;
 			display: block;
