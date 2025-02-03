@@ -32,7 +32,7 @@ export const server = {
 					.filter((val) => val !== false);
 
 				const result = await inngest.send({
-					name: 'lwj/user.profile.update',
+					name: 'codetv/user.profile.update',
 					data: {
 						id: id.toString(),
 						username,
