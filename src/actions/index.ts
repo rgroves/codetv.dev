@@ -31,17 +31,21 @@ export const server = {
 					})
 					.filter((val) => val !== false);
 
-				const result = await inngest.send({
-					name: 'codetv/user.profile.update',
-					data: {
-						id: id.toString(),
-						username,
-						bio,
-						links,
-					},
-				});
+				try {
+					const result = await inngest.send({
+						name: 'codetv/user.profile.update',
+						data: {
+							id: id.toString(),
+							username,
+							bio,
+							links,
+						},
+					});
 
-				return result;
+					return result;
+				} catch (err) {
+					console.log({ err });
+				}
 			},
 		}),
 	},

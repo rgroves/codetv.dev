@@ -68,6 +68,7 @@ type Events = {
 					userId: string;
 				};
 				subscription: string;
+				cancel_at_period_end: boolean;
 			};
 		};
 	};
@@ -75,6 +76,7 @@ type Events = {
 		data: {
 			object: {
 				id: string;
+				cancel_at_period_end: boolean;
 			};
 		};
 	};
@@ -97,7 +99,11 @@ type Events = {
 
 export const schemas = new EventSchemas().fromRecord<Events>();
 
-export const inngest = new Inngest({ id: 'codetv', schemas });
+export const inngest = new Inngest({
+	id: 'codetv',
+	schemas,
+	eventKey: import.meta.env.INNGEST_EVENT_KEY,
+});
 
 export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 	{ id: 'clerk/user-created-or-updated' },
@@ -327,7 +333,11 @@ export const handleStripeSubscriptionCompletedWebhook = inngest.createFunction(
 			const n = user.name;
 			const p = product.name;
 			const s = subscription.status;
-			const msg = `New supporter! ${n} joined as a ${p} (${s})`;
+
+			let msg = `New supporter! ${n} joined as a ${p} (${s})`;
+			if (event.data.object.cancel_at_period_end) {
+				msg = `${n} canceled their ${p} subscription`;
+			}
 
 			return sendDiscordMessage({
 				content: msg,
