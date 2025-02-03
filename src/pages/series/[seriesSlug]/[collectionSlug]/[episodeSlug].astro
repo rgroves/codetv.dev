@@ -90,7 +90,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 	</Fragment>
 
 	<div class="video-wrapper">
-		{(episode.video?.youtube_id || episode.video?.mux_video) ? (
+		{(episode.video?.youtube_id || episode.video?.mux) ? (
 			<VideoPlayer
 				video={{
 					...episode.video,
@@ -289,6 +289,7 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		.video-wrapper {
 			aspect-ratio: 16 / 9;
 			background: var(--gray-900);
+			border-bottom: 1px solid var(--gray-600);
 			container: video-wrapper / size;
 			inline-size: 100dvi;
 			max-block-size: calc(100dvh - 280px);
@@ -304,14 +305,14 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 			@media (min-width: 750px) {
 				display: grid;
 				gap: 2rem;
-				grid-template-columns: repeat(2, calc(50% - 1rem));
+				grid-template-columns: calc(62% - 0.5rem) auto;
 			}
 		}
 
 		.video-player-placeholder {
 			animation: 1s pulse infinite alternate linear;
 			aspect-ratio: 16 / 9;
-			background: var(--gray-100);
+			background: var(--gray-900);
 			block-size: auto;
 			inline-size: 100dvi;
 		}
@@ -412,8 +413,8 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		section,
 		.description {
 			h2 {
-				font-size: 0.875rem;
-				font-weight: 400;
+				font-size: 1rem;
+				font-weight: 600;
 				line-height: 1.1;
 				margin-block: 0.25rem;
 			}

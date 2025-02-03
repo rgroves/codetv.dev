@@ -37,7 +37,7 @@ const isSubscriber = subscription?.status === 'active';
 					</span>
 				</h1>
 
-				<>
+				<Fragment>
 					{isSubscriber ? (
 						<p class="level">{subscription.level}</p>
 						<p class="start-date">Supporter since {new Intl.DateTimeFormat('en-US', { dateStyle: 'medium'}).format(new Date((stripeSub?.start_date ?? Date.now() / 1000) * 1000))}</p>
@@ -61,7 +61,7 @@ const isSubscriber = subscription?.status === 'active';
 					<a href="https://accounts.learnwithjason.dev/user" class="update-profile">Update Avatar, Username, etc.</a>
 
 					<SignOutButton />
-				</>
+				</Fragment>
 			</section>
 		) : null}
 
@@ -69,7 +69,7 @@ const isSubscriber = subscription?.status === 'active';
 			<section class="support">
 				<h2>Become a supporter</h2>
 				<p>
-					<strong>CodeTV is not a VC-backed company.</strong> We rely on sponsorships and support from people just like you to continue operating. Creating content for developers at the level of quality they deserve isn’t cheap, and the income from your membership makes new series and formats possible.
+					<strong>CodeTV is not a VC-backed company.</strong> We rely on sponsorships and support from people just like you to continue operating. Creating content for developers at the level of quality they deserve isn’t cheap, and your contribution makes new series and formats possible.
 				</p>
 
 				<h3>Choose your level of support:</h3>
@@ -81,28 +81,26 @@ const isSubscriber = subscription?.status === 'active';
 								<h3>{level.name}</h3>
 								<p>{level.description}</p>
 
-								<>
-									{level.prices.map((price) => {
-										const formattedPrice = new Intl.NumberFormat(
-											'en-US',
-											{
-												style: 'currency',
-												currency: 'USD',
-												maximumFractionDigits: 0,
-											}
-										).format(price.price / 100);
+								{level.prices.map((price) => {
+									const formattedPrice = new Intl.NumberFormat(
+										'en-US',
+										{
+											style: 'currency',
+											currency: 'USD',
+											maximumFractionDigits: 0,
+										}
+									).format(price.price / 100);
 
-										return (
-											<form action="/api/stripe/checkout" method="POST">
-												{user?.publicMetadata?.stripe?.customer ? (
-													<input type="hidden" name="customerId" value={user.publicMetadata.stripe.customer} />
-												) : null}
-												<input type="hidden" name="priceId" value={price.priceId} />
-												<button>Subscribe {price.period} for {formattedPrice}</button>
-											</form>
-										)}
+									return (
+										<form action="/api/stripe/checkout" method="POST">
+											{user?.publicMetadata?.stripe?.customer ? (
+												<input type="hidden" name="customerId" value={user.publicMetadata.stripe.customer} />
+											) : null}
+											<input type="hidden" name="priceId" value={price.priceId} />
+											<button>Subscribe {price.period} for {formattedPrice}</button>
+										</form>
 									)}
-								</>
+								)}
 							</div>
 						)}
 					)}
