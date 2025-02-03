@@ -7,9 +7,10 @@ export const prerender = true;
 
 export interface Props {
 	series: AllSeriesQueryResult;
+	short?: boolean;
 }
 
-const { series } = Astro.props;
+const { series, short = false } = Astro.props;
 ---
 
 <section class="series-container">
@@ -76,6 +77,15 @@ const { series } = Astro.props;
 			})
 		}
 	</div>
+	{
+		short ? (
+			<p class="see-all">
+				<a href="/watch" class="button">
+					See all series &rarr;
+				</a>
+			</p>
+		) : null
+	}
 </section>
 
 <style>
@@ -149,6 +159,17 @@ const { series } = Astro.props;
 		& p {
 			font-size: 0.75rem;
 			line-height: 1.25;
+		}
+	}
+
+	.see-all {
+		margin: 1rem 0 0;
+		text-align: center;
+
+		a {
+			border: 1px solid var(--gray-600);
+			font-size: 0.875rem;
+			padding: 0.5rem 0.75rem;
 		}
 	}
 </style>

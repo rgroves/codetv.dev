@@ -2,6 +2,7 @@
 import Layout from '../layouts/default.astro';
 import SeriesList from '../components/series-list.astro';
 import { getAllSeries } from '../util/sanity';
+import Heart from '../components/heart.astro';
 
 export const prerender = true;
 
@@ -17,7 +18,24 @@ const allSeries = await getAllSeries();
 				having fun together with a supportive community.
 			</p>
 		</section>
-		<SeriesList series={allSeries.filter((s) => s.featured)} />
+		<SeriesList series={allSeries.filter((s) => s.featured)} short />
+
+		<section class="support">
+			<h2>Become a supporter</h2>
+			<p>
+				CodeTV is possible thanks to the support of partner companies and
+				individual supporters. We help developers learn their craft in a fun,
+				community-centered way — and with your support we can make an even
+				bigger impact. <Heart />
+			</p>
+			<p>Get more info and become a supporter today:</p>
+			<div class="support-options">
+				<a href="/support" class="button">Individual Support</a>
+				<a href="https://partners.codetv.dev" class="button"
+					>Partner Companies</a
+				>
+			</div>
+		</section>
 	</main>
 </Layout>
 
@@ -45,6 +63,28 @@ const allSeries = await getAllSeries();
 			max-inline-size: min(46ch, 90vw);
 			margin: 0.5rem auto 0;
 			text-align: center;
+		}
+	}
+
+	.support {
+		inline-size: min(90dvi, 54ch);
+		margin-block-end: 4rem;
+		margin-inline: auto;
+
+		p {
+			margin: 1rem 0 0;
+		}
+
+		.support-options {
+			display: flex;
+			gap: 2rem;
+			justify-content: center;
+
+			a {
+				border: 1px solid var(--gray-600);
+				font-size: 1rem;
+				font-weight: 400;
+			}
 		}
 	}
 </style>
