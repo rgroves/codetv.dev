@@ -34,7 +34,7 @@ export function SearchBox({
 			isOpen={open}
 			onToggle={onToggle}
 			initialState={{
-				query: new URL(window.location.toString()).searchParams.get('q'),
+				query: new URL(window.location.toString()).searchParams.get('q') ?? '',
 			}}
 			emptyQuery={() => [
 				{
