@@ -244,7 +244,7 @@ const {
 				transparent calc(100% - 100px),
 				transparent
 			);
-			padding: 0.75rem max((100dvi - 1080px) / 2, 5dvi) calc(0.75rem + 100px);
+			padding: 0 max((100dvi - 1080px) / 2, 5dvi) 100px;
 
 			.logo {
 				grid-area: logo;
@@ -254,7 +254,7 @@ const {
 					aspect-ratio: 109 / 28;
 					block-size: auto;
 					display: block;
-					inline-size: min(300px, 48dvi);
+					inline-size: min(250px, 30dvi);
 				}
 			}
 
@@ -292,7 +292,6 @@ const {
 					block-size: auto;
 					display: flex;
 					flex-direction: column;
-					gap: 0.5rem;
 					grid-area: nav;
 					inline-size: auto;
 					inset: unset;
@@ -333,12 +332,6 @@ const {
 
 				a {
 					align-items: center;
-					backdrop-filter: blur(1rem);
-					background: color-mix(in oklch, var(--gray-400) 60%, transparent);
-					border: 1px solid color-mix(in oklch, var(--white) 15%, transparent);
-					border-radius: 2.5rem;
-					box-shadow: 0 1px 2px
-						color-mix(in oklch, var(--gray-500) 80%, transparent);
 					color: var(--white);
 					display: flex;
 					font-size: 0.625rem;
@@ -346,7 +339,7 @@ const {
 					inline-size: max-content;
 					letter-spacing: 0.1em;
 					margin-inline-start: auto;
-					padding: 0.125rem 1.625rem;
+					padding: 0.5rem 1.625rem;
 					pointer-events: all;
 					text-decoration: none;
 					text-shadow: 0 1px 2px
@@ -369,35 +362,29 @@ const {
 
 			nav {
 				align-items: baseline;
-				backdrop-filter: blur(1rem);
-				background: color-mix(in oklch, var(--gray-400) 60%, transparent);
-				border: 1px solid color-mix(in oklch, var(--white) 15%, transparent);
-				border-radius: 2.5rem;
-				box-shadow: 0 1px 2px
-					color-mix(in oklch, var(--gray-500) 80%, transparent);
 				color: var(--white);
 				display: flex;
 				flex-wrap: wrap;
-				font-size: 0.875rem;
+				font-size: 0.75rem;
 				font-weight: 500;
 				gap: 1rem 1.5rem;
 				inline-size: min(max-content, 90dvi);
 				justify-content: center;
 				letter-spacing: 0.1em;
-				padding: 1rem 1.625rem;
-				text-transform: uppercase;
 
 				@media (min-width: 1080px) {
 					gap: 0.5rem;
 					inline-size: max-content;
 					justify-content: start;
-					padding: 0.5rem 1.625rem;
+					padding: 0 1.625rem;
 				}
 
 				a {
+					block-size: 100%;
 					color: var(--white);
 					display: block;
 					line-height: 1.1;
+					padding: 0.875rem 0.5rem;
 					pointer-events: all;
 					text-decoration: none;
 				}

@@ -7,7 +7,7 @@ const user = await Astro.locals.currentUser();
 {
 	user ? (
 		<a href="/dashboard">
-			Manage your profile
+			{user.fullName}
 			<img src={user.imageUrl} alt={user.fullName} width={60} />
 		</a>
 	) : (
