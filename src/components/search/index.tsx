@@ -18,6 +18,110 @@ type AlgoliaItem = {
 	};
 };
 
+export function SearchBox({
+	open,
+	onToggle = () => window.location.assign('/'),
+}: {
+	open: boolean;
+	onToggle?: () => void;
+}) {
+	return (
+		<Autocomplete
+			placeholder="Search for episodes and posts"
+			openOnFocus={true}
+			autoFocus={true}
+			defaultActiveItemId={0}
+			isOpen={open}
+			onToggle={onToggle}
+			initialState={{
+				query: new URL(window.location.toString()).searchParams.get('q'),
+			}}
+			emptyQuery={() => [
+				{
+					sourceId: 'links',
+					getItems: () => [
+						{
+							label: 'Subscribe to the newsletter',
+							description: 'The best way to make sure you don’t miss anything.',
+							url: '/newsletter',
+							icon: () => (
+								<div className="aa-LinkPicture">
+									<NewsletterIcon />
+								</div>
+							),
+						},
+						{
+							label: 'Add schedule to Google Calendar',
+							description: 'See upcoming shows and events in your calendar.',
+							url: '/calendar',
+							icon: () => (
+								<div className="aa-LinkPicture">
+									<GoogleCalendarLogo />
+								</div>
+							),
+						},
+						{
+							label: 'Subscribe on YouTube',
+							description: 'Watch all past LWJ episodes.',
+							url: 'https://www.youtube.com/channel/UCnty0z0pNRDgnuoirYXnC5A',
+							icon: () => (
+								<div className="aa-LinkPicture aa-LinkPicture--YouTube">
+									<YouTubeLogo />
+								</div>
+							),
+						},
+					],
+					getItemUrl: ({ item }: AlgoliaItem) => item.url,
+					templates: {
+						header: () => <div className="aa-Header">Links</div>,
+						item: ({ item }: AlgoliaItem) => <LinkItem item={item} />,
+					},
+				},
+			]}
+			sources={() => [
+				{
+					sourceId: 'episodes',
+					getItemUrl({ item }: AlgoliaItem) {
+						return item.url;
+					},
+					getItems({ query, ...rest }: { query: any }) {
+						console.log(rest);
+						return getAlgoliaResults({
+							searchClient,
+							queries: [
+								{
+									indexName:
+										'netlify_38f74995-47a6-4a22-9cd6-6ccc0ba17d4e_main_all',
+									query,
+									params: {
+										hitsPerPage: 12,
+									},
+								},
+							],
+						});
+					},
+					templates: {
+						item: ({ item }: AlgoliaItem) => <QueryEpisodeItem item={item} />,
+					},
+				},
+			]}
+			noResults={({ query }: { query: any }) => (
+				<div className="aa-NoResults">
+					<div className="aa-NoResultsLabel">No results for "{query}".</div>
+					<div className="aa-NoResultsDescription">
+						Here's a consolation Corgi.
+					</div>
+					<img
+						className="aa-NoResultsImage"
+						src="https://cdn.shopify.com/s/files/1/0589/5798/8049/products/corgi-pal.png?v=1627084571"
+						alt="a cartoon corgi with rainbow colors"
+					/>
+				</div>
+			)}
+		/>
+	);
+}
+
 export function Search() {
 	const [searchState, setSearchState] = useState<'open' | 'closed'>('closed');
 
@@ -37,143 +141,11 @@ export function Search() {
 				</span>
 				<span className="sr-only">Open search</span>
 			</button>
-			<Autocomplete
-				placeholder="Search for episodes and posts"
-				openOnFocus={true}
-				autoFocus={true}
-				defaultActiveItemId={0}
-				isOpen={searchState === 'open'}
+			<SearchBox
+				open={searchState === 'open'}
 				onToggle={() =>
 					setSearchState(searchState === 'open' ? 'closed' : 'open')
 				}
-				emptyQuery={() => [
-					{
-						sourceId: 'links',
-						getItems: () => [
-							{
-								label: 'Subscribe to the newsletter',
-								description:
-									'The best way to make sure you don’t miss anything.',
-								url: '/newsletter',
-								icon: () => (
-									<div className="aa-LinkPicture">
-										<NewsletterIcon />
-									</div>
-								),
-							},
-							{
-								label: 'Add schedule to Google Calendar',
-								description: 'See upcoming shows and events in your calendar.',
-								url: '/calendar',
-								icon: () => (
-									<div className="aa-LinkPicture">
-										<GoogleCalendarLogo />
-									</div>
-								),
-							},
-							{
-								label: 'Subscribe on YouTube',
-								description: 'Watch all past LWJ episodes.',
-								url: 'https://www.youtube.com/channel/UCnty0z0pNRDgnuoirYXnC5A',
-								icon: () => (
-									<div className="aa-LinkPicture aa-LinkPicture--YouTube">
-										<YouTubeLogo />
-									</div>
-								),
-							},
-						],
-						getItemUrl: ({ item }: AlgoliaItem) => item.url,
-						templates: {
-							header: () => <div className="aa-Header">Links</div>,
-							item: ({ item }: AlgoliaItem) => <LinkItem item={item} />,
-						},
-					},
-					// {
-					// 	sourceId: 'latest',
-					// 	getItems: () => [
-					// 		...episodes,
-					// 		{
-					// 			label: 'See all past episodes',
-					// 			url: '/episodes',
-					// 		},
-					// 	],
-					// 	getItemUrl({ item }: AlgoliaItem) {
-					// 		return isLink(item) ? item.url : item.slug.current;
-					// 	},
-					// 	templates: {
-					// 		header: () => <div className="aa-Header">Latest episodes</div>,
-					// 		item({ item }: AlgoliaItem) {
-					// 			if (isLink(item)) {
-					// 				return <ButtonItem item={item} />;
-					// 			}
-
-					// 			return <EmptyQueryEpisodeItem item={item} />;
-					// 		},
-					// 	},
-					// },
-					// {
-					// 	sourceId: 'schedule',
-					// 	getItems: () => [
-					// 		...schedule,
-					// 		{
-					// 			label: 'See all upcoming episodes',
-					// 			url: '/schedule',
-					// 		},
-					// 	],
-					// 	getItemUrl({ item }: AlgoliaItem) {
-					// 		return isLink(item) ? item.url : item.slug.current;
-					// 	},
-					// 	templates: {
-					// 		header: () => <div className="aa-Header">Upcoming episodes</div>,
-					// 		item({ item }: AlgoliaItem) {
-					// 			if (isLink(item)) {
-					// 				return <ButtonItem item={item} />;
-					// 			}
-
-					// 			return <EmptyQueryEpisodeItem item={item} />;
-					// 		},
-					// 	},
-					// },
-				]}
-				sources={() => [
-					{
-						sourceId: 'episodes',
-						getItemUrl({ item }: AlgoliaItem) {
-							return item.url;
-						},
-						getItems({ query }: { query: any }) {
-							return getAlgoliaResults({
-								searchClient,
-								queries: [
-									{
-										indexName:
-											'netlify_38f74995-47a6-4a22-9cd6-6ccc0ba17d4e_main_all',
-										query,
-										params: {
-											hitsPerPage: 12,
-										},
-									},
-								],
-							});
-						},
-						templates: {
-							item: ({ item }: AlgoliaItem) => <QueryEpisodeItem item={item} />,
-						},
-					},
-				]}
-				noResults={({ query }: { query: any }) => (
-					<div className="aa-NoResults">
-						<div className="aa-NoResultsLabel">No results for "{query}".</div>
-						<div className="aa-NoResultsDescription">
-							Here's a consolation Corgi.
-						</div>
-						<img
-							className="aa-NoResultsImage"
-							src="https://cdn.shopify.com/s/files/1/0589/5798/8049/products/corgi-pal.png?v=1627084571"
-							alt="a cartoon corgi with rainbow colors"
-						/>
-					</div>
-				)}
 			/>
 		</>
 	);
