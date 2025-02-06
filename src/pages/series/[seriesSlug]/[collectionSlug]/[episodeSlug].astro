@@ -3,7 +3,11 @@ import { format } from 'date-fns';
 import { marked } from 'marked';
 import { Image } from '@unpic/astro';
 import { getAllEpisodes } from '../../../../util/sanity';
-import { createImageUrl } from '../../../../util/cloudinary';
+import {
+	createImageUrl,
+	generateEpisodePoster,
+	getYouTubeThumbnail,
+} from '../../../../util/cloudinary';
 import Layout from '../../../../layouts/default.astro';
 import VideoPlayer from '../../../../components/video-player.astro';
 import EpisodePreview from '../../../../components/episode-preview.astro';
@@ -17,19 +21,25 @@ export const prerender = true;
 export async function getStaticPaths() {
 	const allEpisodes = await getAllEpisodes();
 
-	const paths = await Promise.all(allEpisodes.map(async (e) => {
-		if (!e.series || !e.collection || !e.slug) {
-			console.log(e)
-			return false;
-		}
+	const paths = await Promise.all(
+		allEpisodes.map(async (e) => {
+			if (!e.series || !e.collection || !e.slug) {
+				console.log(e);
+				return false;
+			}
 
-		const episode = e;
+			const episode = e;
 
-		return {
-			params: { seriesSlug: e.series.slug, collectionSlug: e.collection.slug, episodeSlug: e.slug },
-			props: { episode }
-		};
-	}));
+			return {
+				params: {
+					seriesSlug: e.series.slug,
+					collectionSlug: e.collection.slug,
+					episodeSlug: e.slug,
+				},
+				props: { episode },
+			};
+		}),
+	);
 
 	return paths.filter(Boolean);
 }
@@ -52,21 +62,84 @@ url.pathname = `/series/${episode.series?.slug}/${episode.collection?.slug}/${ep
 
 const thumb_w = 1280;
 const thumb_h = 720;
-const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnail.public_id, {
-	height: thumb_h,
-	width: thumb_w,
-	crop: 'fill',
-}) : false;
+
+let image;
+if (episode.thumbnail.public_id) {
+	image = createImageUrl(episode.thumbnail.public_id, {
+		width: thumb_w,
+		aspect_ratio: `${thumb_w}:${thumb_h}`,
+		crop: 'fill',
+	});
+} else if (episode.video?.youtube_id) {
+	image = getYouTubeThumbnail(episode.video.youtube_id);
+} else {
+	image = generateEpisodePoster();
+}
 ---
 
 <Layout title={episode.title as string}>
 	<Fragment slot="head">
 		<link rel="canonical" href={url.toString()} />
+		<meta name="description" content={episode.short_description} />
+		<meta name="image" content={image} />
 
 		<meta property="og:type" content="video.episode" />
 		<meta property="og:title" content={episode.title} />
+		<meta property="og:site_name" content="CodeTV" />
 		<meta property="og:description" content={episode.short_description} />
 		<meta property="og:url" content={Astro.url} />
+
+		<meta property="og:image" content={image} />
+		<meta property="og:image:width" content={thumb_w.toString()} />
+		<meta property="og:image:height" content={thumb_h.toString()} />
+		<meta
+			property="og:image:alt"
+			content={episode.thumbnail?.alt ?? episode.title}
+		/>
+
+		<meta name="twitter:dnt" content="on" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:description" content={episode.short_description} />
+		<meta name="twitter:image" content={image} />
+
+		<script
+			type="application/ld+json"
+			set:html={`
+			{
+				"@context": "https://schema.org",
+				"@type": "TVEpisode",
+				"url": "${Astro.url}",
+				"name": "${episode.title}",
+				"image": "${image}",
+				"description": "${episode.short_description}",
+				"datePublished": "${format(episode.publish_date!, 'yyyy-MM-dd')}",
+				"actor": [
+					${episode.people?.map((person) => {
+						return JSON.stringify(
+							{
+								'@type': 'Person',
+								url: `https://codetv.dev/profile/${person.slug}`,
+								name: person.name,
+							},
+							null,
+							2,
+						);
+					})}
+				],
+				"creator": [
+					{
+						"@type": "Organization",
+						"url": "https://codetv.dev"
+					},
+					{
+						"@type": "Person",
+						"url": "https://codetv.dev/profile/jlengstorf",
+						"name": "Jason Lengstorf"
+					}
+				]
+			}
+		`}
+		/>
 
 		<!-- <meta
 			property="og:video"
@@ -74,183 +147,180 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 		/>
 		<meta property="og:video:width" content="1920" />
 		<meta property="og:video:height" content="1080" /> -->
-
-		{thumbnail ? (
-			<meta
-				property="og:image"
-				content={thumbnail}
-			/>
-			<meta property="og:image:width" content={thumb_w.toString()} />
-			<meta property="og:image:height" content={thumb_h.toString()} />
-			<meta
-				property="og:image:alt"
-				content={episode.thumbnail?.alt ?? episode.title}
-			/>
-		) : null}
 	</Fragment>
 
-	<div class="video-wrapper">
-		{(episode.video?.youtube_id || episode.video?.mux) ? (
-			<VideoPlayer
-				video={{
-					...episode.video,
-					thumbnail: episode.thumbnail,
-					title: episode.title,
-					publish_date: episode.publish_date,
-				}}
-				server:defer
-			>
-				<div class="video-player-placeholder" slot="fallback" />
-			</VideoPlayer>
-		) : thumbnail ? (
-			<div class="thumbnail">
-				<Image src={thumbnail as string} alt={episode.title} />
-			</div>
-		) : null}
-	</div>
-
-	<div class="wrapper">
-		<section class="header">
-			<div class="episode-details">
-				<h1>
-					{episode.title}
-				</h1>
-				<div class="episode-meta">
-					<a
-						href={`/series/${episode.series?.slug}/${episode.collection?.slug}`}
-						class="season-link">{episode.series?.title}</a
+	<main>
+		<div class="video-wrapper">
+			{
+				episode.video?.youtube_id || episode.video?.mux ? (
+					<VideoPlayer
+						video={{
+							...episode.video,
+							thumbnail: episode.thumbnail,
+							title: episode.title,
+							publish_date: episode.publish_date,
+						}}
+						server:defer
 					>
-					<span class="episode-number">
-						{episodeNumber}
-					</span>
-					<span class="episode-date">
-						{new Date(episode.publish_date!) > new Date() ? `Coming ${format(episode.publish_date!, 'eeee, MMM d')}` : format(episode.publish_date!, 'MMM d, yyyy')}
-					</span>
+						<div class="video-player-placeholder" slot="fallback" />
+					</VideoPlayer>
+				) : image ? (
+					<div class="thumbnail">
+						<Image src={image} alt={episode.thumbnail.alt ?? episode.title} />
+					</div>
+				) : null
+			}
+		</div>
+
+		<div class="wrapper">
+			<section class="header">
+				<div class="episode-details">
+					<h1>
+						{episode.title}
+					</h1>
+					<div class="episode-meta">
+						<a
+							href={`/series/${episode.series?.slug}/${episode.collection?.slug}`}
+							class="season-link">{episode.series?.title}</a
+						>
+						<span class="episode-number">
+							{episodeNumber}
+						</span>
+						<span class="episode-date">
+							{
+								new Date(episode.publish_date!) > new Date()
+									? `Coming ${format(episode.publish_date!, 'eeee, MMM d')}`
+									: format(episode.publish_date!, 'MMM d, yyyy')
+							}
+						</span>
+					</div>
 				</div>
-			</div>
 
-			<nav class="episode-links">
-				<ShareInput label="Share this episode:" url={url.toString()} />
+				<nav class="episode-links">
+					<ShareInput label="Share this episode:" url={url.toString()} />
 
-				<BecomeASupporter server:defer />
-			</nav>
-		</section>
+					<BecomeASupporter server:defer />
+				</nav>
+			</section>
 
-		<section class="description">
-			<div set:html={description} />
+			<section class="description">
+				<div set:html={description} />
+
+				{
+					episode.resources && episode.resources.length > 0 ? (
+						<div class="resources">
+							<h2>Resources & Links</h2>
+
+							<ul class="resources">
+								{episode.resources.map((resource) => {
+									if (!resource.url) {
+										return null;
+									}
+
+									const label = resource.label ?? resource.url;
+
+									return (
+										<li class="resource">
+											<a href={resource.url}>
+												{label.replace(/^https:\/\/(www\.)?/, '')}
+											</a>
+										</li>
+									);
+								})}
+							</ul>
+						</div>
+					) : null
+				}
+			</section>
+
+			<section class="additional-details">
+				{
+					episode.sponsors && episode.sponsors.length > 0 ? (
+						<div class="sponsors">
+							<h3>Presented by</h3>
+
+							<div class="sponsor-logos">
+								{episode.sponsors.map((sponsor) => {
+									if (
+										!sponsor.logo ||
+										!sponsor.logo.public_id ||
+										!sponsor.logo.width ||
+										!sponsor.logo.height
+									) {
+										return;
+									}
+
+									const src = createImageUrl(sponsor.logo.public_id, {
+										height: sponsor.logo.height * 2,
+										width: sponsor.logo.width * 2,
+										color: '#463963',
+										effect: 'colorize',
+									});
+
+									return (
+										<a href={sponsor.link}>
+											<Image
+												src={src}
+												alt={sponsor.title}
+												height={70}
+												aspectRatio={sponsor.logo.width / sponsor.logo.height}
+											/>
+										</a>
+									);
+								})}
+							</div>
+						</div>
+					) : null
+				}
+
+				<PeopleInEpisode people={episode.people ?? []} server:defer />
+			</section>
 
 			{
-				episode.resources && episode.resources.length > 0 ? (
-					<div class="resources">
-						<h2>Resources & Links</h2>
+				relatedEpisodes.length > 0 ? (
+					<section class="related-episodes">
+						<h2>
+							More episodes from {episode.series?.title}{' '}
+							{episode.collection?.title}
+						</h2>
 
-						<ul class="resources">
-							{episode.resources.map((resource) => {
-								if (!resource.url) {
+						<div class="more-episodes">
+							{relatedEpisodes.map((related, index) => {
+								const minIndex = Math.max(0, episodeIndex - 3);
+								const maxIndex = Math.min(relatedEpisodes.length, minIndex + 6);
+								if (
+									related.slug === episode.slug ||
+									index < minIndex ||
+									index > maxIndex
+								) {
 									return null;
 								}
 
-								const label = resource.label ?? resource.url;
-
 								return (
-									<li class="resource">
-										<a href={resource.url}>{label.replace(/^https:\/\/(www\.)?/, '')}</a>
-									</li>
-								);
-							})}
-						</ul>
-					</div>
-				) : null
-			}
-		</section>
-
-		<section class="additional-details">
-			{
-				episode.sponsors && episode.sponsors.length > 0 ? (
-					<div class="sponsors">
-						<h3>Presented by</h3>
-
-						<div class="sponsor-logos">
-							{episode.sponsors.map((sponsor) => {
-								if (
-									!sponsor.logo ||
-									!sponsor.logo.public_id ||
-									!sponsor.logo.width ||
-									!sponsor.logo.height
-								) {
-									return;
-								}
-
-								const src = createImageUrl(sponsor.logo.public_id, {
-									height: sponsor.logo.height * 2,
-									width: sponsor.logo.width * 2,
-									color: '#463963',
-									effect: 'colorize',
-								});
-
-								return (
-									<a href={sponsor.link}>
-										<Image
-											src={src}
-											alt={sponsor.title}
-											height={70}
-											aspectRatio={sponsor.logo.width / sponsor.logo.height}
-										/>
-									</a>
+									<EpisodePreview
+										class="compact"
+										episode={related}
+										episodeNumber={`${episode.collection?.slug}E${index + 1}`.toUpperCase()}
+										episodeUrl={`/series/${episode.series?.slug}/${episode.collection?.slug}/${related.slug}`}
+									/>
 								);
 							})}
 						</div>
-					</div>
+					</section>
 				) : null
 			}
 
-			<PeopleInEpisode people={episode.people ?? []} server:defer />
-		</section>
-
-		{
-			relatedEpisodes.length > 0 ? (
-				<section class="related-episodes">
-					<h2>
-						More episodes from {episode.series?.title}{' '}
-						{episode.collection?.title}
-					</h2>
-
-					<div class="more-episodes">
-						{relatedEpisodes.map((related, index) => {
-							const minIndex = Math.max(0, episodeIndex - 3);
-							const maxIndex = Math.min(relatedEpisodes.length, minIndex + 6);
-							if (
-								related.slug === episode.slug ||
-								index < minIndex ||
-								index > maxIndex
-							) {
-								return null;
-							}
-
-							return (
-								<EpisodePreview
-									class="compact"
-									episode={related}
-									episodeNumber={`${episode.collection?.slug}E${index + 1}`.toUpperCase()}
-									episodeUrl={`/series/${episode.series?.slug}/${episode.collection?.slug}/${related.slug}`}
-								/>
-							);
-						})}
-					</div>
-				</section>
-			) : null
-		}
-
-		<section class="supporters">
-			<h2>Supporters</h2>
-			<p>
-				<a href="/support">
-					Become a supporter to see yourself here on future episodes!
-				</a>
-			</p>
-			<Supporters />
-		</section>
-	</div>
+			<section class="supporters">
+				<h2>Supporters</h2>
+				<p>
+					<a href="/support">
+						Become a supporter to see yourself here on future episodes!
+					</a>
+				</p>
+				<Supporters />
+			</section>
+		</div>
+	</main>
 
 	<style>
 		.video-wrapper {
@@ -401,6 +471,10 @@ const thumbnail = episode.thumbnail?.public_id ? createImageUrl(episode.thumbnai
 			}
 
 			p {
+				&:not(:first-child) {
+					margin-block-start: 0.75rem;
+				}
+
 				&:first-child {
 					font-size: 0.875rem;
 				}
