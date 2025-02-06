@@ -2,9 +2,4 @@
 package = "./plugins/inject-env-vars"
 
 [[plugins]]
-package = "@algolia/netlify-plugin-crawler"
-[plugins.inputs]
-customDomain = "codetv.dev"
-
-[[plugins]]
 package = "netlify-plugin-inngest"
