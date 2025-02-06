@@ -90,8 +90,21 @@ export function SearchBox({
 							searchClient,
 							queries: [
 								{
-									indexName:
-										'netlify_38f74995-47a6-4a22-9cd6-6ccc0ba17d4e_main_all',
+									indexName: 'codetv_dev_yzf8n5ikfx_episodes',
+									query,
+									params: {
+										hitsPerPage: 12,
+									},
+								},
+								{
+									indexName: 'codetv_dev_yzf8n5ikfx_articles',
+									query,
+									params: {
+										hitsPerPage: 12,
+									},
+								},
+								{
+									indexName: 'codetv_dev_yzf8n5ikfx_pages',
 									query,
 									params: {
 										hitsPerPage: 12,

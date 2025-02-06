@@ -116,7 +116,7 @@ export function QueryEpisodeItem({ item }) {
 					<img className="aa-CoverImage" src={item.image} />
 					<div>
 						<div className="aa-LinkLabel">
-							<Highlight hit={item} attribute="title" />
+							<Highlight hit={item} attribute="headline" />
 						</div>
 						<div className="aa-LinkDescription">
 							<Snippet hit={item} attribute={descriptionAttribute} />

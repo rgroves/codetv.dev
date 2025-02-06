@@ -1,6 +1,10 @@
 import { liteClient } from 'algoliasearch/lite';
+import {
+	PUBLIC_ALGOLIA_APP_ID,
+	PUBLIC_ALGOLIA_API_KEY,
+} from 'astro:env/client';
 
 export const searchClient = liteClient(
-	'OVS2M3AMR9',
-	'60974a0aa0e70bfb087c0a2392f752b3',
+	PUBLIC_ALGOLIA_APP_ID,
+	PUBLIC_ALGOLIA_API_KEY,
 );

@@ -116,6 +116,14 @@ export default defineConfig({
 				access: 'secret',
 				context: 'server',
 			}),
+			PUBLIC_ALGOLIA_API_KEY: envField.string({
+				access: 'public',
+				context: 'client',
+			}),
+			PUBLIC_ALGOLIA_APP_ID: envField.string({
+				access: 'public',
+				context: 'client',
+			}),
 		},
 	},
 });
