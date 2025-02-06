@@ -148,13 +148,10 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 									const pathname = `/series/${series.slug}/${c.slug}#episodes`;
 									const selected = c.slug === series.collection?.slug;
 
-									// TODO when https://github.com/withastro/astro/pull/12027 is released simplify this code
-									return selected ? (
-										<option value={pathname} selected>
+									return (
+										<option value={pathname} {selected}>
 											{c.title}
 										</option>
-									) : (
-										<option value={pathname}>{c.title}</option>
 									);
 								})
 							: null
