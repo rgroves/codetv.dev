@@ -151,7 +151,7 @@ export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 	},
 );
 
-// TODO handle Stripe webhook
+// TODO verify Stripe webhook signature: https://www.inngest.com/docs/platform/webhooks#verifying-request-signatures
 // export const handleStripeSubscriptionChangeWebhook = inngest.createFunction(
 // 	{ id: 'stripe/subscription-changed' },
 // 	[{ event: 'stripe/checkout.session.completed'},{ event: 'stripe/customer.subscription.updated'},{ event: 'stripe/customer.subscription.deleted'}],
