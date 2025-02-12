@@ -8,6 +8,4 @@ description: You’re all set!
 
 \[in an extremely hacker voice\]: _We’re in._
 
-Thanks so much for signing up for my newsletter! I’ll send you information about building better websites.
-
-To make sure the messages don’t go to spam, add jason@learnwithjason.dev to your address book – the easiest way to do that is by sending me a quick email to say hi.
+To make sure the messages don’t go to spam, add info@codetv.dev to your address book – the easiest way to do that is by sending me a quick email to say hi.
