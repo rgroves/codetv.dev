@@ -92,6 +92,10 @@ body {
 	font-weight: 400;
 }
 
+button {
+	cursor: pointer;
+}
+
 .sr-only {
 	position: absolute;
 	width: 1px;
