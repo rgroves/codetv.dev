@@ -264,99 +264,111 @@ export const handleStripeSubscriptionCompletedWebhook = inngest.createFunction(
 	{ id: 'stripe/subscription-changed' },
 	{ event: 'stripe/checkout.session.completed' },
 	async ({ event, step }) => {
-		const data = event.data;
-		const userId = data.object.metadata?.userId as string;
+		try {
+			const data = event.data;
+			const userId = data.object.metadata?.userId as string;
 
-		const subscription = await step.invoke('stripe/retrieve-subscription', {
-			function: retrieveStripeSubscription,
-			data: {
-				subscriptionId: data.object.subscription,
-			},
-		});
+			const subscription = await step.invoke('stripe/retrieve-subscription', {
+				function: retrieveStripeSubscription,
+				data: {
+					subscriptionId: data.object.subscription,
+				},
+			});
 
-		const getStripeProduct = step.invoke('stripe/retrieve-product', {
-			function: retrieveStripeProduct,
-			data: {
-				productId: subscription.items.data.at(0)?.plan?.product as string,
-			},
-		});
+			const getStripeProduct = step.invoke('stripe/retrieve-product', {
+				function: retrieveStripeProduct,
+				data: {
+					productId: subscription.items.data.at(0)?.plan?.product as string,
+				},
+			});
 
-		const getSanityUser = step.run(
-			'sanity/check-for-existing-user',
-			async () => {
-				return getPersonByClerkId({ user_id: userId });
-			},
-		);
+			const getSanityUser = step.run(
+				'sanity/check-for-existing-user',
+				async () => {
+					return getPersonByClerkId({ user_id: userId });
+				},
+			);
 
-		const updateStripeMetadata = step.run(
-			'stripe/update-metadata',
-			async () => {
-				return stripe.customers.update(subscription.customer as string, {
-					metadata: {
-						userId: userId,
-					},
-				});
-			},
-		);
+			const updateStripeMetadata = step.run(
+				'stripe/update-metadata',
+				async () => {
+					return stripe.customers.update(subscription.customer as string, {
+						metadata: {
+							userId: userId,
+						},
+					});
+				},
+			);
 
-		const [product, user] = await Promise.all([
-			getStripeProduct,
-			getSanityUser,
-			updateStripeMetadata,
-		]);
+			const [product, user] = await Promise.all([
+				getStripeProduct,
+				getSanityUser,
+				updateStripeMetadata,
+			]);
 
-		if (!user) {
-			throw new NonRetriableError('no user found');
-		}
-
-		const updateClerkUser = step.invoke('clerk-update-user-subscription', {
-			function: updateClerkUserSubscription,
-			data: {
-				clerkUserId: userId,
-				stripeCustomerId: subscription.customer as string,
-				subscriptionStatus: subscription.status,
-				productName: product.name,
-			},
-		});
-
-		const updateSanityUser = step.invoke('sanity-update-person-subscription', {
-			function: updateSanityPersonSubscription,
-			data: {
-				sanityUserId: user._id,
-				stripeCustomerId: subscription.customer as string,
-				subscriptionStatus: subscription.status,
-				productName: product.name,
-			},
-		});
-
-		const sendMessage = step.run('discord-send-message', async () => {
-			const n = user.name;
-			const p = product.name;
-			const s = subscription.status;
-
-			let msg = `New supporter! ${n} joined as a ${p} (${s})`;
-			if (event.data.object.cancel_at_period_end) {
-				msg = `${n} canceled their ${p} subscription`;
+			if (!user) {
+				throw new NonRetriableError('no user found');
 			}
 
-			return sendDiscordMessage({
-				content: msg,
+			const updateClerkUser = step.invoke('clerk-update-user-subscription', {
+				function: updateClerkUserSubscription,
+				data: {
+					clerkUserId: userId,
+					stripeCustomerId: subscription.customer as string,
+					subscriptionStatus: subscription.status,
+					productName: product.name,
+				},
 			});
-		});
 
-		const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
-			function: invalidateNetlifyProfileCacheTag,
-			data: {
-				cacheTag: `profile-${user.slug?.current ?? ''}`,
-			},
-		});
+			const updateSanityUser = step.invoke(
+				'sanity-update-person-subscription',
+				{
+					function: updateSanityPersonSubscription,
+					data: {
+						sanityUserId: user._id,
+						stripeCustomerId: subscription.customer as string,
+						subscriptionStatus: subscription.status,
+						productName: product.name,
+					},
+				},
+			);
 
-		await Promise.all([
-			updateClerkUser,
-			updateSanityUser,
-			sendMessage,
-			purgeCache,
-		]);
+			const sendMessage = step.run('discord-send-message', async () => {
+				const n = user.name;
+				const p = product.name;
+				const s = subscription.status;
+
+				let msg = `New supporter! ${n} joined as a ${p} (${s})`;
+				if (event.data.object.cancel_at_period_end) {
+					msg = `${n} canceled their ${p} subscription`;
+				}
+
+				return sendDiscordMessage({
+					content: msg,
+				});
+			});
+
+			const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
+				function: invalidateNetlifyProfileCacheTag,
+				data: {
+					cacheTag: `profile-${user.slug?.current ?? ''}`,
+				},
+			});
+
+			await Promise.all([
+				updateClerkUser,
+				updateSanityUser,
+				sendMessage,
+				purgeCache,
+			]);
+		} catch (err) {
+			await step.run('discord-send-message', async () => {
+				return sendDiscordMessage({
+					content:
+						'Failed Inngest run:\n```' + JSON.stringify(err, null, 2) + '```',
+				});
+			});
+		}
 	},
 );
 
@@ -367,90 +379,102 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 		{ event: 'stripe/customer.subscription.deleted' },
 	],
 	async ({ event, step }) => {
-		const data = event.data;
+		try {
+			const data = event.data;
 
-		const subscription = await step.invoke('stripe/retrieve-subscription', {
-			function: retrieveStripeSubscription,
-			data: {
-				subscriptionId: data.object.id,
-			},
-		});
-
-		const retrieveCustomer = step.run('stripe/retrieve-customer', async () => {
-			return stripe.customers.retrieve(subscription.customer as string);
-		}) as InvocationResult<Stripe.Customer>;
-
-		const retrieveProduct = step.invoke('stripe/retrieve-product', {
-			function: retrieveStripeProduct,
-			data: {
-				productId: subscription.items.data.at(0)?.plan?.product as string,
-			},
-		});
-
-		const [customer, product] = await Promise.all([
-			retrieveCustomer,
-			retrieveProduct,
-		]);
-
-		if (!customer) {
-			throw new NonRetriableError('No customer found');
-		}
-
-		const getSanityUser = step.run(
-			'sanity/check-for-existing-user',
-			async () => {
-				return getPersonByClerkId({ user_id: customer.metadata.userId });
-			},
-		);
-
-		const updateClerkUser = step.invoke('clerk-update-user-subscription', {
-			function: updateClerkUserSubscription,
-			data: {
-				clerkUserId: customer.metadata.userId,
-				stripeCustomerId: subscription.customer as string,
-				subscriptionStatus: subscription.status,
-				productName: product.name,
-			},
-		});
-
-		const [user] = await Promise.all([getSanityUser, updateClerkUser]);
-
-		if (!user) {
-			throw new NonRetriableError('unable to find user');
-		}
-
-		const updateSanityPerson = step.invoke(
-			'sanity-update-person-subscription',
-			{
-				function: updateSanityPersonSubscription,
+			const subscription = await step.invoke('stripe/retrieve-subscription', {
+				function: retrieveStripeSubscription,
 				data: {
-					sanityUserId: user._id,
+					subscriptionId: data.object.id,
+				},
+			});
+
+			const retrieveCustomer = step.run(
+				'stripe/retrieve-customer',
+				async () => {
+					return stripe.customers.retrieve(subscription.customer as string);
+				},
+			) as InvocationResult<Stripe.Customer>;
+
+			const retrieveProduct = step.invoke('stripe/retrieve-product', {
+				function: retrieveStripeProduct,
+				data: {
+					productId: subscription.items.data.at(0)?.plan?.product as string,
+				},
+			});
+
+			const [customer, product] = await Promise.all([
+				retrieveCustomer,
+				retrieveProduct,
+			]);
+
+			if (!customer) {
+				throw new NonRetriableError('No customer found');
+			}
+
+			const getSanityUser = step.run(
+				'sanity/check-for-existing-user',
+				async () => {
+					return getPersonByClerkId({ user_id: customer.metadata.userId });
+				},
+			);
+
+			const updateClerkUser = step.invoke('clerk-update-user-subscription', {
+				function: updateClerkUserSubscription,
+				data: {
+					clerkUserId: customer.metadata.userId,
 					stripeCustomerId: subscription.customer as string,
 					subscriptionStatus: subscription.status,
 					productName: product.name,
 				},
-			},
-		);
-
-		const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
-			function: invalidateNetlifyProfileCacheTag,
-			data: {
-				cacheTag: `profile-${user.slug?.current ?? ''}`,
-			},
-		});
-
-		const sendMessage = step.run('discord-send-message', async () => {
-			const n = user.name;
-			const p = product.name;
-			const s = subscription.status;
-			const msg = `${n} updated their subscription to ${p} (${s})`;
-
-			return sendDiscordMessage({
-				content: msg,
 			});
-		});
 
-		await Promise.all([updateSanityPerson, sendMessage, purgeCache]);
+			const [user] = await Promise.all([getSanityUser, updateClerkUser]);
+
+			if (!user) {
+				throw new NonRetriableError('unable to find user');
+			}
+
+			const updateSanityPerson = step.invoke(
+				'sanity-update-person-subscription',
+				{
+					function: updateSanityPersonSubscription,
+					data: {
+						sanityUserId: user._id,
+						stripeCustomerId: subscription.customer as string,
+						subscriptionStatus: subscription.status,
+						productName: product.name,
+					},
+				},
+			);
+
+			const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
+				function: invalidateNetlifyProfileCacheTag,
+				data: {
+					cacheTag: `profile-${user.slug?.current ?? ''}`,
+				},
+			});
+
+			const sendMessage = step.run('discord-send-message', async () => {
+				const n = user.name;
+				const p = product.name;
+				const s = subscription.status;
+				const msg = `${n} updated their subscription to ${p} (${s})`;
+
+				return sendDiscordMessage({
+					content: msg,
+				});
+			});
+
+			await Promise.all([updateSanityPerson, sendMessage, purgeCache]);
+		} catch (err) {
+			await step.run('discord-send-message', async () => {
+				return sendDiscordMessage({
+					content:
+						'Failed Inngest run:\n```' + JSON.stringify(err, null, 2) + '```',
+				});
+			});
+		}
 	},
 );
 
