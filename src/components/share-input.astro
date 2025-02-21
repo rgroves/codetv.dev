@@ -1,37 +1,63 @@
 ---
 export interface Props {
 	label: string;
+	title: string;
+	text: string;
 	url: string;
 }
 
-const { label, url } = Astro.props;
+const { label, url, title, text } = Astro.props;
 ---
 
-<label>
-	{label} (click to copy)
-	<input class="share-input" type="text" readonly value={url} />
+<share-btn data-title={title} data-text={text} data-url={url}>
+	<button class="button">{label}</button>
 	<div class="confirmation">copied!</div>
-</label>
+</share-btn>
 
 <script>
-	const shareInput = document.querySelector('.share-input') as HTMLInputElement;
-	const confirmation = document.querySelector(
-		'.confirmation',
-	) as HTMLDivElement;
+	class ShareBtn extends HTMLElement {
+		connectedCallback() {
+			const shareData = {
+				title: this.dataset.title,
+				text: this.dataset.text,
+				url: this.dataset.url,
+			};
 
-	shareInput.addEventListener('click', async () => {
-		const text = shareInput.value;
-		await navigator.clipboard.writeText(text);
+			if (!shareData.url) {
+				this.style.display = 'none';
+				return;
+			}
 
-		confirmation.classList.add('clicked');
-		setTimeout(() => {
-			confirmation.classList.remove('clicked');
-		}, 3000);
-	});
+			const button = this.querySelector('button')!;
+
+			button.addEventListener('click', async () => {
+				if (navigator.share) {
+					try {
+						await navigator.share(shareData);
+					} catch (err) {
+						console.error(`Error: ${err}`);
+					}
+				} else {
+					const confirmation = document.querySelector(
+						'.confirmation',
+					) as HTMLDivElement;
+
+					await navigator.clipboard.writeText(shareData.url!);
+
+					confirmation.classList.add('clicked');
+					setTimeout(() => {
+						confirmation.classList.remove('clicked');
+					}, 3000);
+				}
+			});
+		}
+	}
+
+	customElements.define('share-btn', ShareBtn);
 </script>
 
 <style>
-	label {
+	share-btn {
 		position: relative;
 
 		.confirmation {
@@ -43,6 +69,7 @@ const { label, url } = Astro.props;
 			align-content: center;
 			opacity: 0;
 			padding: 0.5rem;
+			pointer-events: none;
 			position: absolute;
 			text-align: center;
 			transition: all ease-out 500ms;
@@ -51,11 +78,6 @@ const { label, url } = Astro.props;
 			&.clicked {
 				opacity: 1;
 			}
-		}
-
-		input {
-			border: 1px solid var(--gray-200);
-			border-radius: 0.25rem;
 		}
 	}
 </style>

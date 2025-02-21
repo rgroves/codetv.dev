@@ -199,7 +199,12 @@ const transcript = marked.parse(transcriptRaw ?? '');
 				</div>
 
 				<nav class="episode-links">
-					<ShareInput label="Share this episode:" url={url.toString()} />
+					<ShareInput
+						label="Share this episode"
+						title={episode.title!}
+						text={episode.short_description!}
+						url={url.toString()}
+					/>
 
 					<BecomeASupporter server:defer />
 				</nav>
