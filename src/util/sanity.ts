@@ -228,6 +228,10 @@ const episodeBySlugQuery = groq`
   }
 `;
 
+const episodeTranscriptBySlugQuery = groq`
+  *[_type=="episode" && slug.current==$episode][0].video.transcript
+`;
+
 const upcomingEpisodeBySeriesQuery = groq`
   *[ _type == "collection" && series->slug.current == $seriesSlug] {
     title,
@@ -295,7 +299,7 @@ const personBySlugQuery = groq`
     bio,
     links[],
     user_id,
-    "episodes": *[_type == "episode" && hidden!=true && references(^._id) && (defined(@->video.youtube_id) || defined(@->video.mux_video))] {
+    "episodes": *[_type == "episode" && references(^._id) && hidden != true && (defined(video.youtube_id) || defined(video.mux_video))] {
       title,
       'slug': slug.current,
       short_description,
@@ -318,7 +322,7 @@ const personBySlugQuery = groq`
         'slug': slug.current,
         title,
       },
-    } | order(publish_date desc)[0...4]
+    } | order(publish_date desc)[0...6]
   }
 `;
 
@@ -387,6 +391,20 @@ export async function getEpisodeBySlug(params: { episode: string }) {
 
 	if (!episode) {
 		throw new Error(`Invalid episode ${params.episode}`);
+	}
+
+	return episode;
+}
+
+export async function getEpisodeTranscriptBySlug(params: { episode: string }) {
+	const episode = await client.fetch<EpisodeTranscriptBySlugQueryResult>(
+		episodeTranscriptBySlugQuery,
+		params,
+		{ useCdn: true },
+	);
+
+	if (!episode) {
+		return null;
 	}
 
 	return episode;

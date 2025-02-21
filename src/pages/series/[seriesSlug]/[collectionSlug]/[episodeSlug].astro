@@ -2,7 +2,10 @@
 import { format } from 'date-fns';
 import { marked } from 'marked';
 import { Image } from '@unpic/astro';
-import { getAllEpisodes } from '../../../../util/sanity';
+import {
+	getAllEpisodes,
+	getEpisodeTranscriptBySlug,
+} from '../../../../util/sanity';
 import {
 	createImageUrl,
 	generateEpisodePoster,
@@ -75,6 +78,11 @@ if (episode.thumbnail.public_id) {
 } else {
 	image = generateEpisodePoster();
 }
+
+const transcriptRaw = await getEpisodeTranscriptBySlug({
+	episode: episode.slug!,
+});
+const transcript = marked.parse(transcriptRaw ?? '');
 ---
 
 <Layout title={episode.title as string}>
@@ -141,13 +149,6 @@ if (episode.thumbnail.public_id) {
 			}
 		`}
 		/>
-
-		<!-- <meta
-			property="og:video"
-			content="https://stream.mux.com/5Mt02twIFdC5m00oZAMVi83aUz8urnKBXT5RcMUd0247XE/capped-1080p.mp4"
-		/>
-		<meta property="og:video:width" content="1920" />
-		<meta property="og:video:height" content="1080" /> -->
 	</Fragment>
 
 	<main>
@@ -229,6 +230,18 @@ if (episode.thumbnail.public_id) {
 									);
 								})}
 							</ul>
+						</div>
+					) : null
+				}
+
+				{
+					transcript ? (
+						<div class="transcript">
+							<details>
+								<summary>Read the transcript</summary>
+
+								<div set:html={transcript} />
+							</details>
 						</div>
 					) : null
 				}
@@ -495,6 +508,15 @@ if (episode.thumbnail.public_id) {
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+		}
+
+		.transcript {
+			margin-block-start: 30px;
+
+			summary {
+				font-weight: 600;
+				margin-block-end: 15px;
+			}
 		}
 
 		.sponsors {
