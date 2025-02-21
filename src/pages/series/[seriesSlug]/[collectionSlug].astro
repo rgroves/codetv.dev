@@ -258,7 +258,10 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 
 			h3 {
 				color: var(--gray-100);
-				font-weight: 600;
+				font-size: 0.75em;
+				font-weight: 400;
+				letter-spacing: 0.1em;
+				line-height: 1;
 				text-transform: uppercase;
 			}
 		}
@@ -291,6 +294,7 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 		   * @see https://stackoverflow.com/a/69273410
 		   */
 			backdrop-filter: opacity(1);
+			-webkit-backdrop-filter: opacity(1);
 
 			&::before {
 				background-image: linear-gradient(
