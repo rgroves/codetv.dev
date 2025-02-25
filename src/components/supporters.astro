@@ -12,25 +12,29 @@ if (supporters.length < 1) {
 
 <div class="supporter-list">
 	{
-		supporters.map((supporter) => {
-			const photo = supporter.photo;
+		supporters
+			.filter(
+				(s) => !['jlengstorf', 'jlengstorf-test'].includes(s.username ?? ''),
+			)
+			.map((supporter) => {
+				const photo = supporter.photo;
 
-			if (!photo || !photo.public_id) {
-				return;
-			}
+				if (!photo || !photo.public_id) {
+					return;
+				}
 
-			const src = createImageUrl(photo.public_id, {
-				height: 80,
-				width: 80,
-				crop: 'fill',
-			});
+				const src = createImageUrl(photo.public_id, {
+					height: 80,
+					width: 80,
+					crop: 'fill',
+				});
 
-			return (
-				<a href={`/profile/${supporter.username}`} title={supporter.name}>
-					<Image src={src} alt={supporter.name} width={80} aspectRatio={1} />
-				</a>
-			);
-		})
+				return (
+					<a href={`/profile/${supporter.username}`} title={supporter.name}>
+						<Image src={src} alt={supporter.name} width={80} aspectRatio={1} />
+					</a>
+				);
+			})
 	}
 </div>
 

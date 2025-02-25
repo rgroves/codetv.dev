@@ -45,7 +45,11 @@ const subscription = clerkUser?.publicMetadata.stripe ?? {
 	status: 'inactive',
 	level: 'none',
 };
-const isSubscriber = subscription?.status === 'active';
+const isSubscriber = !['jlengstorf', 'jlengstorf-test'].includes(
+	person.slug ?? '',
+)
+	? subscription?.status === 'active'
+	: false;
 
 const bio = marked.parse(person.bio ?? '');
 ---
