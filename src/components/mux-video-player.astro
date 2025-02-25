@@ -109,6 +109,7 @@ const dateString = new Intl.DateTimeFormat('en-US', {
 	isPrerelease && isSubscriber && signedPlayback ? (
 		<mux-player
 			theme="classic"
+			poster={thumbnailSrc}
 			playback-id={signedPlayback.id}
 			playback-token={videoPlaybackToken}
 			thumbnail-token={thumbnailPlaybackToken}
