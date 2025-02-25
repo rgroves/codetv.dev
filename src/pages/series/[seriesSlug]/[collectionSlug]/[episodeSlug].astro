@@ -537,13 +537,15 @@ const transcript = marked.parse(transcriptRaw ?? '');
 				font-weight: 500;
 				margin: 0;
 				text-transform: uppercase;
+				text-wrap: nowrap;
 			}
 		}
 
 		.sponsor-logos {
 			align-items: center;
 			display: flex;
-			gap: 2rem;
+			flex-wrap: wrap;
+			gap: 0 2rem;
 
 			img {
 				block-size: 2.5rem;
