@@ -16,10 +16,8 @@ const slugField = defineField({
   name: 'slug',
   type: 'slug',
   options: {
-    source: 'title',
+    source: 'name',
     slugify,
-    // TODO collection and episode slugs can duplicate as long as they have different parents
-    isUnique: () => true,
   },
   validation: (Rule) => Rule.required(),
 })
