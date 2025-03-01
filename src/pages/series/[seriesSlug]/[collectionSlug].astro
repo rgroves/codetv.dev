@@ -47,6 +47,11 @@ const sponsors = series.sponsors ?? [];
 
 const url = Astro.site!;
 url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
+
+const collection = series.collection ?? false;
+const date = collection
+	? new Date(collection.release_year ?? Date.now())
+	: new Date();
 ---
 
 <Layout title={`${series.title} ${series.collection?.title}`}>
@@ -161,9 +166,7 @@ url.pathname = `/series/${series.slug}/${series.collection?.slug}`;
 					{series.collection?.episodes?.length} episodes
 				</p>
 				<p class="year">
-					Release year: {
-						format(series.collection?.release_year ?? new Date(), 'yyyy')
-					}
+					Release year: {format(date, 'yyyy')}
 				</p>
 			</div>
 			<div class="episodes">
