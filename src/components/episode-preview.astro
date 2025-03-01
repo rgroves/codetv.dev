@@ -35,38 +35,29 @@ if (episode.thumbnail.public_id) {
 // if there's no YouTube ID or Mux ID, it's scheduled
 const date = new Date(episode.publish_date);
 const isPrerelease = date >= new Date();
+const isMembersOnly = episode.video.members_only;
+const hasYouTubeId = !!episode.video.youtube_id;
+const hasMuxId = !!episode.video.mux_video;
 
 let episode_status = 'unknown';
 let status_text = '';
-if (!isPrerelease && episode.video.youtube_id) {
-	episode_status = 'public';
-} else if (!episode.video.youtube_id && episode.video.mux) {
-	if (!episode.video.members_only && !isPrerelease) {
-		episode_status = 'public';
-	}
 
-	if (!episode.video.members_only && isPrerelease) {
+if (isPrerelease) {
+	if (!isMembersOnly && !hasYouTubeId && hasMuxId) {
 		episode_status = 'members-first';
-		status_text = `Members only until ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
-	}
-
-	if (episode.video.members_only) {
+		status_text = `Supporters only until ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+	} else if (isMembersOnly && !hasYouTubeId && hasMuxId) {
 		episode_status = 'members-only';
-		status_text = `Members only content`;
+		status_text = `Supporters only content`;
+	} else {
+		episode_status = 'scheduled';
+		status_text = `New episode coming ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 	}
-} else if (isPrerelease) {
-	episode_status = 'scheduled';
-	status_text = `New episode coming ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+} else if (!isPrerelease && hasYouTubeId) {
+	episode_status = 'public';
 } else {
 	console.log(`Episode ${episode.slug} is in an unknown state`);
 	console.log(episode);
-}
-
-if (episode.slug === 'sqlite-and-turso') {
-	console.log({
-		episode_status,
-		isPrerelease,
-	});
 }
 
 const MAX_DESC_LENGTH = 18;
