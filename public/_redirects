@@ -1,9 +1,15 @@
 # series shortlinks
 /wdc                        /series/web-dev-challenge
 /series/web-dev-challenge   /series/web-dev-challenge/s1
+/lwj                        /series/learn-with-jason
+/series/learn-with-jason    /series/learn-with-jason/s8
+/lh                         /series/leet-heat
+/leet-heat                  /series/leet-heat
+/series/leet-heat           /series/leet-heat/s1
 
 # LWJ episode redirects
 /let-s-learn-minecraft      /series/learn-with-jason/s3
+/series/leet-heat/s1/christopher-vs-jeremy /series/leet-heat/s1/e4-christopher-vs-jeremy
 
 # Old pages
 /partners                   https://partners.lwj.dev
