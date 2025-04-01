@@ -9,7 +9,7 @@ import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
   name: 'default',
-  title: 'learnwithjason.dev',
+  title: 'codetv.dev',
 
   projectId: 'vnkupgyb',
   dataset: 'develop',
