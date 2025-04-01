@@ -86,21 +86,28 @@ export const person = defineType({
       subscription: 'subscription',
     },
     prepare({name, photo, subscription}) {
-      const url = new URL('https://res.cloudinary.com')
-      url.pathname = [
-        'jlengstorf',
-        'image',
-        photo.type,
-        't_thumb400',
-        'w_99',
-        'v' + photo.version,
-        photo.public_id,
-      ].join('/')
+      let url
+      if (photo && photo.public_id) {
+        url = new URL('https://res.cloudinary.com')
+        url.pathname = [
+          'jlengstorf',
+          'image',
+          photo.type,
+          't_thumb400',
+          'w_99',
+          'v' + photo.version,
+          photo.public_id,
+        ].join('/')
+      } else {
+        url = new URL(
+          'https://res.cloudinary.com/jlengstorf/image/upload/t_thumb400/w_99/v1743473132/placeholder.jpg',
+        )
+      }
 
       const subtitle = subscription?.status === 'active' ? subscription?.level : ''
 
       return {
-        title: name,
+        title: name ?? 'Draft Person',
         subtitle,
         imageUrl: url.toString(),
       }
