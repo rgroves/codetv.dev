@@ -135,7 +135,7 @@ if (episode.video && !episode.video.youtube_id && episode.video.mux) {
 				"name": "${title}",
 				"image": "${image}",
 				"description": "${episode.short_description}",
-				"datePublished": "${format(episode.publish_date!, 'yyyy-MM-dd')}",
+				"datePublished": "${format(new Date(episode.publish_date!), 'yyyy-MM-dd')}",
 				"actor": [
 					${episode.people?.map((person) => {
 						return JSON.stringify(
@@ -205,8 +205,8 @@ if (episode.video && !episode.video.youtube_id && episode.video.mux) {
 						<span class="episode-date">
 							{
 								new Date(episode.publish_date!) > new Date()
-									? `Coming ${format(episode.publish_date!, 'eeee, MMM d')}`
-									: format(episode.publish_date!, 'MMM d, yyyy')
+									? `Coming ${format(new Date(episode.publish_date!), 'eeee, MMM d')}`
+									: format(new Date(episode.publish_date!), 'MMM d, yyyy')
 							}
 						</span>
 					</div>
@@ -346,7 +346,9 @@ if (episode.video && !episode.video.youtube_id && episode.video.mux) {
 			</section>
 
 			{
-				relatedEpisodes.length > 0 ? (
+				relatedEpisodes.length > 0 &&
+				relatedEpisodes.length !== 1 &&
+				relatedEpisodes.at(0)?.slug !== episode.slug ? (
 					<section class="related-episodes">
 						<h2>
 							More episodes from {episode.series?.title}{' '}
@@ -399,7 +401,16 @@ if (episode.video && !episode.video.youtube_id && episode.video.mux) {
 			container: video-wrapper / size;
 			inline-size: 100%;
 			max-block-size: calc(100dvh - 280px);
-			overflow: hidden;
+
+			&:has(.subscription-required) {
+				aspect-ratio: unset;
+				container: video-wrapper / inline-size;
+
+				@media (min-width: 500px) {
+					aspect-ratio: 16 / 9;
+					container: video-wrapper / size;
+				}
+			}
 		}
 
 		.wrapper {
@@ -477,7 +488,6 @@ if (episode.video && !episode.video.youtube_id && episode.video.mux) {
 				border: 1px solid var(--gray-300);
 				block-size: min-content;
 				color: var(--black);
-				font: inherit;
 				font-weight: 600;
 				margin: 0;
 				text-decoration: none;
@@ -486,14 +496,23 @@ if (episode.video && !episode.video.youtube_id && episode.video.mux) {
 			.inline-heart {
 				margin-inline-end: 0.5rem;
 			}
+
+			svg:not(.inline-heart) {
+				display: block;
+			}
 		}
 
 		.episode-meta {
 			display: flex;
+			flex-direction: column;
 			font-size: 0.875rem;
 			font-weight: 200;
-			gap: 0.5rem;
 			margin-block: 0.25rem;
+
+			@media (min-width: 410px) {
+				flex-direction: initial;
+				gap: 0.5rem;
+			}
 		}
 
 		.season-link {
@@ -578,8 +597,12 @@ if (episode.video && !episode.video.youtube_id && episode.video.mux) {
 			align-items: center;
 			display: flex;
 			gap: 1.5rem;
-			justify-content: start;
+			justify-content: center;
 			margin: 0;
+
+			@media (min-width: 750px) {
+				justify-content: start;
+			}
 
 			h3 {
 				color: var(--text-muted);

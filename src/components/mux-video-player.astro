@@ -162,7 +162,6 @@ const dateString = new Intl.DateTimeFormat('en-US', {
 	}
 
 	.subscription-required {
-		aspect-ratio: 16 / 9;
 		background-blend-mode: multiply, normal;
 		background-image: linear-gradient(
 				color-mix(in oklch, var(--gray-500) 40%, transparent),
@@ -170,8 +169,9 @@ const dateString = new Intl.DateTimeFormat('en-US', {
 			),
 			var(--bg-img);
 		background-size: cover, cover;
+		block-size: 100%;
 		display: flex;
-		place-content: center;
+		place-items: center;
 
 		.notice {
 			align-items: center;

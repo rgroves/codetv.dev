@@ -75,10 +75,10 @@ body {
 	color: var(--black);
 	display: inline-block;
 	font-family: var(--font-family-medium);
-	font-size: 1.125rem;
+	font-size: 0.875rem;
 	line-height: 1;
 	margin-block-start: 1rem;
-	padding: 0.75rem 1rem;
+	padding: 4px 8px;
 	text-decoration: none;
 
 	&:is(:active, :hover, :focus) {
