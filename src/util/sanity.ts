@@ -90,6 +90,7 @@ const seriesBySlugQuery = groq`
       title,
       'slug': slug.current,
       release_year,
+      'episode_count': count(episodes[@->hidden != true])
     }
   }
 `;
