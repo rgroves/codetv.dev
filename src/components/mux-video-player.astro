@@ -40,7 +40,13 @@ const mux = new Mux({
 	jwtPrivateKey: env.MUX_JWT_PRIVATE_KEY!,
 });
 
-const user = await Astro.locals.currentUser();
+let user;
+try {
+	user = await Astro.locals.currentUser();
+} catch (e) {
+	user = false;
+}
+
 // @ts-ignore
 const isSubscriber = user && user?.publicMetadata?.stripe?.status === 'active';
 
