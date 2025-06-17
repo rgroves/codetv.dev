@@ -21,6 +21,11 @@ export const STRIPE_SUBSCRIPTION_TYPES = [
 				price: 5_00,
 				priceId: TIER_SILVER_PRICE_ID,
 			},
+			{
+				period: 'yearly',
+				price: 55_00,
+				priceId: 'price_1Rb7tQJ4VGTQR05O6ICKiAgi',
+			},
 		],
 	},
 	{
@@ -33,20 +38,25 @@ export const STRIPE_SUBSCRIPTION_TYPES = [
 				price: 20_00,
 				priceId: TIER_GOLD_PRICE_ID,
 			},
-		],
-	},
-	{
-		name: 'Platinum',
-		description:
-			'All the perks of the gold tier + the option to book a 30-minute monthly strategy call.',
-		prices: [
 			{
-				period: 'monthly',
-				price: 100_00,
-				priceId: TIER_PLATINUM_PRICE_ID,
+				period: 'yearly',
+				price: 220_00,
+				priceId: 'price_1Rb7u0J4VGTQR05OlNNhThIx',
 			},
 		],
 	},
+	// {
+	// 	name: 'Platinum',
+	// 	description:
+	// 		'All the perks of the gold tier + the option to book a 30-minute monthly strategy call.',
+	// 	prices: [
+	// 		{
+	// 			period: 'monthly',
+	// 			price: 100_00,
+	// 			priceId: TIER_PLATINUM_PRICE_ID,
+	// 		},
+	// 	],
+	// },
 ];
 
 export async function validateWebhookSignature(request: Request) {
