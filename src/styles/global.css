@@ -119,9 +119,11 @@ a {
 
 .three-up {
 	display: grid;
+	gap: 80px;
 	grid-template-columns: 100%;
 
 	@media (min-width: 500px) {
+		gap: 20px;
 		grid-template-columns: repeat(2, 1fr);
 	}
 
