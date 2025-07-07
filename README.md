@@ -1,15 +1,26 @@
 # CodeTV.dev
 
-WIP.
+The home page for [CodeTV](https://codetv.dev).
 
-## TODO:
+## Tech Stack
 
-- [ ] set up Sanity webhook
-- [x] set up new Sanity studio and/or swap dataset
-- [x] hook up Algolia to the v2 site data
-- [x] figure out how to get Algolia images to display correctly
+- Astro
+- Sanity for series content
+- Markdown (via Astro content collections) for the blog
+- Algolia for search
+- Clerk for auth
+- Inngest to manage all the cross-tool syncing and updates
+- Mux for supporters-only video
+- Stripe for subscriptions
+- Cloudinary for images
+
+## TODO
+
 - [ ] RSS feed per series
 - [ ] RSS feed all content
-- [ ] Dark mode
-- [ ] home page newsletter
-- [ ] explore prefetching profiles for faster loads
+
+## Local Development
+
+Currently it's not easy to run this site locally because it requires a bunch of environment variables that can't be shared.
+
+If anyone has ideas on how to make this less painful, [please let us know](https://github.com/codetv-dev/codetv.dev/issues/28).
