@@ -46,24 +46,13 @@ export const discordUpdateUserRole = inngest.createFunction(
 			},
 		);
 
-		await step.run('discord/roles.debug', async () => {
-			return {
-        bt: DISCORD_BOT_TOKEN,
-        memberId,
-				roleId,
-				silver: roles.SILVER_TIER_ROLE_ID,
-				gold: roles.GOLD_TIER_ROLE_ID,
-				platinum: roles.PLATINUM_TIER_ROLE_ID,
-			};
-		});
-
 		// update the user's role on Discord
-		const addRole = await step.run('discord/user.roles.add', async () => {
+		const addRole = step.run('discord/user.roles.add', async () => {
 			return updateRole({ memberId, roleId });
 		});
 
 		// remove other roles on Discord
-		const removeSilverRole = await step.run(
+		const removeSilverRole = step.run(
 			'discord/user.roles.maybe-remove-silver',
 			async () => {
 				if (roleId !== roles.SILVER_TIER_ROLE_ID) {
@@ -77,7 +66,7 @@ export const discordUpdateUserRole = inngest.createFunction(
 			},
 		);
 
-		const removeGoldRole = await step.run(
+		const removeGoldRole = step.run(
 			'discord/user.roles.maybe-remove-gold',
 			async () => {
 				if (roleId !== roles.GOLD_TIER_ROLE_ID) {
@@ -91,7 +80,7 @@ export const discordUpdateUserRole = inngest.createFunction(
 			},
 		);
 
-		const removePlatinumRole = await step.run(
+		const removePlatinumRole = step.run(
 			'discord/user.roles.maybe-remove-platinum',
 			async () => {
 				if (roleId !== roles.PLATINUM_TIER_ROLE_ID) {
@@ -105,12 +94,12 @@ export const discordUpdateUserRole = inngest.createFunction(
 			},
 		);
 
-		// await Promise.all([
-		// 	addRole,
-		// 	removeSilverRole,
-		// 	removeGoldRole,
-		// 	removePlatinumRole,
-		// ]);
+		await Promise.all([
+			addRole,
+			removeSilverRole,
+			removeGoldRole,
+			removePlatinumRole,
+		]);
 
 		// send a message to the updates feed channel
 		await step.fetch(
