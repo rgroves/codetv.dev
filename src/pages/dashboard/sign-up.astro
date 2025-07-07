@@ -26,8 +26,8 @@ import Heart from '../../components/heart.astro';
 				</p>
 				<p>
 					Accounts start free, and you can choose to upgrade for as little as
-					$5/month. Paid accounts directly fund the creation of new CodeTV programming and
-					unlock exclusive, supporter-only perks, including:
+					$5/month. Paid accounts directly fund the creation of new CodeTV
+					programming and unlock exclusive, supporter-only perks, including:
 				</p>
 
 				<ul>
@@ -81,7 +81,10 @@ import Heart from '../../components/heart.astro';
 		.auth {
 			.cl-rootBox {
 				margin-block: 0;
-				max-inline-size: 50cqi;
+
+				@media (min-width: 960px) {
+					max-inline-size: 50cqi;
+				}
 			}
 		}
 	}
