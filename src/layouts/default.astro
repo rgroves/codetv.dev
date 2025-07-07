@@ -1,17 +1,8 @@
 ---
-import Eyebrow from '../components/eyebrow.astro';
-import Logo from '../components/logo.astro';
+// import Eyebrow from '../components/eyebrow.astro';
+import Header from '../components/header.astro';
 import Footer from '../components/footer.astro';
-import UserButton from '../components/user-button.astro';
 import '../styles/global.css';
-
-const nav = [
-	{ path: '/watch', label: 'Watch' },
-	{ path: '/blog', label: 'Blog' },
-	{ path: '/newsletter', label: 'Newsletter' },
-	{ path: '/support', label: 'Support' },
-	{ path: 'https://partners.codetv.dev', label: 'Partners' },
-];
 
 export interface Props {
 	title?: string;
@@ -37,6 +28,13 @@ const {
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+
+		<link
+			rel="alternate"
+			type="application/rss+xml"
+			title="CodeTV Blog RSS"
+			href={new URL('blog/rss.xml', Astro.site)}
+		/>
 
 		<slot name="head">
 			<meta name="description" content={description} />
@@ -64,51 +62,8 @@ const {
 		></script>
 	</head>
 	<body>
-		<header>
-			<Eyebrow />
-
-			<div>
-				<a href="/" rel="home" class="logo">
-					<Logo />
-				</a>
-
-				<button class="nav-toggle" popovertarget="menu"> menu </button>
-
-				<div class="nav-group" id="menu" popover>
-					<div class="account">
-						<UserButton server:defer>
-							<a slot="fallback" href="#loading">
-								loading... <div class="placeholder-img"></div>
-							</a>
-						</UserButton>
-					</div>
-
-					<nav>
-						{nav.map(({ path, label }) => <a href={path}>{label}</a>)}
-
-						<a
-							href="#search"
-							class="open-search"
-							title="open site search"
-							data-name="nav-search"
-						>
-							<svg viewBox="0 0 20 20">
-								<path
-									fill="none"
-									fill-rule="evenodd"
-									stroke="currentColor"
-									stroke-width="2"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M14.386 14.386l4.088 4.088-4.088-4.088A7.533 7.533 0 113.733 3.733a7.533 7.533 0 0110.653 10.653z"
-								></path>
-							</svg>
-							⌘+K
-						</a>
-					</nav>
-				</div>
-			</div>
-		</header>
+		<!-- <Eyebrow /> -->
+		<Header />
 
 		<slot />
 
@@ -142,23 +97,6 @@ const {
 	</body>
 </html>
 
-<script>
-	const navSearchBtn = document.querySelector('[data-name="nav-search"]');
-
-	navSearchBtn?.addEventListener('click', (event) => {
-		event.preventDefault();
-
-		const search = document.querySelector(
-			'[data-name="main-search"]',
-		) as HTMLButtonElement;
-
-		(
-			document.querySelector('#menu:popover-open') as HTMLElement
-		)?.hidePopover();
-		search.click();
-	});
-</script>
-
 <style>
 	/* When the nav popover is visible:
 		1. Disable anchor tags from being targets of pointer events to prevent clicking links under the popover
@@ -174,255 +112,6 @@ const {
 		*/
 		:not(#menu a) {
 			pointer-events: none;
-		}
-	}
-
-	/* This allows the header and nav menu popover to be full screen height when the popover is visible. */
-	header:has(#menu:popover-open) {
-		position: fixed;
-		min-height: 100%;
-		top: 0;
-
-		& .nav-group {
-			position: fixed;
-			min-height: 100%;
-			top: 0;
-		}
-	}
-
-	header {
-		inset-block-start: 0;
-		margin: 0;
-
-		/* how much will I regret this? */
-		pointer-events: none;
-		position: sticky;
-		z-index: 100;
-
-		&::after {
-			background: linear-gradient(to bottom, var(--white), transparent);
-			content: '';
-			position: fixed;
-			block-size: 10px;
-			inset-block-start: 0;
-			inset-inline: 0;
-			display: block;
-			z-index: 1;
-		}
-
-		aside {
-			position: relative;
-			z-index: 2;
-		}
-
-		> div {
-			align-items: center;
-			backdrop-filter: blur(30px) saturate(120%);
-			-webkit-backdrop-filter: blur(30px) saturate(120%);
-			background: color-mix(in oklch, var(--gray-900) 70%, transparent);
-			display: grid;
-			gap: 5px;
-			grid-template-areas:
-				'logo account'
-				'nav nav';
-			justify-content: space-between;
-			position: relative;
-			z-index: 10;
-
-			@media (min-width: 1080px) {
-				grid-template-areas: 'logo nav';
-			}
-
-			/*
-			 * Linear-style glass optical effect, credited to Jamie Gray by Artur Bién
-			 * @see https://twitter.com/artur_bien/status/1707130118391370234
-			 */
-			margin-block-end: -100px;
-			mask-image: linear-gradient(
-				to bottom,
-				black 0,
-				black calc(100% - 100px),
-				transparent calc(100% - 100px),
-				transparent
-			);
-			padding: 0 max((100dvi - 1080px) / 2, 5dvi) 100px;
-
-			.logo {
-				grid-area: logo;
-				pointer-events: all;
-
-				svg {
-					aspect-ratio: 109 / 28;
-					block-size: auto;
-					display: block;
-					inline-size: min(250px, 30dvi);
-				}
-			}
-
-			.nav-toggle {
-				align-self: center;
-				background: transparent;
-				border: none;
-				color: var(--white);
-				font-weight: 600;
-				justify-self: center;
-				letter-spacing: 0.1em;
-				line-height: 1.75;
-				padding: 10px 30px;
-				pointer-events: all;
-				text-transform: uppercase;
-
-				@media (min-width: 1080px) {
-					display: none;
-				}
-			}
-
-			.nav-group {
-				background: none;
-				block-size: 90dvb;
-				border: none;
-				inline-size: 100dvi;
-				padding: 0;
-				position: absolute;
-				inset: 10dvb 0 0;
-
-				@media (min-width: 1080px) {
-					block-size: auto;
-					display: flex;
-					flex-direction: column;
-					grid-area: nav;
-					inline-size: auto;
-					inset: unset;
-					position: static;
-				}
-			}
-
-			#menu:popover-open {
-				align-items: center;
-				backdrop-filter: blur(30px);
-				-webkit-backdrop-filter: blur(30px);
-				background: color-mix(in oklch, var(--gray-400) 60%, transparent);
-				border: none;
-				display: flex;
-				flex-direction: column-reverse;
-				font-size: 0.8rem;
-				gap: 10px;
-				grid-area: nav;
-				justify-content: start;
-				padding: 2rem;
-				padding-inline-end: 25px;
-
-				.account {
-					align-self: center;
-					margin-block-start: 20px;
-					padding-inline-end: 0;
-				}
-
-				nav {
-					align-items: center;
-					background: none;
-					backdrop-filter: none;
-					-webkit-backdrop-filter: none;
-					border: none;
-					box-shadow: none;
-					gap: 5px;
-					flex-direction: column;
-
-					&::before {
-						content: '× close menu';
-						display: block;
-						font-size: 0.8em;
-						margin-block-end: 20px;
-						padding: 10px;
-					}
-				}
-
-				.open-search {
-					margin-inline-start: 0;
-				}
-			}
-
-			.account {
-				align-self: end;
-				display: flex;
-				gap: 1rem;
-				grid-area: account;
-				padding-inline-end: 25px;
-
-				a {
-					align-items: center;
-					color: var(--white);
-					display: flex;
-					gap: 0.5rem;
-					inline-size: max-content;
-					letter-spacing: 0.1em;
-					margin-inline-start: auto;
-					padding: 10px 5px;
-					pointer-events: all;
-					text-decoration: none;
-					text-shadow: 0 1px 2px
-						color-mix(in oklch, var(--gray-500) 80%, transparent);
-					text-transform: lowercase;
-				}
-
-				.placeholder-img,
-				img {
-					aspect-ratio: 1;
-					background: var(--text-muted);
-					block-size: auto;
-					border: 1px solid var(--black);
-					border-radius: 50%;
-					display: inline-block;
-					inline-size: 1.625rem;
-					object-fit: cover;
-				}
-			}
-
-			nav {
-				align-items: baseline;
-				color: var(--white);
-				display: flex;
-				flex-wrap: wrap;
-				font-weight: 500;
-				gap: 1rem 1.5rem;
-				inline-size: min(max-content, 90dvi);
-				justify-content: center;
-				letter-spacing: 0.1em;
-
-				@media (min-width: 1080px) {
-					gap: 10px;
-					inline-size: max-content;
-					justify-content: start;
-					padding: 0 25px;
-				}
-
-				a {
-					color: var(--white);
-					display: block;
-					line-height: 1.1;
-					padding: 15px 10px;
-					pointer-events: all;
-					text-decoration: none;
-				}
-
-				.open-search {
-					align-items: baseline;
-					background: var(--white);
-					border-radius: 15px;
-					color: var(--text-muted);
-					display: flex;
-					gap: 8px;
-					margin-inline-start: 15px;
-					padding: 5px 20px;
-
-					svg {
-						display: block;
-						inline-size: 0.875rem;
-						position: relative;
-						inset-block-start: 0.1rem;
-					}
-				}
-			}
 		}
 	}
 
