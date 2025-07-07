@@ -46,11 +46,6 @@ export const discordUpdateUserRole = inngest.createFunction(
 			},
 		);
 
-		// update the user's role on Discord
-		const addRole = await step.run('discord/user.roles.add', async () => {
-			return updateRole({ memberId, roleId });
-		});
-
 		await step.run('discord/roles.debug', async () => {
 			return {
         bt: DISCORD_BOT_TOKEN,
@@ -60,6 +55,11 @@ export const discordUpdateUserRole = inngest.createFunction(
 				gold: roles.GOLD_TIER_ROLE_ID,
 				platinum: roles.PLATINUM_TIER_ROLE_ID,
 			};
+		});
+
+		// update the user's role on Discord
+		const addRole = await step.run('discord/user.roles.add', async () => {
+			return updateRole({ memberId, roleId });
 		});
 
 		// remove other roles on Discord
