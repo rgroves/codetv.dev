@@ -5,7 +5,9 @@ import {
 	DISCORD_CHANNEL_ID,
 	DISCORD_SERVER_ID,
 	getRoleId,
+	removeRole,
 	roles,
+	updateRole,
 	type SubscriptionLevel,
 } from '../discord';
 import { NonRetriableError } from 'inngest';
@@ -45,13 +47,7 @@ export const discordUpdateUserRole = inngest.createFunction(
 		);
 
 		// update the user's role on Discord
-		const addRole = step.fetch(
-			`https://discord.com/api/v10/guilds/${DISCORD_SERVER_ID}/members/${memberId}/roles/${roleId}`,
-			{
-				method: 'PUT',
-				headers: botRequestHeaders,
-			},
-		);
+		const addRole = updateRole({ memberId, roleId });
 
 		await step.run('discord/roles.debug', async () => {
 			return {
@@ -68,33 +64,15 @@ export const discordUpdateUserRole = inngest.createFunction(
 		let removePlatinumRole = Promise.resolve(new Response('no action'));
 
 		if (roleId !== roles.SILVER_TIER_ROLE_ID) {
-			removeSilverRole = step.fetch(
-				`https://discord.com/api/v10/guilds/${DISCORD_SERVER_ID}/members/${memberId}/roles/${roles.SILVER_TIER_ROLE_ID}`,
-				{
-					method: 'DELETE',
-					headers: botRequestHeaders,
-				},
-			);
+			removeSilverRole = removeRole({ memberId, roleId: roles.SILVER_TIER_ROLE_ID});
 		}
 
 		if (roleId !== roles.GOLD_TIER_ROLE_ID) {
-			removeGoldRole = step.fetch(
-				`https://discord.com/api/v10/guilds/${DISCORD_SERVER_ID}/members/${memberId}/roles/${roles.GOLD_TIER_ROLE_ID}`,
-				{
-					method: 'DELETE',
-					headers: botRequestHeaders,
-				},
-			);
+			removeGoldRole = removeRole({ memberId, roleId: roles.GOLD_TIER_ROLE_ID});
 		}
 
 		if (roleId !== roles.PLATINUM_TIER_ROLE_ID) {
-			removePlatinumRole = step.fetch(
-				`https://discord.com/api/v10/guilds/${DISCORD_SERVER_ID}/members/${memberId}/roles/${roles.PLATINUM_TIER_ROLE_ID}`,
-				{
-					method: 'DELETE',
-					headers: botRequestHeaders,
-				},
-			);
+			removePlatinumRole = removeRole({ memberId, roleId: roles.PLATINUM_TIER_ROLE_ID});
 		}
 
 		await Promise.all([
