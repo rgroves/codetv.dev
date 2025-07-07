@@ -8,7 +8,7 @@ export type SubscriptionLevel = 'Free Tier Supporter' | 'Silver Tier Supporter' 
 
 export const botRequestHeaders = {
 	Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
-	'Content-Type': 'application/json',
+	// 'Content-Type': 'application/json',
 	'User-Agent': 'CodeTV Bot (http://www.codetv.dev, v0.1)',
 };
 
