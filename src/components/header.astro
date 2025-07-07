@@ -127,7 +127,7 @@ const nav = [
 	}
 
 	nav {
-		align-items: baseline;
+		align-items: center;
 		background: color-mix(in oklch, var(--black) 95%, transparent);
 		block-size: calc(100dvb - 68px);
 		color: var(--white);
@@ -266,8 +266,9 @@ const nav = [
 		padding: 15px 5px 15px 10px;
 		transition: background-color 100ms linear;
 
+
 		@media (min-width: 1080px) {
-			padding-block: 5px;
+			padding: 8px;
 		}
 
 		&:is(:hover, :focus) {
