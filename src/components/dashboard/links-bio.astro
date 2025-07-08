@@ -40,10 +40,10 @@ const userDetails = (await getPersonById(
 							{
 								userDetails.links?.map((link, i: number) => (
 									<>
-										<dt class="link field-label">{link.label}</dt>
+										<dt class="link field-label" title={link.label}>{link.label}</dt>
 
 										<dd class="url">
-											<span>{link.url}</span>
+											<span title={link.url}>{link.url}</span>
 
 											<button class="remove-link">
 												<svg
@@ -145,6 +145,12 @@ const userDetails = (await getPersonById(
 		field-sizing: content;
 	}
 
+	.link {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
 	.url {
 		align-items: flex-start;
 		display: flex;
@@ -152,6 +158,7 @@ const userDetails = (await getPersonById(
 
 		span {
 			display: block;
+			max-inline-size: 85cqi;
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
