@@ -16,16 +16,6 @@ function slugify(str: string) {
     .replace(/-+/g, '-') // remove consecutive hyphens
 }
 
-const date = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false,
-  timeZone: 'America/Los_Angeles',
-})
-
 export const slugField = defineField({
   title: 'Slug',
   name: 'slug',

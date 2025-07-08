@@ -14,21 +14,26 @@ export default defineConfig({
   dataset: 'develop',
 
   plugins: [
+    visionTool(),
+    markdownSchema(),
+    cloudinarySchemaPlugin(),
+    muxInput({
+      tool: false,
+    }),
     structureTool({
       structure: (S) => {
         return S.list()
           .title('Content')
           .items(
             S.documentTypeListItems().filter(
-              (li) => !['Episode', 'Collection'].includes(li.getTitle() ?? ''),
+              (li) =>
+                !['Episode', 'Collection', 'Episode Tag', 'Video asset'].includes(
+                  li.getTitle() ?? '',
+                ),
             ),
           )
       },
     }),
-    visionTool(),
-    markdownSchema(),
-    cloudinarySchemaPlugin(),
-    muxInput(),
   ],
 
   schema: {
