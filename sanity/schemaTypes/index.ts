@@ -133,8 +133,8 @@ const collection = defineType({
   title: 'Collection',
   icon: FolderIcon,
   groups: [
+    {name: 'details', title: 'Details'},
     {name: 'content', title: 'Content', default: true},
-    {name: 'organization', title: 'Organization'},
   ],
   fields: [
     defineField({
@@ -142,7 +142,7 @@ const collection = defineType({
       name: 'title',
       type: 'string',
       validation: (Rule) => Rule.required().error('Collection title is required'),
-      group: 'content',
+      group: 'details',
     }),
     slugField,
     defineField({
@@ -151,7 +151,7 @@ const collection = defineType({
       title: 'Release Year',
       description: 'When this collection was released',
       validation: (Rule) => Rule.required().error('Release year is required'),
-      group: 'content',
+      group: 'details',
     }),
     defineField({
       title: 'Series',
@@ -159,7 +159,7 @@ const collection = defineType({
       type: 'reference',
       to: {type: 'series'},
       validation: (Rule) => Rule.required().error('Series is required'),
-      group: 'organization',
+      group: 'content',
     }),
     defineField({
       title: 'Episodes',
@@ -172,7 +172,7 @@ const collection = defineType({
           to: [{type: 'episode'}],
         },
       ],
-      group: 'organization',
+      group: 'content',
     }),
   ],
   preview: {
