@@ -119,6 +119,10 @@ export default defineConfig({
 				access: 'public',
 				context: 'client',
 			}),
+			GOOGLE_SHEETS_SERVICE_ACCOUNT: envField.string({
+				access: 'secret',
+				context: 'server',
+			}),
 		},
 	},
 });
