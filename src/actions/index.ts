@@ -51,12 +51,27 @@ export const server = {
 				}
 			},
 		}),
+		test: defineAction({
+			accept: 'form',
+			input: z.object({
+				id: z.string(),
+				bio: z.string().optional(),
+				'link_label[]': z.array(z.string()),
+				'link_url[]': z.array(z.string()),
+			}),
+			handler: async (input) => {
+				console.log('actions.user.test');
+				console.log(input);
+
+				return true;
+			}
+		}),
 		wdcIntake: defineAction({
 			accept: 'form',
 			input: z.object({
 				id: z.string(),
 				// username: z.string(),
-				bio: z.string(),
+				bio: z.string().optional(),
 				// email: z.string(),
 				// phone: z.string(),
 				// groupchat: z.coerce.boolean(),
@@ -77,7 +92,7 @@ export const server = {
 					const {
 						id,
 						// username,
-						bio,
+						bio = '',
 						// email,
 						// phone,
 						// groupchat,
