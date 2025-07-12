@@ -72,63 +72,65 @@ export const server = {
 			handler: async (input) => {
 				console.log('actions.user.wdcIntake');
 				console.log(input);
-				try {
-					const {
-						id,
-						username,
-						bio,
-						email,
-						phone,
-						groupchat,
-						coffee,
-						role,
-						reimbursement,
-					} = input;
 
-					const dietaryRequirements = input['dietary-requirements'];
-					const foodAdventurousness = input['food-adventurousness'];
-					const terms = input['terms-accept'];
-					const link_labels = input['link_label[]'];
-					const link_urls = input['link_url[]'];
-					const links = link_urls
-						.map((url, i) => {
-							if (!url) {
-								return false;
-							}
+				return true;
+				// try {
+				// 	const {
+				// 		id,
+				// 		username,
+				// 		bio,
+				// 		email,
+				// 		phone,
+				// 		groupchat,
+				// 		coffee,
+				// 		role,
+				// 		reimbursement,
+				// 	} = input;
 
-							return {
-								label: link_labels.at(i) ?? '',
-								url,
-							};
-						})
-						.filter((val) => val !== false);
+				// 	const dietaryRequirements = input['dietary-requirements'];
+				// 	const foodAdventurousness = input['food-adventurousness'];
+				// 	const terms = input['terms-accept'];
+				// 	const link_labels = input['link_label[]'];
+				// 	const link_urls = input['link_url[]'];
+				// 	const links = link_urls
+				// 		.map((url, i) => {
+				// 			if (!url) {
+				// 				return false;
+				// 			}
 
-					const result = await inngest.send({
-						name: 'codetv/forms.wdc.submit',
-						data: {
-							id: id.toString(),
-							username,
-							email,
-							bio,
-							phone,
-							groupchat,
-							coffee,
-							role,
-							reimbursement,
-							dietaryRequirements,
-							foodAdventurousness,
-							terms,
-							links,
-						},
-					});
+				// 			return {
+				// 				label: link_labels.at(i) ?? '',
+				// 				url,
+				// 			};
+				// 		})
+				// 		.filter((val) => val !== false);
 
-					return result;
-				} catch (err) {
-					console.log({ err });
-					return {
-						error: err
-					}
-				}
+				// 	const result = await inngest.send({
+				// 		name: 'codetv/forms.wdc.submit',
+				// 		data: {
+				// 			id: id.toString(),
+				// 			username,
+				// 			email,
+				// 			bio,
+				// 			phone,
+				// 			groupchat,
+				// 			coffee,
+				// 			role,
+				// 			reimbursement,
+				// 			dietaryRequirements,
+				// 			foodAdventurousness,
+				// 			terms,
+				// 			links,
+				// 		},
+				// 	});
+
+				// 	return result;
+				// } catch (err) {
+				// 	console.log({ err });
+				// 	return {
+				// 		error: err
+				// 	}
+				// }
 			},
 		}),
 	},
