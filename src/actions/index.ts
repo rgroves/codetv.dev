@@ -131,7 +131,7 @@ export const server = {
 			// 			error: err
 			// 		}
 			// 	}
-			// },
+			},
 		}),
 	},
 	newsletter: {
