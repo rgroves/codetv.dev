@@ -55,17 +55,17 @@ export const server = {
 			accept: 'form',
 			input: z.object({
 				id: z.string(),
-				username: z.string(),
+				// username: z.string(),
 				bio: z.string(),
-				email: z.string(),
-				phone: z.string(),
-				groupchat: z.coerce.boolean(),
-				dietaryRequirements: z.string().optional(),
-				foodAdventurousness: z.coerce.number(),
-				coffee: z.string().optional(),
-				termsAccept: z.string(),
-				role: z.enum(['developer', 'advisor']),
-				reimbursement: z.coerce.boolean(),
+				// email: z.string(),
+				// phone: z.string(),
+				// groupchat: z.coerce.boolean(),
+				// dietaryRequirements: z.string().optional(),
+				// foodAdventurousness: z.coerce.number(),
+				// coffee: z.string().optional(),
+				// termsAccept: z.string(),
+				// role: z.enum(['developer', 'advisor']),
+				// reimbursement: z.coerce.boolean(),
 				'link_label[]': z.array(z.string()),
 				'link_url[]': z.array(z.string()),
 			}),
@@ -73,49 +73,20 @@ export const server = {
 				console.log('actions.user.wdcIntake');
 				console.log(input);
 
-				/**
-					[
-						{ name: 'id', value: '1c607bb5-519b-49b6-9da9-5ddc424aa44c' },
-						{ name: 'username', value: 'jlengstorf' }
-						{
-							name: 'bio',
-							value: "Jason makes tv for developers at CodeTV. He believes that a career in tech is more successful, rewarding, and sustainable when it's built on fun, curiosity, and community."
-						},
-						{ name: 'email', value: 'jason@codetv.dev' },
-						{ name: 'phone', value: '971-280-4906' },
-						{ name: 'groupchat', value: 'on' },
-						{ name: 'dietary-requirements', value: '' },
-						{ name: 'food-adventurousness', value: '5' },
-						{ name: 'coffee', value: '' },
-						{ name: 'terms-accept', value: 'test' },
-						{ name: 'role', value: 'developer' },
-						{ name: 'reimbursement', value: 'on' },
-						{ name: 'link_label[]', value: 'Links' },
-						{ name: 'link_url[]', value: 'https://jason.energy/links' },
-						{ name: 'link_label[]', value: 'Bluesky' },
-						{
-							name: 'link_url[]',
-							value: 'https://bsky.app/profile/jason.energy'
-						},
-						{ name: 'link_label[]', value: 'CodeTV' },
-						{ name: 'link_url[]', value: 'https://codetv.dev' },
-					]
-				*/
-
 				try {
 					const {
 						id,
-						username,
+						// username,
 						bio,
-						email,
-						phone,
-						groupchat,
-						coffee,
-						role,
-						reimbursement,
-						dietaryRequirements,
-						foodAdventurousness,
-						termsAccept,
+						// email,
+						// phone,
+						// groupchat,
+						// coffee,
+						// role,
+						// reimbursement,
+						// dietaryRequirements,
+						// foodAdventurousness,
+						// termsAccept,
 					} = input;
 
 					const link_labels = input['link_label[]'];
@@ -137,17 +108,17 @@ export const server = {
 						name: 'codetv/forms.wdc.submit',
 						data: {
 							id: id.toString(),
-							username,
-							email,
+							// username,
+							// email,
 							bio,
-							phone,
-							groupchat,
-							coffee,
-							role,
-							reimbursement,
-							dietaryRequirements,
-							foodAdventurousness,
-							termsAccept,
+							// phone,
+							// groupchat,
+							// coffee,
+							// role,
+							// reimbursement,
+							// dietaryRequirements,
+							// foodAdventurousness,
+							// termsAccept,
 							links,
 						},
 					});
