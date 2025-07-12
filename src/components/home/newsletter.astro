@@ -14,7 +14,7 @@ import { actions } from 'astro:actions';
 		all, we believe that <strong>you belong here.</strong>
 	</p>
 
-	<form method="POST" action={`/confirm${actions.newsletter.subscribe}`}>
+	<form method="POST" action={actions.newsletter.subscribe}>
 		<div class="input">
 			<label for="firstName">First Name</label>
 			<input type="text" name="firstName" id="firstName" required />
@@ -28,6 +28,23 @@ import { actions } from 'astro:actions';
 		<button class="button" type="submit">Subscribe</button>
 	</form>
 </section>
+
+<script>
+	import { actions } from 'astro:actions';
+  import { navigate } from 'astro:transitions/client';
+
+  const form = document.querySelector('form');
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+		
+    const formData = new FormData(form);
+    const { error } = await actions.newsletter.subscribe(formData);
+
+    if (!error) {
+			navigate('/confirm');
+		}
+  })
+</script>
 
 <style>
 	.newsletter {
