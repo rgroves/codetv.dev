@@ -157,6 +157,7 @@ if (result && !result.error) {
 									id="email"
 									class="input"
 									placeholder="you@example.com"
+									value={user?.primaryEmailAddress?.emailAddress ?? ''}
 									required
 								/>
 							</div>
@@ -171,7 +172,7 @@ if (result && !result.error) {
 									name="phone"
 									id="phone"
 									class="input"
-									placeholder="555-555-1234"
+									placeholder={user?.primaryPhoneNumber?.phoneNumber ?? ''}
 									required
 								/>
 							</div>
