@@ -376,7 +376,11 @@ if (result && !result.error) {
 						form?.addEventListener('submit', async (event) => {
 							event.preventDefault();
 							const formData = new FormData(form);
-							const { error, data } = await actions.user.test(formData);
+							const termsAccept = formData.get('termsAccept')?.toString() ?? '';
+
+							const actionData = new FormData();
+							actionData.set('termsAccept', termsAccept);
+							const { error, data } = await actions.user.test(actionData);
 
 							console.log({ formData: Array.from(formData.entries()), error, data });
 							console.log('form submitted');
