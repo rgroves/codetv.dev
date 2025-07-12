@@ -11,7 +11,7 @@ const userDetails = (await getPersonById(
 	{ useCdn: false },
 )) ?? { _id: undefined, bio: '', links: [] };
 
-const result = await Astro.getActionResult(actions.user.wdcIntake);
+const result = Astro.getActionResult(actions.user.wdcIntake);
 
 console.log(result);
 
