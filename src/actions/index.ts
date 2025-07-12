@@ -53,27 +53,27 @@ export const server = {
 		}),
 		test: defineAction({
 			accept: 'form',
-			// input: z.object({
-			// 	signature: z.string(),
-			// 	// role: z.any(),
-			// 	// reimbursement: z.any(),
-			// 	// email: z.any(),
-			// 	// phone: z.any(),
-			// 	// groupchat: z.any(),
-			// 	// bio: z.any(),
-			// 	// 'link_label[]': z.any(),
-			// 	// 'link_url[]': z.any(),
-			// 	// dietaryRequirements: z.any(),
-			// 	// foodAdventurousness: z.any(),
-			// 	// coffee: z.any(),
-			// 	// id: z.any(),
-			// 	// username: z.any(),
-			// }),
+			input: z.object({
+				signature: z.string(),
+				// role: z.any(),
+				// reimbursement: z.any(),
+				// email: z.any(),
+				// phone: z.any(),
+				// groupchat: z.any(),
+				// bio: z.any(),
+				// 'link_label[]': z.any(),
+				// 'link_url[]': z.any(),
+				// dietaryRequirements: z.any(),
+				// foodAdventurousness: z.any(),
+				// coffee: z.any(),
+				// id: z.any(),
+				// username: z.any(),
+			}),
 			handler: async (input) => {
 				console.log('actions.user.test');
 				console.log(input);
 
-				return Array.from(input.entries());
+				return input;
 			}
 		}),
 		// wdcIntake: defineAction({
