@@ -1,7 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/blog.astro';
-import BlueskyActivity from '../../components/bsky-activity.astro';
+// import BlueskyActivity from '../../components/bsky-activity.astro';
 
 export const prerender = true;
 
@@ -27,5 +27,5 @@ const { headings, Content } = await render(blog);
 <Layout frontmatter={blog.data} headings={headings}>
 	<Content />
 
-	<BlueskyActivity postId="3lmvaobmqfc22" />
+	<!-- <BlueskyActivity postId="3lmvaobmqfc22" /> -->
 </Layout>
