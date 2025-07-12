@@ -45,9 +45,14 @@ const { heading = 'tv for developers in your inbox', disclaimer } = Astro.props;
   const form = document.querySelector('form');
   form?.addEventListener('submit', async (event) => {
     event.preventDefault();
-		
+
     const formData = new FormData(form);
-    const { error } = await actions.newsletter.subscribe(formData);
+		const input = {
+			firstName: formData.get('firstName')?.toString() ?? '',
+			email: formData.get('email')?.toString() ?? '',
+		};
+
+    const { error } = await actions.newsletter.subscribe(input);
 
     if (!error) {
 			navigate('/confirm');
