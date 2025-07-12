@@ -55,7 +55,7 @@ export const server = {
 			accept: 'form',
 			input: z.object({
 				termsAccept: z.string(),
-				role: z.enum(['developer', 'advisor']),
+				role: z.string(),
 				reimbursement: z.coerce.boolean(),
 				email: z.string(),
 				phone: z.string(),
@@ -76,87 +76,87 @@ export const server = {
 				return true;
 			}
 		}),
-		wdcIntake: defineAction({
-			accept: 'form',
-			input: z.object({
-				termsAccept: z.string(),
-				role: z.enum(['developer', 'advisor']),
-				reimbursement: z.coerce.boolean(),
-				email: z.string(),
-				phone: z.string(),
-				groupchat: z.coerce.boolean(),
-				bio: z.string().optional(),
-				'link_label[]': z.array(z.string()),
-				'link_url[]': z.array(z.string()),
-				dietaryRequirements: z.string().optional(),
-				foodAdventurousness: z.coerce.number(),
-				coffee: z.string().optional(),
-				id: z.string(),
-				username: z.string(),
-			}),
-			handler: async (input) => {
-				console.log('actions.user.wdcIntake');
-				console.log(input);
+		// wdcIntake: defineAction({
+		// 	accept: 'form',
+		// 	input: z.object({
+		// 		termsAccept: z.string(),
+		// 		role: z.enum(['developer', 'advisor']),
+		// 		reimbursement: z.coerce.boolean(),
+		// 		email: z.string(),
+		// 		phone: z.string(),
+		// 		groupchat: z.coerce.boolean(),
+		// 		bio: z.string().optional(),
+		// 		'link_label[]': z.array(z.string()),
+		// 		'link_url[]': z.array(z.string()),
+		// 		dietaryRequirements: z.string().optional(),
+		// 		foodAdventurousness: z.coerce.number(),
+		// 		coffee: z.string().optional(),
+		// 		id: z.string(),
+		// 		username: z.string(),
+		// 	}),
+		// 	handler: async (input) => {
+		// 		console.log('actions.user.wdcIntake');
+		// 		console.log(input);
 
-				try {
-					const {
-						id,
-						// username,
-						bio = '',
-						// email,
-						// phone,
-						// groupchat,
-						// coffee,
-						// role,
-						// reimbursement,
-						// dietaryRequirements,
-						// foodAdventurousness,
-						// termsAccept,
-					} = input;
+		// 		try {
+		// 			const {
+		// 				id,
+		// 				// username,
+		// 				bio = '',
+		// 				// email,
+		// 				// phone,
+		// 				// groupchat,
+		// 				// coffee,
+		// 				// role,
+		// 				// reimbursement,
+		// 				// dietaryRequirements,
+		// 				// foodAdventurousness,
+		// 				// termsAccept,
+		// 			} = input;
 
-					const link_labels = input['link_label[]'];
-					const link_urls = input['link_url[]'];
-					const links = link_urls
-						.map((url, i) => {
-							if (!url) {
-								return false;
-							}
+		// 			const link_labels = input['link_label[]'];
+		// 			const link_urls = input['link_url[]'];
+		// 			const links = link_urls
+		// 				.map((url, i) => {
+		// 					if (!url) {
+		// 						return false;
+		// 					}
 
-							return {
-								label: link_labels.at(i) ?? '',
-								url,
-							};
-						})
-						.filter((val) => val !== false);
+		// 					return {
+		// 						label: link_labels.at(i) ?? '',
+		// 						url,
+		// 					};
+		// 				})
+		// 				.filter((val) => val !== false);
 
-					const result = await inngest.send({
-						name: 'codetv/forms.wdc.submit',
-						data: {
-							id: id.toString(),
-							// username,
-							// email,
-							bio,
-							// phone,
-							// groupchat,
-							// coffee,
-							// role,
-							// reimbursement,
-							// dietaryRequirements,
-							// foodAdventurousness,
-							// termsAccept,
-							links,
-						},
-					});
+		// 			const result = await inngest.send({
+		// 				name: 'codetv/forms.wdc.submit',
+		// 				data: {
+		// 					id: id.toString(),
+		// 					// username,
+		// 					// email,
+		// 					bio,
+		// 					// phone,
+		// 					// groupchat,
+		// 					// coffee,
+		// 					// role,
+		// 					// reimbursement,
+		// 					// dietaryRequirements,
+		// 					// foodAdventurousness,
+		// 					// termsAccept,
+		// 					links,
+		// 				},
+		// 			});
 
-					return result;
-				} catch (err) {
-					console.log({ err });
-					return {
-						error: err,
-					};
-				}
-			},
-		}),
+		// 			return result;
+		// 		} catch (err) {
+		// 			console.log({ err });
+		// 			return {
+		// 				error: err,
+		// 			};
+		// 		}
+		// 	},
+		// }),
 	},
 	newsletter: {
 		subscribe: defineAction({
