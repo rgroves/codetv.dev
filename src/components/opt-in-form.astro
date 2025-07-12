@@ -12,7 +12,7 @@ const { heading = 'tv for developers in your inbox', disclaimer } = Astro.props;
 ---
 
 <aside class="opt-in">
-	<form method="POST" action={`/confirm${actions.newsletter.subscribe}`}>
+	<form method="POST" action={actions.newsletter.subscribe}>
 		<slot>
 			<h2>{heading}</h2>
 			<p>
@@ -37,6 +37,23 @@ const { heading = 'tv for developers in your inbox', disclaimer } = Astro.props;
 		{disclaimer ? <p class="disclaimer">{disclaimer}</p> : null}
 	</form>
 </aside>
+
+<script>
+	import { actions } from 'astro:actions';
+  import { navigate } from 'astro:transitions/client';
+
+  const form = document.querySelector('form');
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+		
+    const formData = new FormData(form);
+    const { error } = await actions.newsletter.subscribe(formData);
+
+    if (!error) {
+			navigate('/confirm');
+		}
+  })
+</script>
 
 <style>
 	.opt-in {
