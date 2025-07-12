@@ -54,10 +54,20 @@ export const server = {
 		test: defineAction({
 			accept: 'form',
 			input: z.object({
-				id: z.string(),
+				termsAccept: z.string(),
+				role: z.enum(['developer', 'advisor']),
+				reimbursement: z.coerce.boolean(),
+				email: z.string(),
+				phone: z.string(),
+				groupchat: z.coerce.boolean(),
 				bio: z.string().optional(),
 				'link_label[]': z.array(z.string()),
 				'link_url[]': z.array(z.string()),
+				dietaryRequirements: z.string().optional(),
+				foodAdventurousness: z.coerce.number(),
+				coffee: z.string().optional(),
+				id: z.string(),
+				username: z.string(),
 			}),
 			handler: async (input) => {
 				console.log('actions.user.test');
@@ -69,20 +79,20 @@ export const server = {
 		wdcIntake: defineAction({
 			accept: 'form',
 			input: z.object({
-				id: z.string(),
-				// username: z.string(),
+				termsAccept: z.string(),
+				role: z.enum(['developer', 'advisor']),
+				reimbursement: z.coerce.boolean(),
+				email: z.string(),
+				phone: z.string(),
+				groupchat: z.coerce.boolean(),
 				bio: z.string().optional(),
-				// email: z.string(),
-				// phone: z.string(),
-				// groupchat: z.coerce.boolean(),
-				// dietaryRequirements: z.string().optional(),
-				// foodAdventurousness: z.coerce.number(),
-				// coffee: z.string().optional(),
-				// termsAccept: z.string(),
-				// role: z.enum(['developer', 'advisor']),
-				// reimbursement: z.coerce.boolean(),
 				'link_label[]': z.array(z.string()),
 				'link_url[]': z.array(z.string()),
+				dietaryRequirements: z.string().optional(),
+				foodAdventurousness: z.coerce.number(),
+				coffee: z.string().optional(),
+				id: z.string(),
+				username: z.string(),
 			}),
 			handler: async (input) => {
 				console.log('actions.user.wdcIntake');
