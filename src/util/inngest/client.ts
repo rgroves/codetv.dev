@@ -83,17 +83,17 @@ type Events = {
 	'codetv/forms.wdc.submit': {
 		data: {
 			id: string;
-			// username: string;
-			bio: string;
-			// email: string;
-			// phone: string;
-			// groupchat: boolean;
-			// dietaryRequirements?: string;
-			// foodAdventurousness: number;
-			// coffee?: string;
-			// signature: string;
-			// role: 'developer' | 'advisor';
-			// reimbursement: boolean;
+			username: string;
+			bio?: string;
+			email: string;
+			phone: string;
+			groupchat: boolean;
+			dietaryRequirements?: string;
+			foodAdventurousness: number;
+			coffee?: string;
+			signature: string;
+			role: 'developer' | 'advisor';
+			reimbursement: boolean;
 			links: Array<{ label: string; url: string }>;
 		}
 	}

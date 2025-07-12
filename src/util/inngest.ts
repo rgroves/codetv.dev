@@ -180,16 +180,16 @@ const handleWDCIntakeSubmit = inngest.createFunction(
 	async function ({ event, step }) {
 		const {
 			id,
-			bio,
-			// email,
-			// phone,
-			// groupchat,
-			// coffee,
-			// role,
-			// reimbursement,
-			// dietaryRequirements,
-			// foodAdventurousness,
-			// signature,
+			bio = '',
+			email,
+			phone,
+			groupchat,
+			coffee,
+			role,
+			reimbursement,
+			dietaryRequirements,
+			foodAdventurousness,
+			signature,
 			links,
 		} = event.data;
 
@@ -198,30 +198,27 @@ const handleWDCIntakeSubmit = inngest.createFunction(
 		});
 
 		// these details are only relevant to the production, so don’t store in Sanity/Clerk
-		// const appendEntry = step.run('sheets/append', async () => {
-		// 	return await appendValue({
-		// 		signature,
-		// 		role,
-		// 		reimbursement,
-		// 		email,
-		// 		phone,
-		// 		groupchat,
-		// 		dietaryRequirements,
-		// 		foodAdventurousness,
-		// 		coffee,
-		// 	});
-		// });
+		const appendEntry = step.run('sheets/append', async () => {
+			return await appendValue({
+				signature,
+				role,
+				reimbursement,
+				email,
+				phone,
+				groupchat,
+				dietaryRequirements,
+				foodAdventurousness,
+				coffee,
+			});
+		});
 
-		// const [,sheetUrl] = await Promise.all([updateSanityUser, appendEntry]);
-		await Promise.all([updateSanityUser]);
+		const [,sheetUrl] = await Promise.all([updateSanityUser, appendEntry]);
 
-
-
-		// await step.run('discord/notification.send', async () => {
-		// 	await sendDiscordMessage({
-		// 		content: `${signature} filled out the WDC onboarding form ([view submission](${sheetUrl}))`
-		// 	});
-		// });
+		await step.run('discord/notification.send', async () => {
+			await sendDiscordMessage({
+				content: `${signature} filled out the WDC onboarding form ([view submission](${sheetUrl}))`
+			});
+		});
 	},
 );
 

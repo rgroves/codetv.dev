@@ -33,7 +33,7 @@ console.log(JSON.stringify({ result }, null, 2));
 				</div>
 
 				<div class="form">
-					<form method="POST" action={actions.user.test}>
+					<form method="POST" action={actions.forms.wdc}>
 						<section class="form-section">
 							<div class="section-header">
 								<h2>Video release</h2>
@@ -101,7 +101,7 @@ console.log(JSON.stringify({ result }, null, 2));
 								/>
 							</div>
 
-							<!-- <div class="field">
+							<div class="field">
 								<label for="role">Confirm your role in the episode</label>
 								<p class="description">
 									We need different information from developers on the show and
@@ -135,10 +135,10 @@ console.log(JSON.stringify({ result }, null, 2));
 										I will book my travel and invoice CodeTV for reimbursement
 									</label>
 								</div>
-							</div> -->
+							</div>
 						</section>
 
-						<!-- <section class="form-section">
+						<section class="form-section">
 							<div class="section-header">
 								<h2>Contact Information</h2>
 
@@ -360,13 +360,13 @@ console.log(JSON.stringify({ result }, null, 2));
 									placeholder="12oz oat milk latte"
 								/>
 							</div>
-						</section> -->
+						</section>
 
 						<section class="form-section">
 							<button type="submit" class="button">Update Profile</button>
 
-							<!-- <input type="hidden" name="id" value={userDetails._id} />
-							<input type="hidden" name="username" value={user?.username} /> -->
+							<input type="hidden" name="id" value={userDetails._id} />
+							<input type="hidden" name="username" value={user?.username} />
 						</section>
 					</form>
 
@@ -448,7 +448,7 @@ console.log(JSON.stringify({ result }, null, 2));
 	</div>
 </template>
 
-<!-- <script>
+<script>
 	function linksBioSetup() {
 		// handle removing links
 		function addRemoveHandlers() {
@@ -499,7 +499,7 @@ console.log(JSON.stringify({ result }, null, 2));
 	}
 
 	linksBioSetup();
-</script> -->
+</script>
 
 <style>
 	main {
