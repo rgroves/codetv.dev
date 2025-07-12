@@ -31,7 +31,7 @@ if (result && !result.error) {
 				</div>
 
 				<div class="form">
-					<form method="POST" action={actions.user.test}>
+					<form method="POST">
 						<section class="form-section">
 							<div class="section-header">
 								<h2>Video release</h2>
@@ -366,6 +366,24 @@ if (result && !result.error) {
 							<input type="hidden" name="username" value={user?.username} />
 						</section>
 					</form>
+
+					<script>
+						import { actions } from 'astro:actions';
+						// import { navigate } from 'astro:transitions/client';
+					
+						const form = document.querySelector('form');
+						form?.addEventListener('submit', async (event) => {
+							event.preventDefault();
+							const formData = new FormData(form);
+							const { error, data } = await actions.user.test(formData);
+
+							console.log({ error, data });
+							console.log('form submitted');
+							
+							// if (!error) navigate('/confirmation');
+						})
+					</script>
+					
 				</div>
 			</section>
 		</SignedIn>
