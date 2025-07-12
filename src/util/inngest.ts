@@ -189,7 +189,7 @@ const handleWDCIntakeSubmit = inngest.createFunction(
 			reimbursement,
 			dietaryRequirements,
 			foodAdventurousness,
-			terms,
+			termsAccept,
 			links,
 		} = event.data;
 
@@ -200,7 +200,7 @@ const handleWDCIntakeSubmit = inngest.createFunction(
 		// these details are only relevant to the production, so don’t store in Sanity/Clerk
 		const appendEntry = step.run('sheets/append', async () => {
 			return await appendValue({
-				terms,
+				termsAccept,
 				role,
 				reimbursement,
 				email,
@@ -216,7 +216,7 @@ const handleWDCIntakeSubmit = inngest.createFunction(
 
 		await step.run('discord/notification.send', async () => {
 			await sendDiscordMessage({
-				content: `${terms} filled out the WDC onboarding form ([view submission](${sheetUrl}))`
+				content: `${termsAccept} filled out the WDC onboarding form ([view submission](${sheetUrl}))`
 			});
 		});
 	},

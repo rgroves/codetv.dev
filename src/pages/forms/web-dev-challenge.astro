@@ -11,13 +11,11 @@ const userDetails = (await getPersonById(
 	{ useCdn: false },
 )) ?? { _id: undefined, bio: '', links: [] };
 
-// const result = Astro.getActionResult(actions.user.wdcIntake);
+const result = Astro.getActionResult(actions.user.wdcIntake);
 
-// console.log(result);
-
-// if (result && !result.error) {
-//   return Astro.redirect(`/forms/submitted`);
-// }
+if (result && !result.error) {
+  return Astro.redirect(`/forms/submitted`);
+}
 ---
 
 <Layout title="Web Dev Challenge Filming Questionnaire">
@@ -88,13 +86,13 @@ const userDetails = (await getPersonById(
 							</div>
 
 							<div class="field">
-								<label for="terms-accept"
+								<label for="termsAccept"
 									>Enter your legal name to agree to these terms:</label
 								>
 								<input
 									type="text"
-									name="terms-accept"
-									id="terms-accept"
+									name="termsAccept"
+									id="termsAccept"
 									class="input"
 									placeholder="Legal name"
 									required
@@ -299,20 +297,20 @@ const userDetails = (await getPersonById(
 							</div>
 
 							<div class="field">
-								<label for="dietary-requirements">Dietary Requirements</label>
+								<label for="dietaryRequirements">Dietary Requirements</label>
 								<p class="description">
 									E.g. vegetarian, dairy-free, allergic to shellfish. We need to
 									know this so you have options at the dinners and lunch!
 								</p>
 
 								<textarea
-									name="dietary-requirements"
-									id="dietary-requirements"
+									name="dietaryRequirements"
+									id="dietaryRequirements"
 									class="input textarea"></textarea>
 							</div>
 
 							<div class="field">
-								<label for="food-adventurousness"
+								<label for="foodAdventurousness"
 									>How adventurous are you as an eater?</label
 								>
 								<p class="description">
@@ -325,8 +323,8 @@ const userDetails = (await getPersonById(
 								</p>
 
 								<select
-									name="food-adventurousness"
-									id="food-adventurousness"
+									name="foodAdventurousness"
+									id="foodAdventurousness"
 									class="input select"
 									required
 								>

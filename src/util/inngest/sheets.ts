@@ -46,7 +46,7 @@ async function getGoogleSheetsAccessToken() {
 }
 
 export async function appendValue({
-  terms,
+  termsAccept,
   role,
   reimbursement,
   email,
@@ -56,7 +56,7 @@ export async function appendValue({
   foodAdventurousness,
   coffee,
 }: {
-  terms: string;
+  termsAccept: string;
   role: string;
   reimbursement: boolean;
   email: string;
@@ -83,7 +83,7 @@ export async function appendValue({
 
   const entry = [
     new Date().toLocaleString(),
-    terms,
+    termsAccept,
     role,
     reimbursement,
     email,

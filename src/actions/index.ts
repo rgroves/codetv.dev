@@ -57,13 +57,13 @@ export const server = {
 				id: z.string(),
 				username: z.string(),
 				bio: z.string(),
-				email: z.string().email(),
+				email: z.string(),
 				phone: z.string(),
 				groupchat: z.coerce.boolean(),
-				'dietary-requirements': z.string().optional(),
-				'food-adventurousness': z.coerce.number().int().min(1).max(5),
+				dietaryRequirements: z.string().optional(),
+				foodAdventurousness: z.coerce.number(),
 				coffee: z.string().optional(),
-				'terms-accept': z.string(),
+				termsAccept: z.string(),
 				role: z.enum(['developer', 'advisor']),
 				reimbursement: z.coerce.boolean(),
 				'link_label[]': z.array(z.string()),
@@ -113,11 +113,11 @@ export const server = {
 						coffee,
 						role,
 						reimbursement,
+						dietaryRequirements,
+						foodAdventurousness,
+						termsAccept,
 					} = input;
 
-					const dietaryRequirements = input['dietary-requirements'];
-					const foodAdventurousness = input['food-adventurousness'];
-					const terms = input['terms-accept'];
 					const link_labels = input['link_label[]'];
 					const link_urls = input['link_url[]'];
 					const links = link_urls
@@ -147,7 +147,7 @@ export const server = {
 							reimbursement,
 							dietaryRequirements,
 							foodAdventurousness,
-							terms,
+							termsAccept,
 							links,
 						},
 					});
@@ -156,8 +156,8 @@ export const server = {
 				} catch (err) {
 					console.log({ err });
 					return {
-						error: err
-					}
+						error: err,
+					};
 				}
 			},
 		}),
