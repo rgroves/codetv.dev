@@ -13,9 +13,11 @@ const userDetails = (await getPersonById(
 
 const result = Astro.getActionResult(actions.user.test);
 
-if (result && !result.error) {
-  return Astro.redirect(`/forms/submitted`);
-}
+console.log(JSON.stringify({ result }, null, 2));
+
+// if (result && !result.error) {
+//   return Astro.redirect(`/forms/submitted`);
+// }
 ---
 
 <Layout title="Web Dev Challenge Filming Questionnaire">
@@ -31,7 +33,7 @@ if (result && !result.error) {
 				</div>
 
 				<div class="form">
-					<form method="POST">
+					<form method="POST" action={actions.user.test}>
 						<section class="form-section">
 							<div class="section-header">
 								<h2>Video release</h2>
@@ -86,20 +88,20 @@ if (result && !result.error) {
 							</div>
 
 							<div class="field">
-								<label for="termsAccept"
+								<label for="signature"
 									>Enter your legal name to agree to these terms:</label
 								>
 								<input
 									type="text"
-									name="termsAccept"
-									id="termsAccept"
+									name="signature"
+									id="signature"
 									class="input"
 									placeholder="Legal name"
 									required
 								/>
 							</div>
 
-							<div class="field">
+							<!-- <div class="field">
 								<label for="role">Confirm your role in the episode</label>
 								<p class="description">
 									We need different information from developers on the show and
@@ -133,10 +135,10 @@ if (result && !result.error) {
 										I will book my travel and invoice CodeTV for reimbursement
 									</label>
 								</div>
-							</div>
+							</div> -->
 						</section>
 
-						<section class="form-section">
+						<!-- <section class="form-section">
 							<div class="section-header">
 								<h2>Contact Information</h2>
 
@@ -358,17 +360,17 @@ if (result && !result.error) {
 									placeholder="12oz oat milk latte"
 								/>
 							</div>
-						</section>
+						</section> -->
 
 						<section class="form-section">
 							<button type="submit" class="button">Update Profile</button>
 
-							<input type="hidden" name="id" value={userDetails._id} />
-							<input type="hidden" name="username" value={user?.username} />
+							<!-- <input type="hidden" name="id" value={userDetails._id} />
+							<input type="hidden" name="username" value={user?.username} /> -->
 						</section>
 					</form>
 
-					<script>
+					<!-- <script>
 						import { actions } from 'astro:actions';
 						// import { navigate } from 'astro:transitions/client';
 					
@@ -387,7 +389,7 @@ if (result && !result.error) {
 							
 							// if (!error) navigate('/confirmation');
 						})
-					</script>
+					</script> -->
 					
 				</div>
 			</section>

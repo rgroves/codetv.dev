@@ -91,7 +91,7 @@ type Events = {
 			// dietaryRequirements?: string;
 			// foodAdventurousness: number;
 			// coffee?: string;
-			// termsAccept: string;
+			// signature: string;
 			// role: 'developer' | 'advisor';
 			// reimbursement: boolean;
 			links: Array<{ label: string; url: string }>;

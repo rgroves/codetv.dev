@@ -53,33 +53,33 @@ export const server = {
 		}),
 		test: defineAction({
 			accept: 'form',
-			input: z.object({
-				termsAccept: z.any(),
-				// role: z.any(),
-				// reimbursement: z.any(),
-				// email: z.any(),
-				// phone: z.any(),
-				// groupchat: z.any(),
-				// bio: z.any(),
-				// 'link_label[]': z.any(),
-				// 'link_url[]': z.any(),
-				// dietaryRequirements: z.any(),
-				// foodAdventurousness: z.any(),
-				// coffee: z.any(),
-				// id: z.any(),
-				// username: z.any(),
-			}),
+			// input: z.object({
+			// 	signature: z.string(),
+			// 	// role: z.any(),
+			// 	// reimbursement: z.any(),
+			// 	// email: z.any(),
+			// 	// phone: z.any(),
+			// 	// groupchat: z.any(),
+			// 	// bio: z.any(),
+			// 	// 'link_label[]': z.any(),
+			// 	// 'link_url[]': z.any(),
+			// 	// dietaryRequirements: z.any(),
+			// 	// foodAdventurousness: z.any(),
+			// 	// coffee: z.any(),
+			// 	// id: z.any(),
+			// 	// username: z.any(),
+			// }),
 			handler: async (input) => {
 				console.log('actions.user.test');
 				console.log(input);
 
-				return input;
+				return Array.from(input.entries());
 			}
 		}),
 		// wdcIntake: defineAction({
 		// 	accept: 'form',
 		// 	input: z.object({
-				// termsAccept: z.string(),
+				// signature: z.string(),
 				// role: z.string(),
 				// reimbursement: z.coerce.boolean(),
 				// email: z.string(),
@@ -111,7 +111,7 @@ export const server = {
 		// 				// reimbursement,
 		// 				// dietaryRequirements,
 		// 				// foodAdventurousness,
-		// 				// termsAccept,
+		// 				// signature,
 		// 			} = input;
 
 		// 			const link_labels = input['link_label[]'];
@@ -143,7 +143,7 @@ export const server = {
 		// 					// reimbursement,
 		// 					// dietaryRequirements,
 		// 					// foodAdventurousness,
-		// 					// termsAccept,
+		// 					// signature,
 		// 					links,
 		// 				},
 		// 			});
