@@ -16,9 +16,9 @@ import Aside from '../../components/aside.astro';
 
 If you want to use custom fonts with [Cloudinary](https://jason.energy/cloudinary), you need to upload them as authenticated assets.
 
-While you can [use Cloudinary Node SDK to upload custom fonts](/blog/upload-custom-font-cloudinary-node/) (or one of the [other SDKs](https://cloudinary.com/documentation?ap=lwj)), it's sometime more convenient to use the [Media Library UI](https://cloudinary.com/console/media_library?ap=lwj) to drag and drop fonts. However, it's not immediately clear _how_ to upload fonts as authenticated assets.
+While you can [use Cloudinary Node SDK to upload custom fonts](/blog/upload-custom-font-cloudinary-node) (or one of the [other SDKs](https://cloudinary.com/documentation?ap=lwj)), it's sometime more convenient to use the [Media Library UI](https://cloudinary.com/console/media_library?ap=lwj) to drag and drop fonts. However, it's not immediately clear _how_ to upload fonts as authenticated assets.
 
-In this post, we'll look at how to configure the Media Library to upload font files as authenticated assets so we can use them with [text overlays](/blog/add-text-overlay-cloudinary/).
+In this post, we'll look at how to configure the Media Library to upload font files as authenticated assets so we can use them with [text overlays](/blog/add-text-overlay-cloudinary).
 
 <Aside>
 
@@ -80,7 +80,7 @@ We know that our upload preset is working because the font has a lock in the bot
 
 ## Use the custom font in a text overlay
 
-Once our custom font is uploaded, we can use it by adding its public ID as the font name in a [text overlay transformation](/blog/add-text-overlay-cloudinary/).
+Once our custom font is uploaded, we can use it by adding its public ID as the font name in a [text overlay transformation](/blog/add-text-overlay-cloudinary).
 
 Using an image from our own media library, we can add the text overlay like so:
 
@@ -100,7 +100,7 @@ The URL above will display this image with a text overlay using our custom font!
 
 For next steps:
 
-- Learn how to use text overlays to [automatically generate social sharing cards for blog posts](/blog/auto-generate-social-image/)
-- Get more detail on [how text overlays work](/blog/add-text-overlay-cloudinary/)
-- Use the [Node SDK to upload custom fonts programmatically](/blog/upload-custom-font-cloudinary-node/)
+- Learn how to use text overlays to [automatically generate social sharing cards for blog posts](/blog/auto-generate-social-image)
+- Get more detail on [how text overlays work](/blog/add-text-overlay-cloudinary)
+- Use the [Node SDK to upload custom fonts programmatically](/blog/upload-custom-font-cloudinary-node)
 - Read the [Cloudinary docs on text overlays](https://cloudinary.com/documentation/image_transformations?ap=lwj#adding_text_captions)

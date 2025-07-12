@@ -11,20 +11,20 @@ share:
   text: A tutorial to teach you how query parameters work and how to use them.
 ---
 
-import Aside from '../../../components/aside.astro';
-import Figure from '../../../components/figure.astro';
+import Aside from '../../components/aside.astro';
+import Figure from '../../components/figure.astro';
 
 Serverless functions really start to show their potential when we can accept user input and respond to it. The most straightforward way to do this is with query parameters in the browser using `GET` requests. In this article, we'll look at how to retrieve query parameters in a serverless function and use them to affect the output of our function.
 
 <Aside>
 
-**Heads up!** This tutorial uses [Netlify Functions](https://www.netlify.com/products/functions/?utm_source=learnwithjason&utm_medium=sls-query-string-jl&utm_campaign=devex) for development and deployment. If you'd like more information, I've written a [primer on how to deploy serverless functions to Netlify](/blog/serverless-functions/deploy-first-serverless-function/).
+**Heads up!** This tutorial uses [Netlify Functions](https://www.netlify.com/products/functions/?utm_source=learnwithjason&utm_medium=sls-query-string-jl&utm_campaign=devex) for development and deployment. If you'd like more information, I've written a [primer on how to deploy serverless functions to Netlify](/blog/serverless-functions/deploy-first-serverless-function).
 
 </Aside>
 
 ## Create your dev environment
 
-If you've been following along with the [full series on serverless functions](/blog/serverless-functions/overview/), you can use the same codebase you originally set up. If you're starting fresh, you can clone [the starter repo](https://github.com/jlengstorf/serverless-functions/tree/starter):
+If you've been following along with the [full series on serverless functions](/blog/serverless-functions/overview), you can use the same codebase you originally set up. If you're starting fresh, you can clone [the starter repo](https://github.com/jlengstorf/serverless-functions/tree/starter):
 
 ```bash
 # clone the starter branch of the repo
@@ -149,5 +149,5 @@ We did it! We can now send, parse, and use query string parameters in our server
 
 ## What to do next
 
-- [See the full collection of serverless function examples](/blog/serverless-functions/overview/)
+- [See the full collection of serverless function examples](/blog/serverless-functions/overview)
 - Read the [Netlify CLI docs on setting up continuous deployment](https://docs.netlify.com/cli/get-started/?utm_source=learnwithjason&utm_medium=first-serverless-function-jl&utm_campaign=devex#continuous-deployment)

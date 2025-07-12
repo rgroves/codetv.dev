@@ -43,7 +43,7 @@ For me, this was more than I wanted to take on and maintain, so I opted for a (f
 
 ## Make a plan: what is the desired outcome?
 
-Before we get started, we need to know where we're headed — so let's [make a plan](https://lengstorf.com/mise-en-place/) and identify our outcomes. By the end of this article, we want to have a utility function that we can call to generate a social media-friendly image URL that will be unique to our post and help it stand out on people's timelines.
+Before we get started, we need to know where we're headed — so let's [make a plan](https://jason.energy/mise-en-place) and identify our outcomes. By the end of this article, we want to have a utility function that we can call to generate a social media-friendly image URL that will be unique to our post and help it stand out on people's timelines.
 
 It should look something like this:
 
@@ -55,7 +55,7 @@ It should look something like this:
 
 <Aside>
 
-**Heads up!** I wrote a post about [how to design a social sharing card](/blog/design-social-sharing-card/) that goes over the choices made in this design to make it flexible enough to handle auto-generated text. Give it a read if you're interested in the design process or want to create your own social sharing card.
+**Heads up!** I wrote a post about [how to design a social sharing card](/blog/design-social-sharing-card) that goes over the choices made in this design to make it flexible enough to handle auto-generated text. Give it a read if you're interested in the design process or want to create your own social sharing card.
 
 </Aside>
 
@@ -171,11 +171,11 @@ We can repeat that process for the title and tagline transformation blocks, addi
   }
 ```
 
-Only the `title` and `tagline` config options are required — everything else has defaults set to match the [social sharing card template](https://res.cloudinary.com/jlengstorf/raw/upload/v1578342420/social-sharing-cards/learnwithjason-social-card-template.fig) designed in a [companion post](/blog/design-social-sharing-card/).
+Only the `title` and `tagline` config options are required — everything else has defaults set to match the [social sharing card template](https://res.cloudinary.com/jlengstorf/raw/upload/v1578342420/social-sharing-cards/learnwithjason-social-card-template.fig) designed in a [companion post](/blog/design-social-sharing-card).
 
 <Aside>
 
-**Heads up!** If you’ve never seen text overlays before, I wrote a post with more information on [how text overlays work in Cloudinary](/blog/add-text-overlay-cloudinary/). Give that a read if the configuration code is confusing.
+**Heads up!** If you’ve never seen text overlays before, I wrote a post with more information on [how text overlays work in Cloudinary](/blog/add-text-overlay-cloudinary). Give that a read if the configuration code is confusing.
 
 </Aside>
 
@@ -331,7 +331,7 @@ That's more like it! We now get an automatically generated social card that has 
 
 At this point, you have all the tools you need to add automatically generated social media sharing cards to your own blog!
 
-- Learn how to [design a social media sharing card](/blog/design-social-sharing-card/)
+- Learn how to [design a social media sharing card](/blog/design-social-sharing-card)
 - Read the [Cloudinary docs on text overlays](https://cloudinary.com/documentation/image_transformations?ap=lwj#adding_text_captions)
 - Use [the Figma template](https://res.cloudinary.com/jlengstorf/raw/upload/v1578342420/social-sharing-cards/learnwithjason-social-card-template.fig) to create your own design
 - Install the [npm package for automatically generating social sharing images](https://www.npmjs.com/package/@jlengstorf/get-share-image) to add this function to your site
