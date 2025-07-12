@@ -53,22 +53,22 @@ export const server = {
 		}),
 		wdcIntake: defineAction({
 			accept: 'form',
-			input: z.object({
-				id: z.string(),
-				username: z.string(),
-				bio: z.string(),
-				email: z.string().email(),
-				phone: z.string(),
-				groupchat: z.boolean(),
-				'dietary-requirements': z.string().optional(),
-				'food-adventurousness': z.number().int().min(1).max(5),
-				coffee: z.string().optional(),
-				'terms-accept': z.string(),
-				role: z.enum(['developer', 'advisor']),
-				reimbursement: z.boolean(),
-				'link_label[]': z.array(z.string()),
-				'link_url[]': z.array(z.string()),
-			}),
+			// input: z.object({
+			// 	id: z.string(),
+			// 	username: z.string(),
+			// 	bio: z.string(),
+			// 	email: z.string().email(),
+			// 	phone: z.string(),
+			// 	groupchat: z.boolean(),
+			// 	'dietary-requirements': z.string().optional(),
+			// 	'food-adventurousness': z.number().int().min(1).max(5),
+			// 	coffee: z.string().optional(),
+			// 	'terms-accept': z.string(),
+			// 	role: z.enum(['developer', 'advisor']),
+			// 	reimbursement: z.boolean(),
+			// 	'link_label[]': z.array(z.string()),
+			// 	'link_url[]': z.array(z.string()),
+			// }),
 			handler: async (input) => {
 				console.log('actions.user.wdcIntake');
 				console.log(input);
