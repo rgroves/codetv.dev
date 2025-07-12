@@ -128,13 +128,16 @@ export const server = {
 	},
 	newsletter: {
 		subscribe: defineAction({
-			accept: 'form',
-			input: z.object({
-				firstName: z.string(),
-				email: z.string().email(),
-			}),
+			accept: 'json',
 			handler: async (input) => {
-				const subscriber = await addSubscriber(input.firstName, input.email);
+				const schema = z.object({
+					firstName: z.string(),
+					email: z.string().email(),
+				});
+
+				const { firstName, email } = schema.parse(input);
+
+				const subscriber = await addSubscriber(firstName, email);
 
 				return subscriber;
 			},
