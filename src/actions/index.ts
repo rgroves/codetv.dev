@@ -7,39 +7,47 @@ export const server = {
 	user: {
 		updateProfile: defineAction({
 			accept: 'form',
-			input: z.object({
-				id: z.string(),
-				username: z.string(),
-				bio: z.string().optional(),
-				'link_label[]': z.array(z.string()),
-				'link_url[]': z.array(z.string()),
-			}),
-			handler: async (input) => {
-				const { id, username, bio = '' } = input;
-				const link_labels = input['link_label[]'];
-				const link_urls = input['link_url[]'];
-				const links = link_urls
+			handler: async (formData) => {
+				const linkLabels = formData.getAll('link_label[]');
+				const linkUrls = formData.getAll('link_url[]');
+				const links = linkUrls
 					.map((url, i) => {
 						if (!url) {
 							return false;
 						}
 
 						return {
-							label: link_labels.at(i) ?? '',
+							label: linkLabels.at(i) ?? '',
 							url,
 						};
 					})
 					.filter((val) => val !== false);
 
+				const rawInput = {
+					id: formData.get('id'),
+					username: formData.get('username'),
+					bio: formData.get('bio') ?? '',
+					links,
+				};
+
+				const schema = z.object({
+					id: z.string(),
+					username: z.string(),
+					bio: z.string(),
+					links: z.array(
+						z.object({
+							label: z.string(),
+							url: z.string(),
+						}),
+					),
+				});
+
+				const data = schema.parse(rawInput);
+
 				try {
 					const result = await inngest.send({
 						name: 'codetv/user.profile.update',
-						data: {
-							id: id.toString(),
-							username,
-							bio,
-							links,
-						},
+						data,
 					});
 
 					// TODO figure out how to actually wait for the result
