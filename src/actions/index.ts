@@ -51,24 +51,11 @@ export const server = {
 				}
 			},
 		}),
-		test: defineAction({
-			accept: 'form',
-			input: z.object({
-				signature: z.string(),
-			}),
-			async handler() {
-				console.log('actions.user.test');
-
-				return { help: 'plz' };
-			},
-		}),
 	},
 	forms: {
 		wdc: defineAction({
 			accept: 'form',
 			handler: async (formData) => {
-				console.log('actions.user.wdcIntake');
-
 				const linkLabels = formData.getAll('link_label[]');
 				const linkUrls = formData.getAll('link_url[]');
 				const links = linkUrls
@@ -122,7 +109,6 @@ export const server = {
 				});
 
 				const data = InputSchema.parse(rawInput);
-				console.log(data);
 
 				try {
 					const result = await inngest.send({
