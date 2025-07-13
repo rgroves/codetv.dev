@@ -1,16 +1,15 @@
 import { inngest } from './client';
 import { clerk } from '../clerk';
 import {
-	botRequestHeaders,
-	DISCORD_CHANNEL_ID,
+	getMember,
 	getRoleId,
 	removeRole,
 	roles,
+	sendDiscordMessage,
 	updateRole,
 	type SubscriptionLevel,
 } from '../discord';
 import { NonRetriableError } from 'inngest';
-import { DISCORD_BOT_TOKEN } from 'astro:env/server';
 
 export const discordUpdateUserRole = inngest.createFunction(
 	{ id: 'discord/update-user-role' },
@@ -46,8 +45,18 @@ export const discordUpdateUserRole = inngest.createFunction(
 			},
 		);
 
+		const discordMember = await step.run('discord/user.get', async () => {
+			return getMember(memberId);
+		});
+
 		// update the user's role on Discord
 		const addRole = step.run('discord/user.roles.add', async () => {
+			if (discordMember.roles.includes(roleId)) {
+				return {
+					message: `${discordMember.user.username} already has role ${roleId}`,
+				};
+			}
+
 			return updateRole({ memberId, roleId });
 		});
 
@@ -55,42 +64,57 @@ export const discordUpdateUserRole = inngest.createFunction(
 		const removeSilverRole = step.run(
 			'discord/user.roles.maybe-remove-silver',
 			async () => {
-				if (roleId !== roles.SILVER_TIER_ROLE_ID) {
+				if (
+					discordMember.roles.includes(roles.SILVER_TIER_ROLE_ID) &&
+					roleId !== roles.SILVER_TIER_ROLE_ID
+				) {
 					return removeRole({
 						memberId,
 						roleId: roles.SILVER_TIER_ROLE_ID,
 					});
 				}
 
-				return Promise.resolve(new Response('no action'));
+				return {
+					message: 'silver role removal: no action',
+				};
 			},
 		);
 
 		const removeGoldRole = step.run(
 			'discord/user.roles.maybe-remove-gold',
 			async () => {
-				if (roleId !== roles.GOLD_TIER_ROLE_ID) {
+				if (
+					discordMember.roles.includes(roles.GOLD_TIER_ROLE_ID) &&
+					roleId !== roles.GOLD_TIER_ROLE_ID
+				) {
 					return removeRole({
 						memberId,
 						roleId: roles.GOLD_TIER_ROLE_ID,
 					});
 				}
 
-				return Promise.resolve(new Response('no action'));
+				return {
+					message: 'gold role removal: no action',
+				};
 			},
 		);
 
 		const removePlatinumRole = step.run(
 			'discord/user.roles.maybe-remove-platinum',
 			async () => {
-				if (roleId !== roles.PLATINUM_TIER_ROLE_ID) {
+				if (
+					discordMember.roles.includes(roles.PLATINUM_TIER_ROLE_ID) &&
+					roleId !== roles.PLATINUM_TIER_ROLE_ID
+				) {
 					return removeRole({
 						memberId,
 						roleId: roles.PLATINUM_TIER_ROLE_ID,
 					});
 				}
 
-				return Promise.resolve(new Response('no action'));
+				return {
+					message: 'platinum role removal: no action',
+				};
 			},
 		);
 
@@ -102,15 +126,10 @@ export const discordUpdateUserRole = inngest.createFunction(
 		]);
 
 		// send a message to the updates feed channel
-		await step.fetch(
-			`https://discord.com/api/v10/channels/${DISCORD_CHANNEL_ID}/messages`,
-			{
-				method: 'POST',
-				headers: botRequestHeaders,
-				body: JSON.stringify({
-					content: `granted <@${memberId}> the <@&${roleId}> role`,
-				}),
-			},
-		);
+		await step.run('discord/message.send', async () => {
+			return sendDiscordMessage({
+				content: `granted <@${memberId}> the <@&${roleId}> role`,
+			});
+		});
 	},
 );

@@ -1,3 +1,4 @@
+import { z } from 'astro/zod';
 import { DISCORD_BOT_TOKEN } from 'astro:env/server';
 
 // TODO probably put these in the env?
@@ -37,6 +38,32 @@ export function getRoleId(plan: SubscriptionLevel) {
 		default:
 			return roles.FREE_TIER_ROLE_ID;
 	}
+}
+
+export async function getMember(memberId: string) {
+	const res = await fetch(
+		`https://discord.com/api/v10/guilds/${DISCORD_SERVER_ID}/members/${memberId}`,
+		{
+			method: 'GET',
+			headers: botRequestHeaders,
+		},
+	);
+
+	if (!res.ok) {
+		throw new Error(res.statusText);
+	}
+
+	const data = await res.json();
+
+	const schema = z.object({
+		"roles": z.array(z.string()),
+		"user": z.object({
+			"id": z.string(),
+			"username": z.string(),
+		}),
+	});
+
+	return schema.parse(data);
 }
 
 export async function sendDiscordMessage({ content }: { content: string }) {
