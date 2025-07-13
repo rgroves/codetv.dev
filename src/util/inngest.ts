@@ -18,6 +18,7 @@ import { stripe } from './stripe';
 import { clerk } from './clerk';
 import { sendDiscordMessage } from './discord';
 import { appendValue } from './inngest/sheets';
+import { intervalToDuration } from 'date-fns/esm';
 
 export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 	{ id: 'clerk/user-created-or-updated' },
@@ -418,10 +419,36 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 			});
 
 			const sendMessage = step.run('discord-send-message', async () => {
+				const startDate = subscription.start_date;
+				const cycleStart = subscription.items.data.at(0)?.current_period_start;
+				const cycleEnd = subscription.items.data.at(0)?.current_period_end;
+
+				const isNew = startDate === cycleStart;
+
 				const n = user.name;
 				const p = product.name;
 				const s = subscription.status;
-				const msg = `${n} updated their subscription to ${p} (${s})`;
+
+				// default message — if this survives we’ve hit an edge case we need to handle
+				let msg = `${n}'s account is in a weird state`;
+
+				if (isNew) {
+					msg = `:jlengsHeart: ${n} just subscribed to ${p} (${s})`;
+				}
+
+				if (!isNew && cycleEnd) {
+					const duration = intervalToDuration({
+						start: startDate,
+						end: cycleEnd,
+					});
+
+					const d = (duration.years ?? 0) * 12 + (duration.months ?? 0);
+
+					msg = `:jlengsHeart: ${n} renewed their subscription to ${p} (${s}) — ${d} months`
+				}
+
+				// TODO: if canceled, show a different message
+
 
 				return sendDiscordMessage({
 					content: msg,
