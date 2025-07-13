@@ -9,6 +9,8 @@ const nav = [
 	// { path: '/support', label: 'Support' },
 	{ path: 'https://partners.codetv.dev', label: 'Partners' },
 ];
+
+const shortcut = process.platform === 'darwin' ? '⌘+K' : 'ctrl+K';
 ---
 
 <header>
@@ -37,7 +39,7 @@ const nav = [
 				></path>
 			</svg>
 			<span class="small">search</span>
-			<span class="large">⌘+K</span>
+			<span class="large">{shortcut}</span>
 		</a>
 
 		<UserButton server:defer>
