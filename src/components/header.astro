@@ -39,8 +39,17 @@ const shortcut = process.platform === 'darwin' ? '⌘+K' : 'ctrl+K';
 				></path>
 			</svg>
 			<span class="small">search</span>
-			<span class="large">{shortcut}</span>
+			<span class="large shortcut-label"></span>
 		</a>
+
+		<script>
+			const label = document.querySelector('.shortcut-label');
+			const shortcut = navigator.userAgent.match(/Macintosh/) ? '⌘+K' : '^+K';
+
+			if (label) {
+				label.textContent = shortcut;
+			}
+		</script>
 
 		<UserButton server:defer>
 			<Fragment slot="fallback">
