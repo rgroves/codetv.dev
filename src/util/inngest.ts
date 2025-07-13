@@ -345,7 +345,7 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 		try {
 			const data = event.data;
 
-			const subscription = await step.invoke('stripe/retrieve-subscription', {
+			const subscription = await step.invoke('stripe/subscription.get', {
 				function: retrieveStripeSubscription,
 				data: {
 					subscriptionId: data.object.id,
@@ -353,13 +353,13 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 			});
 
 			const retrieveCustomer = step.run(
-				'stripe/retrieve-customer',
+				'stripe/customer.get',
 				async () => {
 					return stripe.customers.retrieve(subscription.customer as string);
 				},
 			) as InvocationResult<Stripe.Customer>;
 
-			const retrieveProduct = step.invoke('stripe/retrieve-product', {
+			const retrieveProduct = step.invoke('stripe/product.get', {
 				function: retrieveStripeProduct,
 				data: {
 					productId: subscription.items.data.at(0)?.plan?.product as string,
@@ -376,13 +376,13 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 			}
 
 			const getSanityUser = step.run(
-				'sanity/check-for-existing-user',
+				'sanity/user.get',
 				async () => {
 					return getPersonByClerkId({ user_id: customer.metadata.userId });
 				},
 			);
 
-			const updateClerkUser = step.invoke('clerk-update-user-subscription', {
+			const updateClerkUser = step.invoke('clerk/user.subscription.update', {
 				function: updateClerkUserSubscription,
 				data: {
 					clerkUserId: customer.metadata.userId,
@@ -392,7 +392,7 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 				},
 			});
 
-			const [user] = await Promise.all([getSanityUser, updateClerkUser]);
+			const [user, clerkUser] = await Promise.all([getSanityUser, updateClerkUser]);
 
 			if (!user) {
 				throw new NonRetriableError('unable to find user');
@@ -411,40 +411,35 @@ export const handleStripeSubscriptionUpdatedWebhook = inngest.createFunction(
 				},
 			);
 
-			const purgeCache = step.invoke('netlify/invalidate-cache-tag', {
-				function: invalidateNetlifyProfileCacheTag,
-				data: {
-					cacheTag: `profile-${user.slug?.current ?? ''}`,
-				},
-			});
-
 			const sendMessage = step.run('discord-send-message', async () => {
-				const startDate = subscription.start_date;
+				const startDate = subscription.created;
 				const cycleStart = subscription.items.data.at(0)?.current_period_start;
-				const cycleEnd = subscription.items.data.at(0)?.current_period_end;
 
 				const isNew = startDate === cycleStart;
 
-				const n = user.name;
+				const discordUser = clerkUser.externalAccounts.find((acct) => acct.provider === 'oauth_discord');
+
+				const n = discordUser ? `<@${discordUser.externalId}>` : user.name;
 				const p = product.name;
-				const s = subscription.status;
+				// to get an emoji ID like this, send `\:theEmojiName:` in Discord
+				const emoji = '<:jlengsHeart:941389642756943993>';
 
 				// default message — if this survives we’ve hit an edge case we need to handle
 				let msg = `${n}'s account is in a weird state`;
 
 				if (isNew) {
-					msg = `:jlengsHeart: ${n} just subscribed to ${p} (${s})`;
+					msg = `New ${p}: ${n} just subscribed! ${emoji}`;
 				}
 
-				if (!isNew && cycleEnd) {
+				if (!isNew && cycleStart) {
 					const duration = intervalToDuration({
-						start: startDate,
-						end: cycleEnd,
+						start: startDate * 1000,
+						end: cycleStart * 1000,
 					});
 
 					const d = (duration.years ?? 0) * 12 + (duration.months ?? 0);
 
-					msg = `:jlengsHeart: ${n} renewed their subscription to ${p} (${s}) — ${d} months`
+					msg = `${n} renewed their subscription. They’ve been a ${p} for ${d} months! ${emoji}`
 				}
 
 				// TODO: if canceled, show a different message
