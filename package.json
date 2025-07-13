@@ -22,6 +22,7 @@
 		"@astrojs/sitemap": "^3.4.1",
 		"@clerk/astro": "^2.10.3",
 		"@clerk/backend": "^2.4.1",
+		"@clerk/clerk-js": "^5.71.0",
 		"@clerk/themes": "^2.2.55",
 		"@mux/mux-node": "^12.1.0",
 		"@mux/mux-player": "^3.5.1",

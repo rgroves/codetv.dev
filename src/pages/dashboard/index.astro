@@ -54,7 +54,12 @@ import Perks from '../../components/dashboard/perks.astro';
 			<UserProfile.Page label="account" />
 
 			<UserProfile.Page label="Links & Bio" url="links-bio">
-				<svg slot="label-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 70 70">
+				<svg
+					slot="label-icon"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 70 70"
+				>
 					<g clip-path="url(#a)">
 						<path
 							fill="currentColor"
@@ -103,6 +108,28 @@ import Perks from '../../components/dashboard/perks.astro';
 </Layout>
 
 <script>
+	import { PUBLIC_CLERK_PUBLISHABLE_KEY } from 'astro:env/client';
+	import { Clerk } from '@clerk/clerk-js';
+
+	const clerk = new Clerk(PUBLIC_CLERK_PUBLISHABLE_KEY);
+	await clerk.load();
+
+	const addAccount = () => {
+			clerk.user
+				?.createExternalAccount({
+					strategy: 'oauth_discord',
+					redirectUrl: '/dashboard#/perks',
+				})
+				.then((externalAccount) => {
+					window.location.href =
+						externalAccount.verification?.externalVerificationRedirectURL?.toString() ??
+						'';
+				})
+				.catch((error) => {
+					console.log('An error occurred:', error.errors);
+				});
+		};
+
 	function linksBioSetup() {
 		// handle removing links
 		function addRemoveHandlers() {
@@ -136,7 +163,7 @@ import Perks from '../../components/dashboard/perks.astro';
 			linksContainer.appendChild(link);
 		}
 
-		addLinkBtn.addEventListener('click', (event) => {
+		addLinkBtn?.addEventListener('click', (event) => {
 			event.preventDefault();
 
 			addLink();
@@ -150,6 +177,13 @@ import Perks from '../../components/dashboard/perks.astro';
 			updateProfile.classList.add('submitting');
 			updateProfile.querySelector('button')?.setAttribute('disabled', 'true');
 		});
+	}
+
+	function addDiscordListener() {
+		const btn = document.getElementById('add-discord');
+
+		btn?.removeEventListener('click', addAccount);
+		btn?.addEventListener('click', addAccount);
 	}
 
 	function addObserver() {
@@ -169,11 +203,14 @@ import Perks from '../../components/dashboard/perks.astro';
 
 					const el = node as HTMLElement;
 					const btn = el.querySelector('#add-profile-link');
-					if (!btn) {
-						return;
+					if (btn) {
+						linksBioSetup();
 					}
 
-					linksBioSetup();
+					const discordBtn = el.querySelector('#add-discord');
+					if (discordBtn) {
+						addDiscordListener();
+					}
 				});
 			}
 		});
@@ -186,6 +223,8 @@ import Perks from '../../components/dashboard/perks.astro';
 		});
 	}
 
+	linksBioSetup();
+	addDiscordListener();
 	addObserver();
 </script>
 
