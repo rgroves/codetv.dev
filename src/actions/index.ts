@@ -45,15 +45,12 @@ export const server = {
 				const data = schema.parse(rawInput);
 
 				try {
-					const result = await inngest.send({
+					await inngest.send({
 						name: 'codetv/user.profile.update',
 						data,
 					});
 
-					// TODO figure out how to actually wait for the result
-					await new Promise((resolve) => setTimeout(() => resolve(true), 3000));
-
-					return result;
+					return data;
 				} catch (err) {
 					console.log({ err });
 				}
