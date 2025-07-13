@@ -182,6 +182,7 @@ const totalEpisodes = series.collections?.reduce(
 								description={episode.short_description}
 								link={`/series/${series.slug}/${series.collection?.slug}/${episode.slug}`}
 								linkText="Watch now"
+								youtube_id={episode.video?.youtube_id}
 							>
 								<Fragment slot="tagline">
 									<p class="episode-number">
