@@ -1,6 +1,7 @@
 import { purgeCache } from '@netlify/functions';
 import { NETLIFY_PERSONAL_ACCESS_TOKEN } from 'astro:env/server';
 import { NonRetriableError } from 'inngest';
+import { intervalToDuration } from 'date-fns';
 import type { InvocationResult } from 'inngest/types';
 import type Stripe from 'stripe';
 import { inngest } from './inngest/client';
@@ -18,7 +19,6 @@ import { stripe } from './stripe';
 import { clerk } from './clerk';
 import { sendDiscordMessage } from './discord';
 import { appendValue } from './inngest/sheets';
-import { intervalToDuration } from 'date-fns/esm';
 
 export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 	{ id: 'clerk/user-created-or-updated' },
