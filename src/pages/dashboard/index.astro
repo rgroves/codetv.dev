@@ -4,6 +4,10 @@ import Layout from '../../layouts/default.astro';
 import DashboardSupporter from '../../components/dashboard/supporter.astro';
 import LinksBio from '../../components/dashboard/links-bio.astro';
 import Perks from '../../components/dashboard/perks.astro';
+
+if (!Astro.cookies.has('has_codetv_account')) {
+	Astro.cookies.set('has_codetv_account', 'true');
+}
 ---
 
 <Layout title="Your Dashboard — CodeTV">

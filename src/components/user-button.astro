@@ -2,6 +2,11 @@
 export const prerender = false;
 
 const user = await Astro.locals.currentUser();
+
+const loggedOutText =
+	Astro.cookies.get('has_codetv_account')?.value === 'true'
+		? 'Log In'
+		: 'Become a Supporter';
 ---
 
 {
@@ -11,7 +16,9 @@ const user = await Astro.locals.currentUser();
 			<img src={user.imageUrl} alt={user.fullName} width={60} />
 		</a>
 	) : (
-		<a href="/dashboard/sign-in" class="button">Become a Supporter</a>
+		<a href="/dashboard/sign-in" class="button">
+			{loggedOutText}
+		</a>
 	)
 }
 
