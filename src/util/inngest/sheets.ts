@@ -110,7 +110,6 @@ export async function appendValue({
 
 	if (!res.ok) {
 		return {
-			token: accessToken,
 			error: {
 				status: res.status,
 				statusText: res.statusText,
