@@ -69,8 +69,8 @@ export type Person = {
   }>;
   subscription?: {
     customer?: string;
-    level?: "free" | "supporter" | "patron";
-    status?: "active" | "inactive" | "cancelled";
+    level?: "Silver Tier Supporter" | "Gold Tier Supporter" | "Platinum Tier Supporter";
+    status?: "incomplete" | "incomplete_expired" | "trialing" | "active" | "past_due" | "canceled" | "unpaid" | "paused";
     date?: string;
   };
   user_id?: string;
@@ -807,8 +807,8 @@ export type AllUsersQueryResult = Array<{
   } | null;
   subscription: {
     cus_id: string | null;
-    level: "free" | "patron" | "supporter" | null;
-    status: "active" | "cancelled" | "inactive" | null;
+    level: "Gold Tier Supporter" | "Platinum Tier Supporter" | "Silver Tier Supporter" | null;
+    status: "active" | "canceled" | "incomplete_expired" | "incomplete" | "past_due" | "paused" | "trialing" | "unpaid" | null;
     date: string | null;
   } | null;
   user_id: string | null;
@@ -905,8 +905,8 @@ export type SupportersQueryResult = Array<{
   } | null;
   username: string | null;
   subscription: {
-    level: "free" | "patron" | "supporter" | null;
-    status: "active" | "cancelled" | "inactive" | null;
+    level: "Gold Tier Supporter" | "Platinum Tier Supporter" | "Silver Tier Supporter" | null;
+    status: "active" | "canceled" | "incomplete_expired" | "incomplete" | "past_due" | "paused" | "trialing" | "unpaid" | null;
   } | null;
 }>;
 

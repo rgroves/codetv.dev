@@ -336,15 +336,15 @@
                 "of": [
                   {
                     "type": "string",
-                    "value": "free"
+                    "value": "Silver Tier Supporter"
                   },
                   {
                     "type": "string",
-                    "value": "supporter"
+                    "value": "Gold Tier Supporter"
                   },
                   {
                     "type": "string",
-                    "value": "patron"
+                    "value": "Platinum Tier Supporter"
                   }
                 ]
               },
@@ -357,15 +357,35 @@
                 "of": [
                   {
                     "type": "string",
+                    "value": "incomplete"
+                  },
+                  {
+                    "type": "string",
+                    "value": "incomplete_expired"
+                  },
+                  {
+                    "type": "string",
+                    "value": "trialing"
+                  },
+                  {
+                    "type": "string",
                     "value": "active"
                   },
                   {
                     "type": "string",
-                    "value": "inactive"
+                    "value": "past_due"
                   },
                   {
                     "type": "string",
-                    "value": "cancelled"
+                    "value": "canceled"
+                  },
+                  {
+                    "type": "string",
+                    "value": "unpaid"
+                  },
+                  {
+                    "type": "string",
+                    "value": "paused"
                   }
                 ]
               },

@@ -82,9 +82,9 @@ export const person = defineType({
           type: 'string',
           options: {
             list: [
-              {title: 'Free', value: 'free'},
-              {title: 'Supporter', value: 'supporter'},
-              {title: 'Patron', value: 'patron'},
+              {title: 'Silver Tier Supporter', value: 'Silver Tier Supporter'},
+              {title: 'Gold Tier Supporter', value: 'Gold Tier Supporter'},
+              {title: 'Platinum Tier Supporter', value: 'Platinum Tier Supporter'},
             ],
           },
         }),
@@ -93,11 +93,16 @@ export const person = defineType({
           type: 'string',
           options: {
             list: [
+              {title: 'Incomplete', value: 'incomplete'},
+              {title: 'Incomplete (expired)', value: 'incomplete_expired'},
+              {title: 'Trialing', value: 'trialing'},
               {title: 'Active', value: 'active'},
-              {title: 'Inactive', value: 'inactive'},
-              {title: 'Cancelled', value: 'cancelled'},
-            ],
-          },
+              {title: 'Past Due', value: 'past_due'},
+              {title: 'Canceled', value: 'canceled'},
+              {title: 'Unpaid', value: 'unpaid'},
+              {title: 'Paused', value: 'paused'},
+            ]
+          }
         }),
         defineField({title: 'Join Date', name: 'date', type: 'datetime'}),
       ],
