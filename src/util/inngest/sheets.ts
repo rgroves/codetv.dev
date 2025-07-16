@@ -117,11 +117,5 @@ export async function appendValue({
 		};
 	}
 
-  const { spreadsheetId } = await res.json();
-
-  if (!spreadsheetId) {
-    throw new Error('no spreadsheet ID returned');
-  }
-
-	return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit`;
+	return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
 }
