@@ -62,6 +62,8 @@ PUBLIC_ALGOLIA_API_KEY=CONTRIBUTOR_DEV_STUB
 PUBLIC_ALGOLIA_APP_ID=CONTRIBUTOR_DEV_STUB
 ```
 
+- Side Note: `.env.local` was not in `.gitignore`; I added it in my temp branch
+
 ## Issue #2: Error via dev server: Invalid Environment Variables
 
 After successfully running the dev server and hitting http://localhost:4321/, this error occurred:
@@ -350,7 +352,7 @@ Time to brainstorm the feasibility of possibly proxying objects, stubbing requir
 There are still other issues at the minimal success point, those below and possibly ones I haven't run into:
 
 - Hitting the dashboard still blows up (likely due to clerk/sanity keys)
-- There are a bunch of errors thrown in the browser console, related to Clerk, not sure how to track these down to see what could possibly be done about them, but there likely related to not having a publishable key in place.
+- There are a bunch of errors thrown in the browser console, related to Clerk, not sure how to track these down to see what could possibly be done about them, but they're likely related to not having a publishable key in place.
 
   ```text
   localhost/:834  GET https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2ltYWdlcy5jbGVyay5kZXYvdXBsb2FkZWQvaW1nXzJzZEt6Q01PU2dzMDlhQnFUVGpvcUJKelM5ViJ9 net::ERR_CONNECTION_RESET
