@@ -266,7 +266,15 @@ Again makes sense given not having the appropriate env vars, these need proxying
 
 ### Temporary workaround
 
-Stubbed out with:
+Stubbed, changed this:
+
+```typescript
+const earlyAccess = await getNextEarlyAccessEpisode();
+const recentEps = await getRecentEpisodes();
+const series = await getFeaturedSeries();
+```
+
+to this:
 
 ```typescript
 const earlyAccess:
@@ -276,7 +284,7 @@ const recentEps: Awaited<ReturnType<typeof getRecentEpisodes>> = [];
 const series: Awaited<ReturnType<typeof getFeaturedSeries>> = [];
 ```
 
-## Issue #8: Usage of Sanity in Series component in the Supporters component
+## Issue #8: Usage of Sanity in the Supporters component
 
 The Support component on the index page uses the Supporters component which uses sanity and hits the Unauthorized due to no key issue seen previously.
 
