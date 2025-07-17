@@ -2,7 +2,7 @@
 
 This file will contain notes regarding rough edges that need to be smoothed out for a nice DX for those that want to help contribute to the `codetv.dev` website.
 
-I've cloned the repo and am going to document every issue I hit, no matter how obvious or small. Then these will become a reference map for creating a contributor guide outlining what is needed to setup locally to contribute to the repo.
+I've cloned the repo and am going to document every issue I hit, no matter how obvious or small. Then these will become a reference map for what needs to be solved for and possibly creating a contributor guide outlining what is needed to setup locally to contribute to the repo.
 
 ## Issue #1: `environment variables defined in env.schema are invalid:`
 
