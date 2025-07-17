@@ -3,7 +3,7 @@ import { Image } from '@unpic/astro';
 import { createImageUrl } from '../util/cloudinary';
 import { getSupporters } from '../util/sanity';
 
-const supporters = await getSupporters();
+const supporters: Awaited<ReturnType<typeof getSupporters>> = [];
 
 if (supporters.length < 1) {
 	return null;

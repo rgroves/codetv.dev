@@ -6,7 +6,7 @@ import { getAllSeries } from '../util/sanity';
 
 export const prerender = true;
 
-const allSeries = await getAllSeries();
+const allSeries: Awaited<ReturnType<typeof getAllSeries>> = [];
 ---
 
 <Layout
