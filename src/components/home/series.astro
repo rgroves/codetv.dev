@@ -15,54 +15,58 @@ const series = await getFeaturedSeries();
 
 <section class="series">
 	{earlyAccess ? (
-		<h2>Early access for supporters</h2>
-		<div class="row early-access">
-			<Card
-				image={{
-					public_id: earlyAccess.thumbnail.public_id,
-					alt: earlyAccess.thumbnail.alt,
-				}}
-				tagline={getTagline(earlyAccess.publish_date!)}
-				title={earlyAccess.series}
-				description={earlyAccess.short_description}
-				link={earlyAccess.path}
-				linkText="Watch Now"
-			>
-				<Fragment slot="details">
-					<p class="episode-number">{earlyAccess.episodeNumber}</p>
-					<p class="episode-title">{earlyAccess.title}</p>
-				</Fragment>
-			</Card>
-		</div>
+		<>
+			<h2>Early access for supporters</h2>
+			<div class="row early-access">
+				<Card
+					image={{
+						public_id: earlyAccess.thumbnail.public_id,
+						alt: earlyAccess.thumbnail.alt,
+					}}
+					tagline={getTagline(earlyAccess.publish_date!)}
+					title={earlyAccess.series}
+					description={earlyAccess.short_description}
+					link={earlyAccess.path}
+					linkText="Watch Now"
+				>
+					<Fragment slot="details">
+						<p class="episode-number">{earlyAccess.episodeNumber}</p>
+						<p class="episode-title">{earlyAccess.title}</p>
+					</Fragment>
+				</Card>
+			</div>
+		</>
 	) : null}
 
 	{recentEps ? (
-		<h2>Newly added</h2>
-		<div class="row three-up">
-			{recentEps.map((ep) => {
-				return (
-					<Card
-						image={{
-							public_id: ep.thumbnail.public_id!,
-							alt: ep.thumbnail.alt!,
-						}}
-						tagline={new Date(ep.publish_date!).toLocaleDateString('en-US', {
-							month: 'short',
-							day: 'numeric',
-						})}
-						title={ep.series}
-						link={ep.path}
-						linkText="Watch Now"
-						youtube_id={ep.youtube_id}
-					>
-						<Fragment slot="details">
-							<p class="episode-number">{ep.episodeNumber}</p>
-							<p class="episode-title">{ep.title}</p>
-						</Fragment>
-					</Card>
-				)
-			})}
-		</div>
+		<>
+			<h2>Newly added</h2>
+			<div class="row three-up">
+				{recentEps.map((ep) => {
+					return (
+						<Card
+							image={{
+								public_id: ep.thumbnail.public_id!,
+								alt: ep.thumbnail.alt!,
+							}}
+							tagline={new Date(ep.publish_date!).toLocaleDateString('en-US', {
+								month: 'short',
+								day: 'numeric',
+							})}
+							title={ep.series}
+							link={ep.path}
+							linkText="Watch Now"
+							youtube_id={ep.youtube_id}
+						>
+							<Fragment slot="details">
+								<p class="episode-number">{ep.episodeNumber}</p>
+								<p class="episode-title">{ep.title}</p>
+							</Fragment>
+						</Card>
+					)
+				})}
+			</div>
+		</>
 	) : null}
 
 	<h2>CodeTV original series</h2>
