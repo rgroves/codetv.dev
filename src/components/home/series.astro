@@ -8,9 +8,9 @@ function getTagline(date: string) {
 	return `Supporters only until ${dateString}`;
 }
 
-const earlyAccess = await getNextEarlyAccessEpisode();
-const recentEps = await getRecentEpisodes();
-const series = await getFeaturedSeries();
+const earlyAccess: Awaited<ReturnType<typeof getNextEarlyAccessEpisode>> | false = false;
+const recentEps: Awaited<ReturnType<typeof getRecentEpisodes>> = [];
+const series: Awaited<ReturnType<typeof getFeaturedSeries>> = [];
 ---
 
 <section class="series">
