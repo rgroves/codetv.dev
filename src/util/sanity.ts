@@ -593,7 +593,13 @@ export async function getPersonById(
 }
 
 export async function getAllUsers(options?: { useCdn: boolean }) {
-  return [];
+	return client.fetch<AllUsersQueryResult>(
+		allUsersQuery,
+		{},
+		{
+			useCdn: options?.useCdn ?? true,
+		}
+	);
 }
 
 export async function getPersonBySlug(
