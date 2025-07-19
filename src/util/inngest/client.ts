@@ -97,6 +97,7 @@ type Events = {
 			links: Array<{ label: string; url: string }>;
 		};
 	};
+	'test/google.calendar.list': {};
 };
 
 export const schemas = new EventSchemas().fromRecord<Events>();

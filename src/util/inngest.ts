@@ -19,6 +19,7 @@ import { stripe } from './stripe';
 import { clerk } from './clerk';
 import { sendDiscordMessage } from './discord';
 import { appendValue } from './inngest/sheets';
+import { handleLWJIntake } from './inngest/learn-with-jason';
 
 export const handleClerkUserCreatedOrUpdatedWebhook = inngest.createFunction(
 	{ id: 'clerk/user-created-or-updated' },
@@ -472,4 +473,5 @@ export const functions = [
 	invalidateNetlifyProfileCacheTag,
 	handleUpdateUserProfile,
 	handleWDCIntakeSubmit,
+	handleLWJIntake,
 ];
