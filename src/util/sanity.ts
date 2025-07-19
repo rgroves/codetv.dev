@@ -1,6 +1,4 @@
-import { createClient } from '@sanity/client';
 import groq from 'groq';
-import { SANITY_SECRET_TOKEN } from 'astro:env/server';
 import type {
 	AllSeriesQueryResult,
 	EpisodeBySlugQueryResult,
@@ -18,15 +16,7 @@ import type {
 	AllUsersQueryResult,
 } from '../types/sanity';
 import type { UploadApiResponse } from 'cloudinary';
-
-const client = createClient({
-	projectId: 'vnkupgyb',
-	dataset: 'develop',
-	apiVersion: '2024-08-10',
-	token: SANITY_SECRET_TOKEN,
-	perspective: 'published',
-	useCdn: true,
-});
+import { sanityClient as client } from './sanityProxy';
 
 const allSeriesQuery = groq`
   *[_type=="series"] {
