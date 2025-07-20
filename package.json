@@ -3,7 +3,8 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"scripts": {
-		"dev": "NX_DAEMON=false nx run-many -t dev"
+		"dev": "NX_DAEMON=false nx run-many -t dev",
+		"build": "nx run @codetv/website:build"
 	},
 	"private": true,
 	"devDependencies": {
