@@ -1,0 +1,6 @@
+{
+	"type": "module",
+	"name": "@codetv/types",
+	"main": "src/index.ts",
+	"private": true
+}

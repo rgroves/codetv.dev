@@ -16,7 +16,7 @@ import type {
 	RecentEpisodesQueryResult,
 	FeaturedSeriesQueryResult,
 	AllUsersQueryResult,
-} from '../types/sanity';
+} from '@codetv/types';
 import type { UploadApiResponse } from 'cloudinary';
 
 const client = createClient({

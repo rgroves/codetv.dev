@@ -2,12 +2,11 @@ import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { useState } from 'react';
 
 import { searchClient } from './search-client';
-import { LinkItem, QueryEpisodeItem } from './items.jsx';
-import { SupportIcon } from './icons/support-icon.jsx';
-import { YouTubeLogo } from './logos/youtube-logo.jsx';
-import { SearchIcon } from './icons/search-icon.tsx';
-import { NewsletterIcon } from './icons/newsletter-icon.jsx';
-import { Autocomplete } from './autocomplete.jsx';
+import { LinkItem, QueryEpisodeItem } from './items';
+import { SupportIcon } from './icons/support-icon';
+import { SearchIcon } from './icons/search-icon';
+import { NewsletterIcon } from './icons/newsletter-icon';
+import { Autocomplete } from './autocomplete';
 
 type AlgoliaItem = {
 	item: {
@@ -80,6 +79,7 @@ export function SearchBox({
 							queries: [
 								{
 									indexName: 'codetv_dev_yzf8n5ikfx_episodes',
+									// @ts-expect-error TS doesn’t like these but they work
 									query,
 									params: {
 										hitsPerPage: 12,
@@ -87,6 +87,7 @@ export function SearchBox({
 								},
 								{
 									indexName: 'codetv_dev_yzf8n5ikfx_articles',
+									// @ts-expect-error TS doesn’t like these but they work
 									query,
 									params: {
 										hitsPerPage: 12,
@@ -94,6 +95,7 @@ export function SearchBox({
 								},
 								{
 									indexName: 'codetv_dev_yzf8n5ikfx_pages',
+									// @ts-expect-error TS doesn’t like these but they work
 									query,
 									params: {
 										hitsPerPage: 12,

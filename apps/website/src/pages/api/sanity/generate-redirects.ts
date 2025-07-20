@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { SANITY_SECRET_TOKEN } from 'astro:env/server';
 import { createClient } from '@sanity/client';
-import { type GetEpisodeSlugQueryResult } from '../../../types/sanity';
+import { type GetEpisodeSlugQueryResult } from '@codetv/types';
 import groq from 'groq';
 
 const client = createClient({
