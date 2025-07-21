@@ -5,8 +5,8 @@ import jwt from 'jsonwebtoken';
 
 console.log({
 	cwd: process.cwd(),
-	dirname: __dirname,
-	filename: __filename,
+	dirname: import.meta.dirname,
+	filename: import.meta.filename,
 });
 
 const env = await decrypt({
