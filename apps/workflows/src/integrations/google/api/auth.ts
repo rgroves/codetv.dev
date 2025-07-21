@@ -2,14 +2,16 @@ import { DOTENVENC_PASS, GOOGLE_API_SERVICE_ACCOUNT } from 'astro:env/server';
 import { join } from 'node:path';
 import { decrypt } from '@tka85/dotenvenc';
 import jwt from 'jsonwebtoken';
-import { readFileSync } from 'node:fs';
 
-const enc = readFileSync('./.env.enc');
-console.log(enc);
+console.log({
+	cwd: process.cwd(),
+	dirname: __dirname,
+	filename: __filename,
+});
 
 const env = await decrypt({
 	passwd: DOTENVENC_PASS,
-	encryptedFile: join(process.cwd(), '.env.enc'),
+	encryptedFile: join(process.cwd(), 'env.enc'),
 });
 
 // our service account needs these scopes to view/change data
