@@ -18,6 +18,7 @@
 		"typescript": "~5.7.2"
 	},
 	"dependencies": {
+		"@astrojs/netlify": "^6.5.1",
 		"@clerk/backend": "^2.5.0",
 		"@sanity/client": "^7.8.0",
 		"@tka85/dotenvenc": "^5.4.2",

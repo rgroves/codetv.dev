@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
+import netlify from '@astrojs/netlify';
 
 // https://astro.build/config
 export default defineConfig({
@@ -7,6 +8,7 @@ export default defineConfig({
   server: {
     port: 8765
   },
+	adapter: netlify(),
 	env: {
 		schema: {
 			DOTENVENC_PASS: envField.string({
