@@ -1,18 +1,27 @@
 {
   "extends": "./tsconfig.base.json",
-  "files": [], // intentionally empty
+  "files": [],
   "references": [
-    {
-      "path": "./libs/types"
-    },
-    {
-      "path": "./apps/api"
-    },
     {
       "path": "./apps/content"
     },
     {
       "path": "./apps/website"
+    },
+    {
+      "path": "./apps/workflows"
+    },
+    {
+      "path": "./libs/cloudinary"
+    },
+    {
+      "path": "./libs/types"
+    },
+    {
+      "path": "./libs/cloudinary"
+    },
+    {
+      "path": "./libs/sanity"
     }
   ]
 }
