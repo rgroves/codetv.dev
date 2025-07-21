@@ -14,8 +14,7 @@ import Heart from './heart.astro';
 export const prerender = false;
 
 const env = await decrypt({
-	passwd: process.env.DOTENVENC_PASS,
-	encryptedFile: join(process.cwd(), '.env.enc'),
+	encryptedFile: join(process.cwd(), 'apps/website', '.env.enc'),
 });
 
 export interface Props {
