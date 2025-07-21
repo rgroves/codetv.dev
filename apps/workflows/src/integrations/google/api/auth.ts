@@ -3,13 +3,6 @@ import { join } from 'node:path';
 import { decrypt } from '@tka85/dotenvenc';
 import jwt from 'jsonwebtoken';
 
-console.log({
-	cwd: process.cwd(),
-	dirname: import.meta.dirname,
-	filename: import.meta.filename,
-	path: join(process.cwd(), 'apps/workflows', '.env.enc'),
-});
-
 const env = await decrypt({
 	passwd: DOTENVENC_PASS,
 	encryptedFile: join(process.cwd(), 'apps/workflows', '.env.enc'),
