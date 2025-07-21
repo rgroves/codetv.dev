@@ -1,8 +1,14 @@
 import { GOOGLE_API_SERVICE_ACCOUNT } from 'astro:env/server';
 import { decrypt } from '@tka85/dotenvenc';
 import jwt from 'jsonwebtoken';
+import { join } from 'node:path';
 
-decrypt();
+// this is to trick Netlify into including this goddamn file
+require(join(process.cwd(), '.env.enc'));
+
+decrypt({
+	encryptedFile: join(process.cwd(), '.env.enc'),
+});
 
 // our service account needs these scopes to view/change data
 const scopes = [
