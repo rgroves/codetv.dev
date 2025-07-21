@@ -1,8 +1,12 @@
-import { GOOGLE_API_SERVICE_ACCOUNT } from 'astro:env/server';
+import { DOTENVENC_PASS, GOOGLE_API_SERVICE_ACCOUNT } from 'astro:env/server';
+import { join } from 'node:path';
 import { decrypt } from '@tka85/dotenvenc';
 import jwt from 'jsonwebtoken';
 
-decrypt();
+const env = await decrypt({
+	passwd: DOTENVENC_PASS,
+	encryptedFile: join(process.cwd(), '.env.enc'),
+});
 
 // our service account needs these scopes to view/change data
 const scopes = [
@@ -14,7 +18,7 @@ export async function getGoogleAccessToken() {
 	const iat = Math.floor(Date.now() / 1000);
 	const exp = iat + 3600;
 
-	if (!process.env.GOOGLE_API_PRIVATE_KEY) {
+	if (!env.GOOGLE_API_PRIVATE_KEY) {
 		throw new Error('must set GOOGLE_API_PRIVATE_KEY in env');
 	}
 
@@ -26,7 +30,7 @@ export async function getGoogleAccessToken() {
 			exp,
 			iat,
 		},
-		process.env.GOOGLE_API_PRIVATE_KEY,
+		env.GOOGLE_API_PRIVATE_KEY,
 		{ algorithm: 'RS256' },
 	);
 
