@@ -1,26 +1,25 @@
-# CodeTV.dev
+# CodeTV Monorepo
 
-The home page for [CodeTV](https://codetv.dev).
+Various web apps and libs supporting [CodeTV](https://codetv.dev).
 
-## Tech Stack
+## Current web apps
 
-- Astro
-- Sanity for series content
-- Markdown (via Astro content collections) for the blog
-- Algolia for search
-- Clerk for auth
-- Inngest to manage all the cross-tool syncing and updates
-- Mux for supporters-only video
-- Stripe for subscriptions
-- Cloudinary for images
+- Website (`apps/website/`) — [codetv.dev](https://codetv.dev)
+- Workflows (`apps/workflows/`) — automations and backend functionality
+- Content (`apps/content/`) — Sanity CMS for managing site content
 
-## TODO
+## Running these projects
 
-- [ ] RSS feed per series
-- [ ] RSS feed all content
+To run them all at once (requires all env vars):
 
-## Local Development
+```sh
+# from the repo root
+pnpm run dev
+```
 
-Currently it's not easy to run this site locally because it requires a bunch of environment variables that can't be shared.
+To run a single app:
 
-If anyone has ideas on how to make this less painful, [please let us know](https://github.com/codetv-dev/codetv.dev/issues/28).
+```sh
+# starts the website in dev mode
+pnpm nx run @codetv/website:dev
+```
