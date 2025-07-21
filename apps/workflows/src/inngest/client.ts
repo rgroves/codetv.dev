@@ -19,6 +19,7 @@ export const schemas = new EventSchemas()
 	.fromZod(stripeSchema)
 	.fromZod(websiteSchema);
 
+// TODO figure out why the Inngest signing key isn't showing up here
 export const inngest = new Inngest({
 	id: 'codetv',
 	schemas,
