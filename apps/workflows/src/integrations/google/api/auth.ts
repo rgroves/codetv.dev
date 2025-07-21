@@ -2,9 +2,7 @@ import { GOOGLE_API_SERVICE_ACCOUNT } from 'astro:env/server';
 import { decrypt } from '@tka85/dotenvenc';
 import jwt from 'jsonwebtoken';
 
-decrypt({
-	encryptedFile: '../../../../.env.enc',
-});
+decrypt();
 
 // our service account needs these scopes to view/change data
 const scopes = [
