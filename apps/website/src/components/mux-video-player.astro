@@ -13,6 +13,11 @@ import Heart from './heart.astro';
 
 export const prerender = false;
 
+console.log({
+	path: join(process.cwd(), 'apps/website', '.env.enc'),
+	dirname: import.meta.dirname,
+});
+
 const env = await decrypt({
 	encryptedFile: join(process.cwd(), 'apps/website', '.env.enc'),
 });
