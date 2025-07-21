@@ -20,7 +20,7 @@ export const schemas = new EventSchemas()
 	.fromZod(websiteSchema);
 
 export const inngest = new Inngest({
-	id: 'codetv',
+	id: 'codetv-v2',
 	schemas,
 	eventKey: INNGEST_EVENT_KEY,
 });
