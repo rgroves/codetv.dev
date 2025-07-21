@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import { join } from 'node:path';
 
 // this is to trick Netlify into including this goddamn file
-require(join(process.cwd(), '.env.enc'));
+import(join(process.cwd(), '.env.enc'));
 
 decrypt({
 	encryptedFile: join(process.cwd(), '.env.enc'),
