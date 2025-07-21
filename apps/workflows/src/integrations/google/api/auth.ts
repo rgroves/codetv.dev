@@ -2,6 +2,10 @@ import { DOTENVENC_PASS, GOOGLE_API_SERVICE_ACCOUNT } from 'astro:env/server';
 import { join } from 'node:path';
 import { decrypt } from '@tka85/dotenvenc';
 import jwt from 'jsonwebtoken';
+import { readFileSync } from 'node:fs';
+
+const enc = readFileSync('./.env.enc');
+console.log(enc);
 
 const env = await decrypt({
 	passwd: DOTENVENC_PASS,
