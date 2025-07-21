@@ -2,4 +2,5 @@
 package = "netlify-plugin-inngest"
 
 [functions]
-included_files = ["./.env.enc"]
+node_bundler = "esbuild"
+included_files = [".env.enc"]
