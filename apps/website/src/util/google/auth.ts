@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 const env = await decrypt({
 	passwd: process.env.DOTENVENC_PASS,
-	encryptedFile: join(process.cwd(), '.env.enc'),
+	encryptedFile: join(process.cwd(), 'apps/website', '.env.enc'),
 });
 
 export async function getGoogleAccessToken() {
@@ -15,7 +15,8 @@ export async function getGoogleAccessToken() {
 	const jwtToken = jwt.sign(
 		{
 			iss: GOOGLE_API_SERVICE_ACCOUNT,
-			scope: 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/calendar',
+			scope:
+				'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/calendar',
 			aud: 'https://accounts.google.com/o/oauth2/token',
 			exp,
 			iat,
