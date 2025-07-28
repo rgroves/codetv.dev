@@ -1,5 +1,4 @@
 ---
-import { join } from 'node:path';
 import Mux from '@mux/mux-node';
 import { CacheHeaders } from 'cdn-cache-control';
 import {
@@ -7,15 +6,10 @@ import {
 	MUX_TOKEN_SECRET,
 	MUX_JWT_SIGNING_KEY,
 } from 'astro:env/server';
-import { decrypt } from '@tka85/dotenvenc';
 import { createImageUrl } from '../util/cloudinary';
 import Heart from './heart.astro';
 
 export const prerender = false;
-
-const env = await decrypt({
-	encryptedFile: join(process.cwd(), '.env.enc'),
-});
 
 export interface Props {
 	playback_ids: Array<{ id: string; policy: 'public' | 'signed' }>;
